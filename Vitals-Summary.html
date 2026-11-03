@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Vitals & Biometrics | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-chart-line" style="color: var(--primary-teal);"></i>
+                    Patient Vitals & Biometrics Telemetry
+                </h1>
+                <p class="page-subtitle">
+                    Real-time clinical vitals synchronized directly with AIIMS & Max hospital clinical databases.
+                </p>
+            </div>
+            <div>
+                <button class="btn-primary" onclick="openAddVitalModal()">
+                    <i class="fa fa-plus-circle"></i> Log New Vital Reading
+                </button>
+            </div>
+        </div>
+
+        <!-- 6 Vitals Metric Cards -->
+        <div class="grid-3" style="margin-bottom: 25px;">
+            <!-- Heart Rate -->
+            <div class="card-box" style="border-left: 5px solid #ef4444;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size: 12px; font-weight:700; color:var(--text-muted);">HEART RATE / PULSE</span>
+                        <div style="font-size: 34px; font-weight: 800; color: var(--secondary-blue); margin: 4px 0;">
+                            <span id="vitalHR">72</span> <small style="font-size:14px; font-weight:600; color:var(--text-muted);">bpm</small>
+                        </div>
+                    </div>
+                    <div class="stat-icon red" style="width:46px; height:46px; font-size:20px;">
+                        <i class="fa fa-heartbeat"></i>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span class="badge badge-green"><i class="fa fa-check"></i> Normal Range</span>
+                    <small style="color:var(--text-muted); font-size:11.5px;">Optimal: 60 - 100 bpm</small>
+                </div>
+            </div>
+
+            <!-- Blood Pressure -->
+            <div class="card-box" style="border-left: 5px solid #2563eb;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size: 12px; font-weight:700; color:var(--text-muted);">BLOOD PRESSURE (BP)</span>
+                        <div style="font-size: 34px; font-weight: 800; color: var(--secondary-blue); margin: 4px 0;">
+                            <span id="vitalBP">120/80</span> <small style="font-size:14px; font-weight:600; color:var(--text-muted);">mmHg</small>
+                        </div>
+                    </div>
+                    <div class="stat-icon blue" style="width:46px; height:46px; font-size:20px;">
+                        <i class="fa fa-tint"></i>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span class="badge badge-teal"><i class="fa fa-shield-alt"></i> Well Controlled</span>
+                    <small style="color:var(--text-muted); font-size:11.5px;">Target: 120/80 mmHg</small>
+                </div>
+            </div>
+
+            <!-- Blood Oxygen (SpO2) -->
+            <div class="card-box" style="border-left: 5px solid #0d9488;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size: 12px; font-weight:700; color:var(--text-muted);">OXYGEN SATURATION (SpO2)</span>
+                        <div style="font-size: 34px; font-weight: 800; color: var(--secondary-blue); margin: 4px 0;">
+                            <span id="vitalSPO2">99</span> <small style="font-size:14px; font-weight:600; color:var(--text-muted);">%</small>
+                        </div>
+                    </div>
+                    <div class="stat-icon teal" style="width:46px; height:46px; font-size:20px;">
+                        <i class="fa fa-lungs"></i>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span class="badge badge-green"><i class="fa fa-check"></i> Optimal Oxygenation</span>
+                    <small style="color:var(--text-muted); font-size:11.5px;">Normal: 95 - 100%</small>
+                </div>
+            </div>
+
+            <!-- Blood Glucose -->
+            <div class="card-box" style="border-left: 5px solid #ea580c;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size: 12px; font-weight:700; color:var(--text-muted);">BLOOD GLUCOSE (FASTING)</span>
+                        <div style="font-size: 34px; font-weight: 800; color: var(--secondary-blue); margin: 4px 0;">
+                            <span id="vitalSugar">98</span> <small style="font-size:14px; font-weight:600; color:var(--text-muted);">mg/dL</small>
+                        </div>
+                    </div>
+                    <div class="stat-icon orange" style="width:46px; height:46px; font-size:20px;">
+                        <i class="fa fa-dna"></i>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span class="badge badge-green"><i class="fa fa-check"></i> Euglycemic</span>
+                    <small style="color:var(--text-muted); font-size:11.5px;">Target: 70 - 100 mg/dL</small>
+                </div>
+            </div>
+
+            <!-- Body Temperature -->
+            <div class="card-box" style="border-left: 5px solid #eab308;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size: 12px; font-weight:700; color:var(--text-muted);">BODY TEMPERATURE</span>
+                        <div style="font-size: 34px; font-weight: 800; color: var(--secondary-blue); margin: 4px 0;">
+                            <span id="vitalTemp">98.4</span> <small style="font-size:14px; font-weight:600; color:var(--text-muted);">°F</small>
+                        </div>
+                    </div>
+                    <div class="stat-icon purple" style="width:46px; height:46px; font-size:20px;">
+                        <i class="fa fa-thermometer-half"></i>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span class="badge badge-green">Afebrile</span>
+                    <small style="color:var(--text-muted); font-size:11.5px;">Standard: 98.6°F</small>
+                </div>
+            </div>
+
+            <!-- Body Weight & BMI -->
+            <div class="card-box" style="border-left: 5px solid #10b981;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span style="font-size: 12px; font-weight:700; color:var(--text-muted);">PATIENT WEIGHT (BMI: 22.4)</span>
+                        <div style="font-size: 34px; font-weight: 800; color: var(--secondary-blue); margin: 4px 0;">
+                            <span id="vitalWeight">71</span> <small style="font-size:14px; font-weight:600; color:var(--text-muted);">kg</small>
+                        </div>
+                    </div>
+                    <div class="stat-icon green" style="width:46px; height:46px; font-size:20px;">
+                        <i class="fa fa-weight"></i>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span class="badge badge-green">Healthy BMI</span>
+                    <small style="color:var(--text-muted); font-size:11.5px;">Last Checked: Today 08:30 AM</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Log Table -->
+        <div class="card-box">
+            <div class="card-header">
+                <h3><i class="fa fa-history" style="color:var(--primary-teal);"></i> Historical Biometrics Log</h3>
+                <span class="badge badge-teal">Verified Device Telemetry</span>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Pulse (HR)</th>
+                            <th>Blood Pressure</th>
+                            <th>Oxygen (SpO2)</th>
+                            <th>Blood Glucose</th>
+                            <th>Temperature</th>
+                            <th>Clinical Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vitalsHistoryBody">
+                        <tr>
+                            <td>Today at 08:30 AM</td>
+                            <td><strong>72 bpm</strong></td>
+                            <td>120/80 mmHg</td>
+                            <td>99%</td>
+                            <td>98 mg/dL</td>
+                            <td>98.4°F</td>
+                            <td><span class="badge badge-green">Optimal</span></td>
+                        </tr>
+                        <tr>
+                            <td>Yesterday at 06:15 PM</td>
+                            <td><strong>74 bpm</strong></td>
+                            <td>122/82 mmHg</td>
+                            <td>98%</td>
+                            <td>104 mg/dL</td>
+                            <td>98.6°F</td>
+                            <td><span class="badge badge-green">Stable</span></td>
+                        </tr>
+                        <tr>
+                            <td>25 Oct 2026</td>
+                            <td><strong>76 bpm</strong></td>
+                            <td>118/78 mmHg</td>
+                            <td>99%</td>
+                            <td>95 mg/dL</td>
+                            <td>98.2°F</td>
+                            <td><span class="badge badge-green">Excellent</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Log Vital Reading -->
+    <div id="vitalModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close-btn" onclick="closeAddVitalModal()">&times;</button>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--secondary-blue);">
+                <i class="fa fa-heartbeat" style="color: var(--primary-teal);"></i> Log New Vital Reading
+            </h3>
+            <form onsubmit="handleSaveVital(event)">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Pulse / Heart Rate (bpm)</label>
+                        <input type="number" id="inHR" class="form-control" required placeholder="72" value="72">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Blood Oxygen SpO2 (%)</label>
+                        <input type="number" id="inSPO2" class="form-control" required placeholder="99" value="99">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Systolic BP (mmHg)</label>
+                        <input type="number" id="inBPSys" class="form-control" required placeholder="120" value="120">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Diastolic BP (mmHg)</label>
+                        <input type="number" id="inBPDia" class="form-control" required placeholder="80" value="80">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Blood Glucose (mg/dL)</label>
+                        <input type="number" id="inSugar" class="form-control" placeholder="98" value="98">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Temperature (°F)</label>
+                        <input type="number" step="0.1" id="inTemp" class="form-control" placeholder="98.4" value="98.4">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                    <i class="fa fa-save"></i> Save Reading & Calculate Analytics
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function renderVitalsPage() {
+            const session = window.SwastikData.getSession();
+            const data = window.SwastikData.getData();
+            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+
+            if (pat && pat.vitals) {
+                document.getElementById('vitalHR').innerText = pat.vitals.heartRate;
+                document.getElementById('vitalBP').innerText = `${pat.vitals.bpSystolic}/${pat.vitals.bpDiastolic}`;
+                document.getElementById('vitalSPO2').innerText = pat.vitals.spo2;
+                document.getElementById('vitalSugar').innerText = pat.vitals.bloodSugar;
+                document.getElementById('vitalTemp').innerText = pat.vitals.temperature;
+                document.getElementById('vitalWeight').innerText = pat.vitals.weight || 71;
+            }
+        }
+
+        function openAddVitalModal() {
+            document.getElementById('vitalModal').classList.add('active');
+        }
+
+        function closeAddVitalModal() {
+            document.getElementById('vitalModal').classList.remove('active');
+        }
+
+        function handleSaveVital(e) {
+            e.preventDefault();
+            const session = window.SwastikData.getSession();
+            const hr = parseInt(document.getElementById('inHR').value);
+            const spo2 = parseInt(document.getElementById('inSPO2').value);
+            const sys = parseInt(document.getElementById('inBPSys').value);
+            const dia = parseInt(document.getElementById('inBPDia').value);
+            const sugar = parseInt(document.getElementById('inSugar').value);
+            const temp = parseFloat(document.getElementById('inTemp').value);
+
+            const newV = {
+                heartRate: hr,
+                spo2: spo2,
+                bpSystolic: sys,
+                bpDiastolic: dia,
+                bloodSugar: sugar,
+                temperature: temp
+            };
+
+            window.SwastikData.updateVitals(session.userId || "pat-1", newV);
+
+            const tbody = document.getElementById('vitalsHistoryBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>Just now</strong></td>
+                <td><strong>${hr} bpm</strong></td>
+                <td>${sys}/${dia} mmHg</td>
+                <td>${spo2}%</td>
+                <td>${sugar} mg/dL</td>
+                <td>${temp}°F</td>
+                <td><span class="badge badge-green">New Reading</span></td>
+            `;
+            tbody.prepend(tr);
+
+            closeAddVitalModal();
+            renderVitalsPage();
+            window.showToast("New vital readings saved successfully!", "success");
+        }
+
+        window.onload = renderVitalsPage;
+    </script>
+</body>
+</html>

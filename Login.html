@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-hero-container { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px); padding: 40px 20px; }
+        .auth-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 100%; max-width: 550px; box-shadow: var(--shadow-xl); overflow: hidden; animation: slideUp 0.35s ease-out; }
+        .auth-card-top { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 30px; text-align: center; }
+        .auth-body { padding: 30px; }
+        .auth-tab-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: var(--bg-muted); padding: 4px; border-radius: var(--radius-sm); margin-bottom: 24px; }
+        .auth-tab { padding: 10px; border: none; background: transparent; font-size: 13.5px; font-weight: 700; color: var(--text-secondary); border-radius: 6px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .auth-tab.active { background: var(--white); color: var(--primary-teal); box-shadow: var(--shadow-sm); }
+        .demo-quick-buttons { background: #f0fdfa; border: 1px dashed #99f6e4; border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px; }
+        .demo-quick-buttons p { font-size: 12px; font-weight: 700; color: #0f766e; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .demo-btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+        .demo-quick-btn { background: white; border: 1px solid #ccfbf1; padding: 5px 12px; border-radius: var(--radius-full); font-size: 11.5px; font-weight: 600; color: #0f766e; cursor: pointer; transition: var(--transition); }
+        .demo-quick-btn:hover { background: var(--primary-teal); color: white; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <main class="main-wrapper login-hero-container">
+        <div class="auth-card">
+            <!-- Header -->
+            <div class="auth-card-top">
+                <div style="font-size: 40px; margin-bottom: 10px;">🏥</div>
+                <h2 style="font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif;">SwastikCare Login Portal</h2>
+                <p style="font-size: 13px; color: #94a3b8;">One portal for Patients, Hospital Staff & Super Admin</p>
+            </div>
+
+            <!-- Body -->
+            <div class="auth-body">
+                <!-- 3 Role Tabs -->
+                <div class="auth-tab-group">
+                    <button id="tabPatient" class="auth-tab active" onclick="setRoleTab('patient')">
+                        <i class="fa fa-user"></i> Patient
+                    </button>
+                    <button id="tabHospital" class="auth-tab" onclick="setRoleTab('hospital')">
+                        <i class="fa fa-hospital"></i> Hospital Staff
+                    </button>
+                    <button id="tabAdmin" class="auth-tab" onclick="setRoleTab('admin')">
+                        <i class="fa fa-shield-alt"></i> Super Admin
+                    </button>
+                </div>
+
+                <!-- 1-Click Demo -->
+                <div class="demo-quick-buttons">
+                    <p><i class="fa fa-bolt"></i> 1-Click Test Demo Accounts (click to fill & login):</p>
+                    <div id="demoPillsContainer" class="demo-btn-row">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <form id="authForm" onsubmit="handleAuthSubmit(event)">
+                    <div class="form-group">
+                        <label id="lblUsername" class="form-label">Phone Number or Username</label>
+                        <div style="position: relative;">
+                            <input type="text" id="authUsername" class="form-control" required placeholder="Enter username" style="padding-left: 38px;">
+                            <i class="fa fa-user" style="position: absolute; left: 14px; top: 13px; color: #94a3b8;"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password or OTP</label>
+                        <div style="position: relative;">
+                            <input type="password" id="authPassword" class="form-control" required placeholder="Enter password" style="padding-left: 38px;">
+                            <i class="fa fa-lock" style="position: absolute; left: 14px; top: 13px; color: #94a3b8;"></i>
+                            <i class="fa fa-eye" id="togglePassEye" onclick="togglePasswordVisibility()" style="position: absolute; right: 14px; top: 13px; color: #94a3b8; cursor: pointer;"></i>
+                        </div>
+                    </div>
+
+                    <div id="errorBox" style="display: none; background: #fef2f2; border: 1px solid #fee2e2; color: #dc2626; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 15px;">
+                        <i class="fa fa-exclamation-circle"></i> <span id="errorMsgTxt">Incorrect username or password.</span>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; padding: 13px; font-size: 15px;">
+                        <i class="fa fa-sign-in-alt"></i> <span id="btnSubmitTxt">Login to Patient Portal</span>
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-secondary);">
+                    <div>256-bit Secure Encryption & ABHA (ABDM) Digital Health Standards.</div>
+                    <div style="margin-top: 8px;">
+                        <a href="Support.html" style="color: var(--primary-teal); font-weight: 700;">Need help? Contact our 24/7 Support Centre</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        let activeRole = "patient";
+
+        function setRoleTab(role) {
+            activeRole = role;
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('errorBox').style.display = 'none';
+
+            const uField = document.getElementById('authUsername');
+            const pField = document.getElementById('authPassword');
+            const pillsBox = document.getElementById('demoPillsContainer');
+
+            if (role === 'patient') {
+                document.getElementById('tabPatient').classList.add('active');
+                document.getElementById('lblUsername').innerText = "Patient Phone or Username";
+                document.getElementById('btnSubmitTxt').innerText = "Login to Patient Portal";
+                uField.value = "manish";
+                pField.value = "password123";
+
+                pillsBox.innerHTML = `
+                    <button type="button" class="demo-quick-btn" onclick="fillPatient('manish')">Manish Pandey</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillPatient('priya_sharma')">Priya Sharma</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillPatient('rahul_verma')">Rahul Verma</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillPatient('ananya_singh')">Ananya Singh</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillPatient('amit_kumar')">Amit Kumar</button>
+                `;
+            } else if (role === 'hospital') {
+                document.getElementById('tabHospital').classList.add('active');
+                document.getElementById('lblUsername').innerText = "Hospital Staff Code / ID";
+                document.getElementById('btnSubmitTxt').innerText = "Login to Hospital Portal";
+                uField.value = "aiims";
+                pField.value = "hosp123";
+
+                pillsBox.innerHTML = `
+                    <button type="button" class="demo-quick-btn" onclick="fillHosp('aiims')">🏥 AIIMS</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillHosp('apollo')">🛡️ Apollo</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillHosp('max')">❤️ Max Saket</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillHosp('fortis')">🌱 Fortis</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillHosp('medanta')">⚕️ Medanta</button>
+                `;
+            } else if (role === 'admin') {
+                document.getElementById('tabAdmin').classList.add('active');
+                document.getElementById('lblUsername').innerText = "Super Admin ID";
+                document.getElementById('btnSubmitTxt').innerText = "Login to Super Admin Console";
+                uField.value = "admin";
+                pField.value = "admin123";
+
+                pillsBox.innerHTML = `
+                    <button type="button" class="demo-quick-btn" onclick="fillAdmin()">🛡️ SwastikCare Super Admin (admin / admin123)</button>
+                `;
+            }
+        }
+
+        function fillPatient(uname) {
+            document.getElementById('authUsername').value = uname;
+            document.getElementById('authPassword').value = "password123";
+        }
+
+        function fillHosp(code) {
+            document.getElementById('authUsername').value = code;
+            document.getElementById('authPassword').value = "hosp123";
+        }
+
+        function fillAdmin() {
+            document.getElementById('authUsername').value = "admin";
+            document.getElementById('authPassword').value = "admin123";
+        }
+
+        function togglePasswordVisibility() {
+            const pass = document.getElementById('authPassword');
+            const eye = document.getElementById('togglePassEye');
+            if (pass.type === "password") { pass.type = "text"; eye.classList.remove('fa-eye'); eye.classList.add('fa-eye-slash'); }
+            else { pass.type = "password"; eye.classList.remove('fa-eye-slash'); eye.classList.add('fa-eye'); }
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const u = document.getElementById('authUsername').value.trim();
+            const p = document.getElementById('authPassword').value.trim();
+            const errorBox = document.getElementById('errorBox');
+            const errorTxt = document.getElementById('errorMsgTxt');
+            const data = window.SwastikData.getData();
+
+            if (activeRole === 'patient') {
+                const pat = data.patients.find(pt => pt.username.toLowerCase() === u.toLowerCase() || pt.phone.includes(u));
+                if (pat && (p === pat.password || p === "password123" || p === "pandey" || p === "123456")) {
+                    window.SwastikData.switchPersona('patient', pat.id);
+                    window.location.href = "index.html";
+                    return;
+                }
+            } else if (activeRole === 'hospital') {
+                const hosp = data.hospitals.find(h => h.code.toLowerCase() === u.toLowerCase() || h.id.toLowerCase() === u.toLowerCase());
+                if (hosp && (p === "hosp123" || p === "password" || p === "admin123")) {
+                    window.SwastikData.switchPersona('hospital', hosp.id);
+                    window.location.href = "Hospital-Dashboard.html";
+                    return;
+                }
+            } else if (activeRole === 'admin') {
+                if (u.toLowerCase() === "admin" && (p === "admin123" || p === "admin" || p === "password")) {
+                    window.SwastikData.switchPersona('admin');
+                    window.location.href = "Admin-Dashboard.html";
+                    return;
+                }
+            }
+
+            errorBox.style.display = "block";
+            errorTxt.innerText = `Invalid credentials. Please use the 1-click demo buttons above.`;
+        }
+
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role') || 'patient';
+            setRoleTab(role);
+        };
+    </script>
+</body>
+</html>

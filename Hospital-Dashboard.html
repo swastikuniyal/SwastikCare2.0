@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Staff Portal | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <!-- Hospital Profile Header Banner -->
+        <div class="card-box" style="margin-bottom: 24px; background: linear-gradient(135deg, #0f172a, #1e293b); color: white; border: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div id="hospLogoContainer" style="width: 72px; height: 72px; border-radius: 18px; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 38px; border: 2px solid rgba(255, 255, 255, 0.2);">
+                        🏥
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <h1 id="hospNameHeader" style="font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif;">AIIMS New Delhi</h1>
+                            <span id="hospBadgeHeader" class="badge badge-teal">AIIMS</span>
+                        </div>
+                        <p id="hospSubtitleHeader" style="color: #cbd5e1; font-size: 14px; margin-top: 3px;">All India Institute of Medical Sciences</p>
+                        <div style="display: flex; gap: 15px; font-size: 13px; color: #94a3b8; margin-top: 8px; flex-wrap:wrap;">
+                            <span id="hospLocationHeader"><i class="fa fa-map-marker-alt"></i> Ansari Nagar, New Delhi</span>
+                            <span id="hospPhoneHeader"><i class="fa fa-phone"></i> +91 11 2658 8500</span>
+                            <span id="hospAccredHeader"><i class="fa fa-award"></i> NABH Accredited</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hospital Workspace Switcher -->
+                <div style="text-align: right;">
+                    <label style="display: block; font-size: 12px; color: #94a3b8; margin-bottom: 5px; font-weight: 700;">
+                        <i class="fa fa-exchange-alt"></i> Switch Hospital Workspace:
+                    </label>
+                    <select id="hospitalWorkspaceSelect" class="form-control" style="background: rgba(255,255,255,0.12); color:white; border-color: rgba(255,255,255,0.25); min-width: 250px;" onchange="switchHospitalView(this.value)">
+                        <option value="hosp-1" style="color:black;">🏥 AIIMS New Delhi</option>
+                        <option value="hosp-2" style="color:black;">🛡️ Indraprastha Apollo Hospitals</option>
+                        <option value="hosp-3" style="color:black;">❤️ Max Super Speciality (Saket)</option>
+                        <option value="hosp-4" style="color:black;">🌱 Fortis Memorial (FMRI)</option>
+                        <option value="hosp-5" style="color:black;">⚕️ Medanta - The Medicity</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 KPI Metrics -->
+        <div class="grid-4" style="margin-bottom: 24px;">
+            <div class="stat-card">
+                <div class="stat-icon teal"><i class="fa fa-user-md"></i></div>
+                <div class="stat-info">
+                    <h3 id="hospDoctorCount">5</h3>
+                    <p>On-Duty Specialists</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa fa-procedures"></i></div>
+                <div class="stat-info">
+                    <h3 id="hospAvailBeds">142</h3>
+                    <p>Vacant General Beds</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red"><i class="fa fa-heartbeat"></i></div>
+                <div class="stat-info">
+                    <h3 id="hospIcuBeds">28</h3>
+                    <p>ICU & Ventilator Beds</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fa fa-calendar-check"></i></div>
+                <div class="stat-info">
+                    <h3 id="hospTodayApts">2</h3>
+                    <p>Today's OPD Queue</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchHospTab('doctorsPane', this)">
+                <i class="fa fa-user-md"></i> Our 5 Specialists
+            </button>
+            <button class="tab-btn" onclick="switchHospTab('appointmentsPane', this)">
+                <i class="fa fa-clipboard-list"></i> OPD Patient Queue
+            </button>
+            <button class="tab-btn" onclick="switchHospTab('bedsPane', this)">
+                <i class="fa fa-bed"></i> Bed & Ward Telemetry
+            </button>
+            <button class="tab-btn" onclick="switchHospTab('settingsPane', this)">
+                <i class="fa fa-info-circle"></i> Hospital Profile & Emergency Info
+            </button>
+        </div>
+
+        <!-- Tab 1: Doctors -->
+        <section id="doctorsPane" class="tab-pane">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-stethoscope" style="color:var(--primary-teal);"></i> 5 Senior Specialist Doctors</h3>
+                    <span class="badge badge-teal">5 Specialists Active</span>
+                </div>
+                <div class="grid-3" id="hospitalDoctorsGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: OPD Patient Queue -->
+        <section id="appointmentsPane" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-calendar-alt" style="color:var(--primary-teal);"></i> Hospital OPD Patient Queue</h3>
+                    <span class="badge badge-blue">Live Patient Check-in</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Booking Token</th>
+                                <th>Patient Name</th>
+                                <th>Consulting Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Room</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hospAppointmentsTbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 3: Bed & Ward Telemetry -->
+        <section id="bedsPane" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-procedures" style="color:var(--primary-teal);"></i> Live Bed Telemetry & Ward Allocation</h3>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-primary btn-sm" onclick="adjustBeds(-1)">
+                            <i class="fa fa-plus"></i> Admit Patient (Occupy 1 Bed)
+                        </button>
+                        <button class="btn-secondary btn-sm" onclick="adjustBeds(1)">
+                            <i class="fa fa-sign-out-alt"></i> Discharge Patient (Free 1 Bed)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-bottom: 25px;">
+                    <div style="background: #f0fdfa; border: 1px solid #ccfbf1; padding: 20px; border-radius: var(--radius-md);">
+                        <h4 style="color: #0f766e; margin-bottom: 5px;">General Wards</h4>
+                        <div style="font-size: 28px; font-weight: 800; color: #0d9488;" id="cardGeneralBeds">114</div>
+                        <p style="font-size: 13px; color: #475569;">Available beds for post-op and general medical admissions</p>
+                    </div>
+                    <div style="background: #eff6ff; border: 1px solid #dbeafe; padding: 20px; border-radius: var(--radius-md);">
+                        <h4 style="color: #1e40af; margin-bottom: 5px;">ICU & Ventilators</h4>
+                        <div style="font-size: 28px; font-weight: 800; color: #2563eb;" id="cardIcuBeds">28</div>
+                        <p style="font-size: 13px; color: #475569;">Critical care life-support units on active standby</p>
+                    </div>
+                    <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 20px; border-radius: var(--radius-md);">
+                        <h4 style="color: #991b1b; margin-bottom: 5px;">Emergency Trauma Unit</h4>
+                        <div style="font-size: 28px; font-weight: 800; color: #dc2626;">24/7 Ready</div>
+                        <p style="font-size: 13px; color: #475569;">Dedicated ambulance bay with instant triage & OT access</p>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-muted); padding: 18px; border-radius: var(--radius-md);">
+                    <h5 style="margin-bottom: 8px; color: var(--secondary-blue);">Bed Occupancy Barometer</h5>
+                    <div style="background: #e2e8f0; border-radius: var(--radius-full); height: 12px; overflow: hidden; margin-bottom: 8px;">
+                        <div id="hospBedBar" style="background: var(--primary-teal); width: 92%; height: 100%; transition: width 0.3s ease;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-secondary);">
+                        <span id="txtOccupiedCount">Occupied Beds: 2,308</span>
+                        <span id="txtTotalBeds">Total Capacity: 2,450 Beds</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 4: Hospital Profile & Emergency Info -->
+        <section id="settingsPane" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-id-card" style="color:var(--primary-teal);"></i> Hospital Profile & Emergency Directory</h3>
+                    <span class="badge badge-green">Accredited Network Partner</span>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <h4 style="color: var(--secondary-blue); margin-bottom: 10px;">About This Institution</h4>
+                        <p id="hospDescDetail" style="font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px;">
+                            Premier healthcare research and patient treatment institute.
+                        </p>
+                        <h4 style="color: var(--secondary-blue); margin-bottom: 10px;">Leading Super-Specialty Centres</h4>
+                        <div id="hospSpecialtiesBadges" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-muted); padding: 20px; border-radius: var(--radius-md);">
+                        <h4 style="color: var(--secondary-blue); margin-bottom: 15px;">Emergency Contacts & Credentials</h4>
+                        <div style="font-size: 13.5px; line-height: 2; color: var(--text-secondary);">
+                            <div><strong>General Helpline:</strong> <span id="detailPhone">+91 11 2658 8500</span></div>
+                            <div><strong>Ambulance Direct Line:</strong> <span id="detailEmergency">102 / +91 11 2659 4405</span></div>
+                            <div><strong>Official Email:</strong> <span id="detailEmail">director@aiims.edu.in</span></div>
+                            <div><strong>Established:</strong> <span id="detailEst">1956</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        let currentHospId = "hosp-1";
+
+        function switchHospTab(paneId, btn) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(paneId).style.display = 'block';
+            btn.classList.add('active');
+        }
+
+        function switchHospitalView(hospId) {
+            currentHospId = hospId;
+            const data = window.SwastikData.getData();
+            const hosp = data.hospitals.find(h => h.id === hospId);
+            if (hosp) {
+                window.SwastikData.setSession({
+                    role: "hospital",
+                    userId: hosp.id,
+                    username: hosp.code,
+                    displayName: hosp.name + " (Staff)",
+                    hospitalId: hosp.id,
+                    hospitalCode: hosp.code,
+                    badge: hosp.logoBadge
+                });
+            }
+            renderHospitalPortal();
+            window.showToast(`Switched workspace to ${hosp.name}`, "success");
+        }
+
+        function renderHospitalPortal() {
+            const data = window.SwastikData.getData();
+            const session = window.SwastikData.getSession();
+
+            if (session.role === "hospital" && session.hospitalId) {
+                currentHospId = session.hospitalId;
+            }
+
+            const hosp = data.hospitals.find(h => h.id === currentHospId) || data.hospitals[0];
+            currentHospId = hosp.id;
+
+            document.getElementById('hospitalWorkspaceSelect').value = hosp.id;
+            document.getElementById('hospLogoContainer').innerText = hosp.logo || '🏥';
+            document.getElementById('hospNameHeader').innerText = hosp.name;
+            document.getElementById('hospBadgeHeader').innerText = hosp.logoBadge || hosp.code.toUpperCase();
+            document.getElementById('hospSubtitleHeader').innerText = hosp.subtitle || hosp.type;
+            document.getElementById('hospLocationHeader').innerHTML = `<i class="fa fa-map-marker-alt"></i> ${hosp.location}`;
+            document.getElementById('hospPhoneHeader').innerHTML = `<i class="fa fa-phone"></i> ${hosp.phone}`;
+            document.getElementById('hospAccredHeader').innerHTML = `<i class="fa fa-award"></i> ${hosp.accreditation}`;
+
+            const docs = data.doctors.filter(d => d.hospitalId === hosp.id);
+            document.getElementById('hospDoctorCount').innerText = docs.length;
+            document.getElementById('hospAvailBeds').innerText = hosp.bedsAvailable;
+            document.getElementById('hospIcuBeds').innerText = hosp.bedsICU;
+
+            const docGrid = document.getElementById('hospitalDoctorsGrid');
+            docGrid.innerHTML = docs.map(d => `
+                <div class="doctor-card">
+                    <div>
+                        <div class="doctor-header">
+                            <img src="${d.avatar}" class="doctor-avatar" alt="${d.name}">
+                            <div class="doctor-info">
+                                <h4>${d.name}</h4>
+                                <div class="doctor-spec">${d.specialty}</div>
+                                <div class="doctor-hosp">${d.qualification}</div>
+                            </div>
+                        </div>
+                        <div class="doctor-meta-grid">
+                            <div class="meta-item">
+                                Experience
+                                <strong>${d.experience}</strong>
+                            </div>
+                            <div class="meta-item">
+                                Fee
+                                <strong>₹${d.consultationFee}</strong>
+                            </div>
+                            <div class="meta-item">
+                                Room
+                                <strong>${d.room}</strong>
+                            </div>
+                            <div class="meta-item">
+                                OPD Days
+                                <strong>${d.opdDays.join(', ')}</strong>
+                            </div>
+                        </div>
+                        <p style="font-size:12.5px; color:var(--text-secondary); line-height:1.4; margin-bottom:12px;">
+                            ${d.bio}
+                        </p>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-light); padding-top:12px;">
+                        <span class="badge ${d.isOnline ? 'badge-green' : 'badge-orange'}">
+                            ${d.isOnline ? '• In OPD' : '• In Surgery'}
+                        </span>
+                        <button class="btn-primary btn-sm" onclick="location.href='Appointment-Booking.html?hospId=${hosp.id}&docId=${d.id}'">
+                            Book Patient
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const hospApts = data.appointments.filter(a => a.hospitalId === hosp.id);
+            document.getElementById('hospTodayApts').innerText = hospApts.length;
+
+            const aptTbody = document.getElementById('hospAppointmentsTbody');
+            if (hospApts.length === 0) {
+                aptTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No upcoming appointments for ${hosp.name}.</td></tr>`;
+            } else {
+                aptTbody.innerHTML = hospApts.map(a => `
+                    <tr>
+                        <td><strong>${a.id}</strong></td>
+                        <td>
+                            <strong style="color:var(--secondary-blue);">${a.patientName}</strong>
+                            <div style="font-size:11px; color:var(--text-muted);">${a.patientPhone || ''}</div>
+                        </td>
+                        <td>${a.doctorName}</td>
+                        <td>
+                            <div>${a.date}</div>
+                            <small style="color:var(--text-muted);">${a.time}</small>
+                        </td>
+                        <td><span class="badge badge-teal">${a.room || 'OPD Room 101'}</span></td>
+                        <td>
+                            <span class="badge ${a.status.includes('Confirmed') ? 'badge-green' : a.status.includes('Completed') ? 'badge-teal' : 'badge-orange'}">
+                                ${a.status}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:6px;">
+                                ${!a.status.includes('Completed') ? `
+                                    <button class="btn-primary btn-sm" onclick="handleAptStatusHosp('${a.id}', 'Completed')">
+                                        <i class="fa fa-check"></i> Complete
+                                    </button>
+                                    <button class="btn-secondary btn-sm" onclick="adjustBeds(-1); handleAptStatusHosp('${a.id}', 'Admitted');">
+                                        <i class="fa fa-procedures"></i> Admit
+                                    </button>
+                                ` : `<span style="font-size:12px; color:var(--text-muted);"><i class="fa fa-check-circle" style="color:var(--accent-green);"></i> Completed</span>`}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('cardGeneralBeds').innerText = Math.max(0, hosp.bedsAvailable - hosp.bedsICU);
+            document.getElementById('cardIcuBeds').innerText = hosp.bedsICU;
+            const pct = hosp.bedsTotal > 0 ? ((hosp.bedsOccupied / hosp.bedsTotal) * 100).toFixed(1) : 0;
+            document.getElementById('hospBedBar').style.width = pct + "%";
+            document.getElementById('txtOccupiedCount').innerText = `Occupied Beds: ${hosp.bedsOccupied} (${pct}%)`;
+            document.getElementById('txtTotalBeds').innerText = `Total Capacity: ${hosp.bedsTotal.toLocaleString()} Beds`;
+
+            document.getElementById('hospDescDetail').innerText = hosp.description;
+            document.getElementById('detailPhone').innerText = hosp.phone;
+            document.getElementById('detailEmergency').innerText = hosp.emergencyPhone;
+            document.getElementById('detailEmail').innerText = hosp.email;
+            document.getElementById('detailEst').innerText = hosp.established;
+
+            const specBadges = document.getElementById('hospSpecialtiesBadges');
+            specBadges.innerHTML = (hosp.specialties || []).map(s => `<span class="badge badge-teal">${s}</span>`).join('');
+        }
+
+        function handleAptStatusHosp(aptId, status) {
+            window.SwastikData.updateAppointmentStatus(aptId, status);
+            window.showToast(`Appointment ${aptId} status updated to ${status}!`, "success");
+            renderHospitalPortal();
+        }
+
+        function adjustBeds(delta) {
+            const updated = window.SwastikData.updateHospitalBeds(currentHospId, -delta);
+            if (updated) {
+                window.showToast(delta < 0 ? "Patient admitted: 1 bed allocated!" : "Patient discharged: 1 bed freed!", "success");
+                renderHospitalPortal();
+            }
+        }
+
+        window.onload = renderHospitalPortal;
+    </script>
+</body>
+</html>

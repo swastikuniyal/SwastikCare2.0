@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talk to a Doctor | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .chat-app-container {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            height: calc(100vh - 190px);
+            min-height: 600px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .chat-sidebar {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+
+        .sidebar-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: white;
+        }
+
+        .doctor-list-scroll {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-doc-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-doc-item:hover { background: #f1f5f9; }
+        .chat-doc-item.active {
+            background: #e6fffa;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .doc-avatar-wrapper { position: relative; flex-shrink: 0; }
+        .doc-avatar-img { width: 46px; height: 46px; border-radius: 14px; object-fit: cover; }
+
+        .online-dot {
+            width: 11px; height: 11px;
+            background: #10b981;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -2px; right: -2px;
+        }
+
+        .chat-main-area { display: flex; flex-direction: column; background: #ffffff; }
+
+        .chat-top-bar {
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+
+        .messages-scroll-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #f8fafc;
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .chat-bubble.doctor {
+            background: white;
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .chat-bubble.patient {
+            background: var(--primary-teal);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+        }
+
+        .bubble-time {
+            font-size: 10.5px;
+            display: block;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .chat-input-bar {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: white;
+        }
+
+        .video-modal-screen {
+            background: #0f172a;
+            color: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 780px;
+            height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            position: relative;
+            box-shadow: var(--shadow-xl);
+        }
+
+        @media (max-width: 850px) {
+            .chat-app-container { grid-template-columns: 1fr; }
+            .chat-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-wrapper" style="padding-bottom: 30px;">
+        <div class="chat-app-container">
+            <!-- Sidebar: 25 Doctors List -->
+            <aside class="chat-sidebar">
+                <div class="sidebar-header">
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 10px;">
+                        <i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Specialist Doctors (25)
+                    </h3>
+                    <input type="text" id="docSearchBox" class="form-control" placeholder="Search doctor or department..." style="padding: 7px 12px; font-size: 13px;" onkeyup="filterSidebarDoctors()">
+                </div>
+                <div class="doctor-list-scroll" id="sidebarDoctorsList">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <section class="chat-main-area">
+                <div class="chat-top-bar">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <img id="chatHeaderAvatar" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80" style="width: 44px; height: 44px; border-radius: 12px; object-fit: cover;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <h4 id="chatHeaderName" style="font-size: 16px; font-weight: 700; color: var(--secondary-blue);">Dr. Randeep Guleria</h4>
+                                <span class="badge badge-green" style="font-size: 10px; padding: 2px 7px;">• In OPD</span>
+                            </div>
+                            <div id="chatHeaderSub" style="font-size: 12px; color: var(--text-secondary);">
+                                Pulmonology & Critical Care • AIIMS New Delhi
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-secondary btn-sm" onclick="startVideoCallSimulation()">
+                            <i class="fa fa-video" style="color: var(--accent-blue);"></i> Video Call
+                        </button>
+                        <button class="btn-primary btn-sm" onclick="issuePrescriptionModal()">
+                            <i class="fa fa-file-prescription"></i> Prescription
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="messages-scroll-area" id="messagesContainer">
+                    <div class="chat-bubble doctor">
+                        <strong>SwastikCare TeleHealth Assistant:</strong><br>
+                        Welcome to SwastikCare Digital OPD. You are being connected directly to <strong id="bubbleDoctorName">Dr. Randeep Guleria</strong>. Please describe your symptoms or concern.
+                        <span class="bubble-time">10:00 AM</span>
+                    </div>
+                    <div class="chat-bubble patient">
+                        Good morning Doctor, please review my latest test report and advise on medication and precautions.
+                        <span class="bubble-time">10:02 AM</span>
+                    </div>
+                    <div class="chat-bubble doctor">
+                        Good morning. I've reviewed your vitals and previous medical reports. Your pulse and BP are perfectly normal. Do you have any chest pain or shortness of breath?
+                        <span class="bubble-time">10:03 AM</span>
+                    </div>
+                </div>
+
+                <!-- Chat Input Bar -->
+                <form class="chat-input-bar" onsubmit="handleSendMessage(event)">
+                    <button type="button" class="btn-secondary" style="padding: 10px 14px; border-radius: 50%;" onclick="attachFileMock()" title="Attach test report">
+                        <i class="fa fa-paperclip"></i>
+                    </button>
+                    <input type="text" id="chatMessageInput" class="form-control" placeholder="Type your symptoms, question or concern here..." style="border-radius: var(--radius-full);" required>
+                    <button type="submit" class="btn-primary" style="padding: 10px 20px; border-radius: var(--radius-full);">
+                        <i class="fa fa-paper-plane"></i> Send
+                    </button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <!-- Video Call Simulation Modal -->
+    <div id="videoCallModal" class="modal-overlay">
+        <div class="video-modal-screen">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="badge badge-red" style="animation: pulse 1s infinite;"><i class="fa fa-circle"></i> LIVE HD OPD</span>
+                    <span id="callDoctorTitle" style="font-weight: 700;">Dr. Randeep Guleria (AIIMS)</span>
+                </div>
+                <div style="font-size: 13px; color: #94a3b8;">Call Duration: <span id="callTimer">01:42</span></div>
+            </div>
+
+            <!-- Doctor Video Screen -->
+            <div style="text-align: center; margin: auto;">
+                <img id="callAvatar" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80" style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-teal); margin-bottom: 14px;">
+                <h3 id="callDoctorName" style="font-size: 22px;">Dr. Randeep Guleria</h3>
+                <p style="color: #94a3b8; font-size: 14px;">Connected via Secure Clinical Network (1080p 60fps)</p>
+            </div>
+
+            <!-- Call Controls -->
+            <div style="display: flex; justify-content: center; gap: 18px;">
+                <button class="btn-secondary" style="background: rgba(255,255,255,0.15); color:white; border:none; border-radius:50%; width:50px; height:50px;" onclick="window.showToast('Microphone toggled', 'info')">
+                    <i class="fa fa-microphone"></i>
+                </button>
+                <button class="btn-secondary" style="background: rgba(255,255,255,0.15); color:white; border:none; border-radius:50%; width:50px; height:50px;" onclick="window.showToast('Camera toggled', 'info')">
+                    <i class="fa fa-video"></i>
+                </button>
+                <button style="background: #ef4444; color:white; border:none; border-radius:50%; width:50px; height:50px; font-size:18px; cursor:pointer;" onclick="endVideoCall()" title="End Call">
+                    <i class="fa fa-phone-slash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        let currentDocId = "dr-1";
+
+        function initTalkToDoctor() {
+            const data = window.SwastikData.getData();
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramDoc = urlParams.get('docId');
+            if (paramDoc && data.doctors.some(d => d.id === paramDoc)) {
+                currentDocId = paramDoc;
+            }
+            renderSidebar();
+            selectChatDoctor(currentDocId);
+        }
+
+        function renderSidebar(filteredDocs) {
+            const data = window.SwastikData.getData();
+            const list = filteredDocs || data.doctors;
+            const container = document.getElementById('sidebarDoctorsList');
+
+            container.innerHTML = list.map(d => `
+                <div class="chat-doc-item ${d.id === currentDocId ? 'active' : ''}" onclick="selectChatDoctor('${d.id}')">
+                    <div class="doc-avatar-wrapper">
+                        <img src="${d.avatar}" class="doc-avatar-img">
+                        ${d.isOnline ? '<div class="online-dot"></div>' : ''}
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-weight:700; font-size:13.5px; color:var(--secondary-blue); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.name}</div>
+                        <div style="font-size:11.5px; color:var(--primary-teal); font-weight:600;">${d.specialty}</div>
+                        <div style="font-size:11px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.hospitalName}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSidebarDoctors() {
+            const q = document.getElementById('docSearchBox').value.trim().toLowerCase();
+            const data = window.SwastikData.getData();
+            const filtered = data.doctors.filter(d =>
+                d.name.toLowerCase().includes(q) ||
+                d.specialty.toLowerCase().includes(q) ||
+                d.hospitalName.toLowerCase().includes(q)
+            );
+            renderSidebar(filtered);
+        }
+
+        function selectChatDoctor(docId) {
+            currentDocId = docId;
+            const data = window.SwastikData.getData();
+            const doc = data.doctors.find(d => d.id === docId);
+            if (!doc) return;
+
+            document.getElementById('chatHeaderAvatar').src = doc.avatar;
+            document.getElementById('chatHeaderName').innerText = doc.name;
+            document.getElementById('chatHeaderSub').innerText = `${doc.specialty} • ${doc.hospitalName}`;
+            document.getElementById('bubbleDoctorName').innerText = doc.name;
+
+            document.querySelectorAll('.chat-doc-item').forEach(el => el.classList.remove('active'));
+            renderSidebar();
+        }
+
+        function handleSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatMessageInput');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const container = document.getElementById('messagesContainer');
+
+            const patBubble = document.createElement('div');
+            patBubble.className = "chat-bubble patient";
+            patBubble.innerHTML = `${txt} <span class="bubble-time">${timeNow}</span>`;
+            container.appendChild(patBubble);
+            input.value = "";
+            container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                const data = window.SwastikData.getData();
+                const doc = data.doctors.find(d => d.id === currentDocId);
+                const replyBubble = document.createElement('div');
+                replyBubble.className = "chat-bubble doctor";
+
+                let responseMsg = `I understand your concern. Based on your report, please stay well-hydrated, rest adequately, and take your medication on time. If discomfort persists, please visit ${doc.hospitalName}, ${doc.room} or call 108.`;
+                if (txt.toLowerCase().includes('pain') || txt.toLowerCase().includes('knee')) {
+                    responseMsg = "Apply ice to your knee for 15 minutes, keep the leg slightly elevated, and avoid bearing weight. I've noted this in your case file.";
+                } else if (txt.toLowerCase().includes('fever') || txt.toLowerCase().includes('cough')) {
+                    responseMsg = "Check your temperature every 4 hours. If it's above 100°F, take Paracetamol 650mg after food.";
+                }
+
+                replyBubble.innerHTML = `<strong>${doc.name}:</strong><br>${responseMsg} <span class="bubble-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+                container.appendChild(replyBubble);
+                container.scrollTop = container.scrollHeight;
+            }, 900);
+        }
+
+        function startVideoCallSimulation() {
+            const data = window.SwastikData.getData();
+            const doc = data.doctors.find(d => d.id === currentDocId);
+            document.getElementById('callDoctorTitle').innerText = `${doc.name} (${doc.hospitalName})`;
+            document.getElementById('callDoctorName').innerText = doc.name;
+            document.getElementById('callAvatar').src = doc.avatar;
+            document.getElementById('videoCallModal').classList.add('active');
+        }
+
+        function endVideoCall() {
+            document.getElementById('videoCallModal').classList.remove('active');
+            window.showToast("Video consultation ended. Consultation notes saved.", "success");
+        }
+
+        function attachFileMock() {
+            window.showToast("Attach file: You can upload a PDF test report or X-ray.", "info");
+        }
+
+        function issuePrescriptionModal() {
+            location.href = "Health-Records.html";
+        }
+
+        window.onload = initTalkToDoctor;
+    </script>
+</body>
+</html>

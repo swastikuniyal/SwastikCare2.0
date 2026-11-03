@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Notifications & Alerts | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-bell" style="color: var(--primary-teal);"></i>
+                    Clinical Alerts & Notifications
+                </h1>
+                <p class="page-subtitle">
+                    Real-time updates on lab diagnostics, doctor appointments, medication refills & rehab milestones.
+                </p>
+            </div>
+            <div>
+                <button class="btn-secondary" onclick="markAllRead()">
+                    <i class="fa fa-check-double"></i> Mark All as Read
+                </button>
+            </div>
+        </div>
+
+        <div class="card-box" style="max-width: 900px; margin: 0 auto;">
+            <div id="notificationsContainer">
+                <!-- Notif 1 -->
+                <div class="card-box" style="margin-bottom: 14px; border-left: 4px solid var(--primary-teal); background: #f0fdfa;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:14px; align-items:flex-start;">
+                            <div class="stat-icon teal" style="width:40px; height:40px; font-size:18px;">
+                                <i class="fa fa-calendar-check"></i>
+                            </div>
+                            <div>
+                                <strong style="color:var(--secondary-blue); font-size:15px;">Appointment Confirmed with Dr. Rajesh Malhotra</strong>
+                                <p style="font-size:13px; color:var(--text-secondary); margin-top:3px;">
+                                    Your Orthopedics consultation at AIIMS New Delhi has been confirmed for <strong>04 Nov 2026 at 10:30 AM</strong> (OPD Block A, Room 102).
+                                </p>
+                                <small style="color:var(--text-muted); font-size:11px;">15 mins ago • AIIMS Clinical Roster</small>
+                            </div>
+                        </div>
+                        <span class="badge badge-teal">NEW</span>
+                    </div>
+                </div>
+
+                <!-- Notif 2 -->
+                <div class="card-box" style="margin-bottom: 14px; border-left: 4px solid var(--accent-blue);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:14px; align-items:flex-start;">
+                            <div class="stat-icon blue" style="width:40px; height:40px; font-size:18px;">
+                                <i class="fa fa-file-medical-alt"></i>
+                            </div>
+                            <div>
+                                <strong style="color:var(--secondary-blue); font-size:15px;">Diagnostic Report Available: Knee MRI & High-Res X-Ray</strong>
+                                <p style="font-size:13px; color:var(--text-secondary); margin-top:3px;">
+                                    Your post-op imaging report has been uploaded by the Department of Radiodiagnosis, AIIMS New Delhi, and linked to your ABHA health locker.
+                                </p>
+                                <small style="color:var(--text-muted); font-size:11px;">Yesterday at 04:30 PM • Department of Radiology</small>
+                            </div>
+                        </div>
+                        <button class="btn-primary btn-sm" onclick="location.href='Health-Records.html'">View Report</button>
+                    </div>
+                </div>
+
+                <!-- Notif 3 -->
+                <div class="card-box" style="margin-bottom: 14px; border-left: 4px solid var(--accent-green);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:14px; align-items:flex-start;">
+                            <div class="stat-icon green" style="width:40px; height:40px; font-size:18px;">
+                                <i class="fa fa-walking"></i>
+                            </div>
+                            <div>
+                                <strong style="color:var(--secondary-blue); font-size:15px;">Recovery Milestone Achieved: 65% Completed!</strong>
+                                <p style="font-size:13px; color:var(--text-secondary); margin-top:3px;">
+                                    Congratulations! You have maintained an 18-day continuous streak in your prescribed knee rehab exercises. Keep going!
+                                </p>
+                                <small style="color:var(--text-muted); font-size:11px;">2 days ago • MoveOn Rehabilitation Engine</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notif 4 -->
+                <div class="card-box" style="border-left: 4px solid var(--accent-orange);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="display:flex; gap:14px; align-items:flex-start;">
+                            <div class="stat-icon orange" style="width:40px; height:40px; font-size:18px;">
+                                <i class="fa fa-prescription-bottle-alt"></i>
+                            </div>
+                            <div>
+                                <strong style="color:var(--secondary-blue); font-size:15px;">Medication Refill Reminder</strong>
+                                <p style="font-size:13px; color:var(--text-secondary); margin-top:3px;">
+                                    Your prescribed Calcium + Vitamin D3 supplements will run out in 4 days. Please collect your refill from the hospital pharmacy.
+                                </p>
+                                <small style="color:var(--text-muted); font-size:11px;">3 days ago • Hospital Pharmacy Dispatch</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function markAllRead() {
+            document.querySelectorAll('.badge-teal').forEach(b => b.remove());
+            window.showToast("All notifications marked as read.", "success");
+        }
+    </script>
+</body>
+</html>

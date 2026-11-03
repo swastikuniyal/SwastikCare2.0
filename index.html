@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwastikCare | National Integrated Healthcare Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #0d9488 100%);
+            color: white;
+            border: none;
+            margin-bottom: 28px;
+            padding: 44px 36px;
+            border-radius: var(--radius-lg);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            right: -60px;
+            bottom: -60px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            line-height: 1.25;
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 12px;
+        }
+
+        .hero-search-wrapper {
+            background: white;
+            border-radius: var(--radius-full);
+            padding: 6px 8px 6px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow-xl);
+            max-width: 720px;
+            margin-top: 24px;
+            gap: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .hero-banner {
+                padding: 30px 20px;
+            }
+            .hero-search-wrapper {
+                border-radius: var(--radius-md);
+                flex-direction: column;
+                padding: 12px;
+                gap: 12px;
+                align-items: stretch;
+            }
+            .hero-search-wrapper input {
+                width: 100%;
+            }
+            .hero-search-wrapper button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .patient-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .patient-vitals-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .vital-mini-box {
+            text-align: center;
+            background: var(--bg-muted);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            min-width: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .patient-vitals-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .vital-mini-box {
+                flex: 1;
+                min-width: 80px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <!-- Hero Section -->
+        <div class="hero-banner">
+            <div style="max-width: 850px; position: relative; z-index: 2;">
+                <span class="badge badge-teal" style="background: rgba(255,255,255,0.2); color:white; margin-bottom: 14px; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fa fa-shield-alt"></i> India's Top 5 Super-Specialty Hospitals Digital Network
+                </span>
+                <h1 class="hero-title">
+                    Your Health, Our Priority! Direct connection to India's 5 largest hospitals.
+                </h1>
+                <p style="font-size: 15.5px; color: #e2e8f0; line-height: 1.6; max-width: 760px;">
+                    Instant OPD appointments with 25 renowned specialists from AIIMS, Apollo, Max, Fortis & Medanta. Real-time vacant bed & ICU telemetry, and encrypted ABDM digital health records.
+                </p>
+
+                <!-- Search Bar -->
+                <div class="hero-search-wrapper">
+                    <i class="fa fa-search" style="color: var(--primary-teal); font-size: 18px; margin-left: 4px;"></i>
+                    <input type="text" id="globalSearchInput" placeholder="Search hospital, doctor (e.g. Dr. Guleria), or specialty (Heart, Ortho, Diabetes)..." style="flex: 1; border: none; outline: none; font-size: 14.5px; color: #1e293b;" onkeyup="handleGlobalSearch(event)">
+                    <button class="btn-primary" onclick="executeGlobalSearch()" style="border-radius: var(--radius-full); padding: 10px 24px; font-weight:700;">
+                        Search OPD
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Patient Profile Card -->
+        <div id="patientActiveCard" class="card-box" style="margin-bottom: 28px; background: white; border-left: 5px solid var(--primary-teal);">
+            <div class="patient-card-header">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <img id="patAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">
+                    <div>
+                        <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing:0.5px;">Active Patient Profile</div>
+                        <h3 id="patName" style="font-size: 20px; font-weight: 800; color: var(--secondary-blue);">Manish Pandey</h3>
+                        <p id="patCondition" style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">
+                            Post-Op Knee Ligament Surgery Rehab • Primary Hospital: <strong>AIIMS New Delhi</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Patient Vitals Telemetry -->
+                <div class="patient-vitals-group">
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Heart Rate</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-red);"><i class="fa fa-heartbeat"></i> <span id="valHR">72</span> bpm</div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Blood Pressure</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-blue);"><i class="fa fa-tint"></i> <span id="valBP">120/80</span></div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Recovery</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-green);"><i class="fa fa-walking"></i> <span id="valRecovery">65%</span></div>
+                    </div>
+                    <button class="btn-primary" onclick="location.href='Appointment-Booking.html'" style="padding: 10px 18px;">
+                        <i class="fa fa-calendar-plus"></i> Book Doctor
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 Quick Feature Tiles -->
+        <div class="grid-4" style="margin-bottom: 32px;">
+            <div class="card-box" onclick="location.href='Appointment-Booking.html'" style="cursor: pointer; display: flex; align-items: center; gap: 16px;">
+                <div class="stat-icon teal"><i class="fa fa-calendar-check"></i></div>
+                <div>
+                    <h4 style="font-size: 16px; font-weight: 700; color: var(--secondary-blue);">Book Appointment</h4>
+                    <p style="font-size: 12.5px; color: var(--text-secondary);">Choose from 5 hospitals & 25 specialist doctors</p>
+                </div>
+            </div>
+            <div class="card-box" onclick="location.href='Health-Records.html'" style="cursor: pointer; display: flex; align-items: center; gap: 16px;">
+                <div class="stat-icon orange"><i class="fa fa-folder-open"></i></div>
+                <div>
+                    <h4 style="font-size: 16px; font-weight: 700; color: var(--secondary-blue);">Lab Reports & Records</h4>
+                    <p style="font-size: 12.5px; color: var(--text-secondary);">Digital X-Rays, blood tests & e-prescriptions</p>
+                </div>
+            </div>
+            <div class="card-box" onclick="location.href='Talk-To-Doctor.html'" style="cursor: pointer; display: flex; align-items: center; gap: 16px;">
+                <div class="stat-icon green"><i class="fa fa-comment-medical"></i></div>
+                <div>
+                    <h4 style="font-size: 16px; font-weight: 700; color: var(--secondary-blue);">Consult Doctor</h4>
+                    <p style="font-size: 12.5px; color: var(--text-secondary);">Telehealth consultations & HD video calls</p>
+                </div>
+            </div>
+            <div class="card-box" onclick="location.href='Emergency.html'" style="cursor: pointer; display: flex; align-items: center; gap: 16px; border-color: #fecaca; background: #fff5f5;">
+                <div class="stat-icon red"><i class="fa fa-ambulance"></i></div>
+                <div>
+                    <h4 style="font-size: 16px; font-weight: 700; color: #dc2626;">Emergency SOS 108</h4>
+                    <p style="font-size: 12.5px; color: #991b1b;">1-Click instant ambulance dispatch</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: 5 Partner Hospitals -->
+        <div style="margin-bottom: 38px;">
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title"><i class="fa fa-hospital" style="color: var(--primary-teal);"></i> Accredited Network Hospitals</h2>
+                    <p class="page-subtitle">Real-time vacant bed and ICU capacity telemetry across 5 premier Delhi-NCR medical centres</p>
+                </div>
+                <span class="badge badge-teal">5 Hospitals Available</span>
+            </div>
+
+            <div class="grid-5" id="partnerHospitalsGrid">
+                <!-- Rendered by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Section: 25 Specialist Doctors -->
+        <div style="margin-bottom: 38px;">
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title"><i class="fa fa-user-md" style="color: var(--primary-teal);"></i> Senior Specialist Doctors (25 Doctors)</h2>
+                    <p class="page-subtitle">5 senior specialists per hospital conducting daily OPD consultations</p>
+                </div>
+                <!-- Filter Chips -->
+                <div style="display:flex; gap:6px; flex-wrap:wrap;" id="hospFilterChips">
+                    <button class="role-chip active" onclick="filterDoctorsByHosp('ALL', this)">All Doctors (25)</button>
+                    <button class="role-chip" onclick="filterDoctorsByHosp('hosp-1', this)">AIIMS (5)</button>
+                    <button class="role-chip" onclick="filterDoctorsByHosp('hosp-2', this)">Apollo (5)</button>
+                    <button class="role-chip" onclick="filterDoctorsByHosp('hosp-3', this)">Max (5)</button>
+                    <button class="role-chip" onclick="filterDoctorsByHosp('hosp-4', this)">Fortis (5)</button>
+                    <button class="role-chip" onclick="filterDoctorsByHosp('hosp-5', this)">Medanta (5)</button>
+                </div>
+            </div>
+
+            <div class="grid-3" id="homeDoctorsGrid">
+                <!-- Rendered by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Section: Platform Trust Metrics -->
+        <div class="card-box" style="background: var(--bg-muted); border: none; padding: 40px 30px;">
+            <div style="text-align: center; max-width: 720px; margin: 0 auto 32px;">
+                <h3 style="font-size: 24px; font-weight: 800; color: var(--secondary-blue);">National Digital Health Ecosystem</h3>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-top: 6px;">
+                    Built on Ayushman Bharat Digital Mission (ABDM) standards for secure electronic health records and seamless patient-doctor coordination.
+                </p>
+            </div>
+            <div class="grid-4" style="text-align: center;">
+                <div class="card-box" style="background:white;">
+                    <div style="font-size: 34px; font-weight: 800; color: var(--primary-teal);">5</div>
+                    <div style="font-weight: 700; color: var(--secondary-blue); margin-top:4px;">Premier Hospitals</div>
+                    <small style="color: var(--text-muted); font-size:12px;">AIIMS, Apollo, Max, Fortis, Medanta</small>
+                </div>
+                <div class="card-box" style="background:white;">
+                    <div style="font-size: 34px; font-weight: 800; color: var(--accent-blue);">25</div>
+                    <div style="font-weight: 700; color: var(--secondary-blue); margin-top:4px;">Specialist Doctors</div>
+                    <small style="color: var(--text-muted); font-size:12px;">5 verified leaders per hospital</small>
+                </div>
+                <div class="card-box" style="background:white;">
+                    <div style="font-size: 34px; font-weight: 800; color: var(--accent-green);">5,360+</div>
+                    <div style="font-weight: 700; color: var(--secondary-blue); margin-top:4px;">Total Hospital Beds</div>
+                    <small style="color: var(--text-muted); font-size:12px;">Live ICU & ward bed monitoring</small>
+                </div>
+                <div class="card-box" style="background:white;">
+                    <div style="font-size: 34px; font-weight: 800; color: var(--accent-purple);">99.4%</div>
+                    <div style="font-weight: 700; color: var(--secondary-blue); margin-top:4px;">Patient Satisfaction</div>
+                    <small style="color: var(--text-muted); font-size:12px;">Verified clinical reviews & ratings</small>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        let currentHospFilter = 'ALL';
+
+        function renderHomePage() {
+            const data = window.SwastikData.getData();
+            const session = window.SwastikData.getSession();
+
+            // 1. Populate Active Patient Details
+            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+            if (pat) {
+                document.getElementById('patAvatar').src = pat.avatar;
+                document.getElementById('patName').innerText = pat.name;
+                document.getElementById('patCondition').innerHTML = `${pat.condition} • Primary Hospital: <strong>${pat.primaryHospitalName}</strong>`;
+                document.getElementById('valHR').innerText = pat.vitals.heartRate;
+                document.getElementById('valBP').innerText = `${pat.vitals.bpSystolic}/${pat.vitals.bpDiastolic}`;
+                document.getElementById('valRecovery').innerText = `${pat.recoveryProgress}%`;
+            }
+
+            // 2. Render Partner Hospitals Grid
+            const hospGrid = document.getElementById('partnerHospitalsGrid');
+            hospGrid.innerHTML = data.hospitals.map(h => `
+                <div class="hospital-card">
+                    <div>
+                        <div class="hospital-card-top">
+                            <div class="hospital-logo-badge">${h.logo}</div>
+                            <span class="hospital-badge-text">${h.logoBadge}</span>
+                        </div>
+                        <h3 class="hospital-card-title">${h.name}</h3>
+                        <div class="hospital-location"><i class="fa fa-map-marker-alt" style="color:var(--primary-teal);"></i> ${h.location.split(',')[0]}</div>
+                        <div class="hospital-bed-telemetry">
+                            <span><i class="fa fa-bed" style="color:#0d9488;"></i> <strong>${h.bedsAvailable}</strong> Beds Free</span>
+                            <span><i class="fa fa-heartbeat" style="color:#ef4444;"></i> <strong>${h.bedsICU}</strong> ICU</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:12px;">
+                            <span style="color:#f59e0b; font-weight:700;"><i class="fa fa-star"></i> ${h.rating}</span>
+                            <span style="color:var(--text-muted);">${h.reviewCount.toLocaleString()} reviews</span>
+                        </div>
+                        <button class="btn-outline-teal" style="width:100%; font-size:12.5px; padding:8px 0;" onclick="location.href='Appointment-Booking.html?hospId=${h.id}'">
+                            Book Doctor Here
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // 3. Render Specialist Doctors Grid
+            renderFilteredDoctors();
+        }
+
+        function filterDoctorsByHosp(hospId, btn) {
+            currentHospFilter = hospId;
+            document.querySelectorAll('#hospFilterChips .role-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderFilteredDoctors();
+        }
+
+        function renderFilteredDoctors(customList) {
+            const data = window.SwastikData.getData();
+            let docs = customList || data.doctors;
+            if (currentHospFilter !== 'ALL' && !customList) {
+                docs = docs.filter(d => d.hospitalId === currentHospFilter);
+            }
+
+            const docGrid = document.getElementById('homeDoctorsGrid');
+            docGrid.innerHTML = docs.map(d => `
+                <div class="doctor-card">
+                    <div>
+                        <div class="doctor-header">
+                            <img src="${d.avatar}" class="doctor-avatar" alt="${d.name}">
+                            <div class="doctor-info">
+                                <h4>${d.name}</h4>
+                                <div class="doctor-spec">${d.specialty}</div>
+                                <div class="doctor-hosp"><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> ${d.hospitalName}</div>
+                            </div>
+                        </div>
+                        <div class="doctor-meta-grid">
+                            <div class="meta-item">
+                                Experience
+                                <strong>${d.experience}</strong>
+                            </div>
+                            <div class="meta-item">
+                                Fee
+                                <strong>₹${d.consultationFee}</strong>
+                            </div>
+                            <div class="meta-item">
+                                Rating
+                                <strong>⭐ ${d.rating} (${d.reviewCount})</strong>
+                            </div>
+                            <div class="meta-item">
+                                OPD Days
+                                <strong>${d.opdDays.slice(0, 3).join(', ')}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-light); padding-top:12px; gap:8px;">
+                        <button class="btn-secondary btn-sm" style="flex:1;" onclick="location.href='Talk-To-Doctor.html?docId=${d.id}'">
+                            <i class="fa fa-comment"></i> Consult
+                        </button>
+                        <button class="btn-primary btn-sm" style="flex:1;" onclick="location.href='Appointment-Booking.html?docId=${d.id}&hospId=${d.hospitalId}'">
+                            <i class="fa fa-calendar-check"></i> Book OPD
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function executeGlobalSearch() {
+            const query = document.getElementById('globalSearchInput').value.trim().toLowerCase();
+            if (!query) {
+                renderFilteredDoctors();
+                return;
+            }
+            const data = window.SwastikData.getData();
+            const matchedDocs = data.doctors.filter(d => 
+                d.name.toLowerCase().includes(query) ||
+                d.specialty.toLowerCase().includes(query) ||
+                d.hospitalName.toLowerCase().includes(query)
+            );
+            renderFilteredDoctors(matchedDocs);
+            window.showToast(`${matchedDocs.length} doctors found matching "${query}"`, "info");
+        }
+
+        function handleGlobalSearch(e) {
+            if (e.key === "Enter") {
+                executeGlobalSearch();
+            }
+        }
+
+        window.onload = renderHomePage;
+    </script>
+</body>
+</html>

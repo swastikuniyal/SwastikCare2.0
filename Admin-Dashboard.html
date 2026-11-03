@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Console | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-shield-alt" style="color: var(--primary-teal);"></i>
+                    Apex Health Admin Console
+                </h1>
+                <p class="page-subtitle">
+                    Central management for 5 hospitals, 25 senior doctors, patient registry & bed availability.
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="openAddHospitalModal()">
+                    <i class="fa fa-plus-circle"></i> Add New Hospital
+                </button>
+                <button class="btn-secondary" onclick="exportPlatformData()">
+                    <i class="fa fa-file-export"></i> Download Data Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Top 5 KPI Metric Cards -->
+        <div class="grid-5" style="margin-bottom: 24px;">
+            <div class="stat-card">
+                <div class="stat-icon teal"><i class="fa fa-hospital"></i></div>
+                <div class="stat-info">
+                    <h3 id="statHospitals">5</h3>
+                    <p>Affiliated Hospitals</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa fa-user-md"></i></div>
+                <div class="stat-info">
+                    <h3 id="statDoctors">25</h3>
+                    <p>Specialist Doctors</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple"><i class="fa fa-users"></i></div>
+                <div class="stat-info">
+                    <h3 id="statPatients">5</h3>
+                    <p>Registered Patients</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fa fa-calendar-check"></i></div>
+                <div class="stat-info">
+                    <h3 id="statAppointments">5</h3>
+                    <p>Total Bookings</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red"><i class="fa fa-procedures"></i></div>
+                <div class="stat-info">
+                    <h3 id="statBedOccupancy">91.4%</h3>
+                    <p>Bed Occupancy Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchAdminTab('hospitalsTab', this)">
+                <i class="fa fa-hospital"></i> Hospitals (5)
+            </button>
+            <button class="tab-btn" onclick="switchAdminTab('doctorsTab', this)">
+                <i class="fa fa-user-md"></i> Doctor Registry (25)
+            </button>
+            <button class="tab-btn" onclick="switchAdminTab('patientsTab', this)">
+                <i class="fa fa-user-injured"></i> Patient Case Files (5)
+            </button>
+            <button class="tab-btn" onclick="switchAdminTab('appointmentsTab', this)">
+                <i class="fa fa-calendar-alt"></i> Booking Register
+            </button>
+            <button class="tab-btn" onclick="switchAdminTab('emergencyTab', this)">
+                <i class="fa fa-ambulance"></i> Live 108 Ambulance
+            </button>
+        </div>
+
+        <!-- Tab 1: Hospitals -->
+        <section id="hospitalsTab" class="tab-pane">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-building" style="color:var(--primary-teal);"></i> 5 Network Hospitals</h3>
+                    <span class="badge badge-teal">5 Hospitals Active</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Hospital Name</th>
+                                <th>Location & Phone</th>
+                                <th>Total Beds</th>
+                                <th>Available / ICU</th>
+                                <th>Rating</th>
+                                <th>Accreditation</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hospitalsTableBody">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: Doctors Registry -->
+        <section id="doctorsTab" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-stethoscope" style="color:var(--primary-teal);"></i> 25 Senior Doctors List</h3>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="doctorHospitalFilter" class="form-control" style="width: auto; padding: 6px 12px;" onchange="filterDoctors()">
+                            <option value="ALL">All 5 Hospitals</option>
+                            <option value="hosp-1">AIIMS New Delhi</option>
+                            <option value="hosp-2">Apollo Hospital</option>
+                            <option value="hosp-3">Max Saket</option>
+                            <option value="hosp-4">Fortis Healthcare</option>
+                            <option value="hosp-5">Medanta The Medicity</option>
+                        </select>
+                        <input type="text" id="doctorSearchInput" class="form-control" placeholder="Search doctor or department..." style="width: 220px; padding: 6px 12px;" onkeyup="filterDoctors()">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Hospital</th>
+                                <th>Specialty & Degree</th>
+                                <th>Experience</th>
+                                <th>OPD Schedule</th>
+                                <th>Fee</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorsTableBody">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 3: Patient Registry -->
+        <section id="patientsTab" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-users" style="color:var(--primary-teal);"></i> Registered Patient Case Master</h3>
+                    <span class="badge badge-blue">5 Active Patients</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID & Name</th>
+                                <th>Age / Gender / Blood</th>
+                                <th>Primary Hospital</th>
+                                <th>Condition</th>
+                                <th>Emergency Contact</th>
+                                <th>Vitals (HR / BP)</th>
+                                <th>Recovery</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 4: Appointments -->
+        <section id="appointmentsTab" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-calendar-check" style="color:var(--primary-teal);"></i> Central OPD Booking Register</h3>
+                    <button class="btn-primary btn-sm" onclick="location.href='Appointment-Booking.html'">
+                        <i class="fa fa-plus"></i> New Booking
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Patient Name</th>
+                                <th>Hospital & Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Consultation Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 5: Emergency 108 -->
+        <section id="emergencyTab" class="tab-pane" style="display: none;">
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-ambulance" style="color:#ef4444;"></i> Active 108 Ambulance Network</h3>
+                    <span class="badge badge-red"><i class="fa fa-satellite-dish"></i> Live GPS Tracking</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: var(--radius-md); padding: 20px;">
+                        <h4 style="color: #b91c1c; margin-bottom: 10px;"><i class="fa fa-shield-virus"></i> Emergency Response Protocol</h4>
+                        <p style="font-size: 13.5px; color: #7f1d1d; line-height: 1.6;">
+                            All 5 hospitals are directly connected to the central 108 ambulance control room. In the event of an accident or cardiac arrest, an Advanced Life Support (ALS) ambulance is dispatched within 6 minutes.
+                        </p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <span class="badge badge-teal">AIIMS Trauma: 28 ICU Beds Ready</span>
+                            <span class="badge badge-blue">Apollo Emergency: 19 ICU Beds Ready</span>
+                            <span class="badge badge-green">Fortis FMRI: 12 ICU Beds Ready</span>
+                        </div>
+                    </div>
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 20px;">
+                        <h4 style="color: var(--secondary-blue); margin-bottom: 10px;"><i class="fa fa-history"></i> Recent Emergency Alerts</h4>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                            <div>• <strong>Manish Pandey:</strong> SOS test triggered. AIIMS ambulance team alerted. Status: Safe.</div>
+                            <div>• <strong>Amit Kumar:</strong> Breathing emergency alert. Admitted at Fortis Gurugram. Status: Stable.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Add New Hospital -->
+    <div id="addHospitalModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close-btn" onclick="closeAddHospitalModal()">&times;</button>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--secondary-blue);">
+                <i class="fa fa-hospital" style="color: var(--primary-teal);"></i> Affiliate New Hospital
+            </h3>
+            <form onsubmit="handleSaveHospital(event)">
+                <div class="form-group">
+                    <label class="form-label">Hospital Name</label>
+                    <input type="text" id="newHospName" class="form-control" required placeholder="e.g. Sir Ganga Ram Hospital">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Short Code</label>
+                        <input type="text" id="newHospCode" class="form-control" required placeholder="e.g. sgrh">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Total Beds</label>
+                        <input type="number" id="newHospBeds" class="form-control" required placeholder="e.g. 650">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address & City</label>
+                    <input type="text" id="newHospLocation" class="form-control" required placeholder="Rajinder Nagar, New Delhi">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Helpline Phone</label>
+                        <input type="text" id="newHospPhone" class="form-control" required placeholder="+91 11 4225 4000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Accreditation</label>
+                        <input type="text" id="newHospAccred" class="form-control" placeholder="NABH | JCI">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                    <i class="fa fa-check-circle"></i> Add to SwastikCare Network
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function switchAdminTab(tabId, btn) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            btn.classList.add('active');
+        }
+
+        function renderAdminDashboard() {
+            const data = window.SwastikData.getData();
+
+            document.getElementById('statHospitals').innerText = data.hospitals.length;
+            document.getElementById('statDoctors').innerText = data.doctors.length;
+            document.getElementById('statPatients').innerText = data.patients.length;
+            document.getElementById('statAppointments').innerText = data.appointments.length;
+
+            const totalBeds = data.hospitals.reduce((acc, h) => acc + (h.bedsTotal || 0), 0);
+            const occBeds = data.hospitals.reduce((acc, h) => acc + (h.bedsOccupied || 0), 0);
+            const occPct = totalBeds > 0 ? ((occBeds / totalBeds) * 100).toFixed(1) : "0.0";
+            document.getElementById('statBedOccupancy').innerText = occPct + "%";
+
+            // Hospitals table
+            const hospTbody = document.getElementById('hospitalsTableBody');
+            hospTbody.innerHTML = data.hospitals.map(h => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:24px;">${h.logo || '🏥'}</span>
+                            <div>
+                                <strong style="font-size:14px; color:var(--secondary-blue);">${h.name}</strong>
+                                <div style="font-size:11.5px; color:var(--text-muted);">${h.subtitle || ''}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size:13px;">${h.location}</div>
+                        <small style="color:var(--text-muted);"><i class="fa fa-phone"></i> ${h.phone}</small>
+                    </td>
+                    <td><strong>${h.bedsTotal.toLocaleString()} Beds</strong></td>
+                    <td>
+                        <span class="badge badge-teal">${h.bedsAvailable} Available</span>
+                        <span class="badge badge-orange">${h.bedsICU} ICU</span>
+                    </td>
+                    <td>
+                        <div style="color:#f59e0b; font-weight:700;"><i class="fa fa-star"></i> ${h.rating}</div>
+                        <small style="font-size:11px; color:var(--text-muted);">(${h.reviewCount.toLocaleString()} reviews)</small>
+                    </td>
+                    <td><span class="badge badge-blue">${h.accreditation.split('|')[0]}</span></td>
+                    <td>
+                        <button class="btn-secondary btn-sm" onclick="window.SwastikData.switchPersona('hospital', '${h.id}')" title="Open Hospital Staff Portal">
+                            <i class="fa fa-door-open"></i> Hospital Portal
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Doctors table
+            renderDoctorsTable(data.doctors);
+
+            // Patients table
+            const patTbody = document.getElementById('patientsTableBody');
+            patTbody.innerHTML = data.patients.map(p => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${p.avatar}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                            <div>
+                                <strong style="font-size:14px; color:var(--secondary-blue);">${p.name}</strong>
+                                <div style="font-size:11.5px; color:var(--text-muted);">${p.id} • ${p.phone}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${p.age} yrs • ${p.gender} • <strong style="color:var(--accent-red);">${p.bloodGroup}</strong></td>
+                    <td><span class="badge badge-teal">${p.primaryHospitalName}</span></td>
+                    <td><div style="font-size:13px; max-width:260px;">${p.condition}</div></td>
+                    <td>
+                        <div style="font-size:12.5px;">${p.emergencyContact.name}</div>
+                        <small style="color:var(--text-muted);">${p.emergencyContact.phone}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-red"><i class="fa fa-heart"></i> ${p.vitals.heartRate} bpm</span>
+                        <span class="badge badge-blue"><i class="fa fa-tint"></i> ${p.vitals.bpSystolic}/${p.vitals.bpDiastolic}</span>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div style="background:#e2e8f0; border-radius:10px; width:60px; height:7px; overflow:hidden;">
+                                <div style="background:var(--primary-teal); width:${p.recoveryProgress}%; height:100%;"></div>
+                            </div>
+                            <span style="font-size:12px; font-weight:700;">${p.recoveryProgress}%</span>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Appointments table
+            renderAppointmentsTable(data.appointments);
+        }
+
+        function renderDoctorsTable(doctors) {
+            const docTbody = document.getElementById('doctorsTableBody');
+            docTbody.innerHTML = doctors.map(d => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${d.avatar}" style="width:40px; height:40px; border-radius:12px; object-fit:cover;">
+                            <div>
+                                <strong style="font-size:14px; color:var(--secondary-blue);">${d.name}</strong>
+                                <div style="font-size:11.5px; color:var(--text-muted);">${d.designation}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-blue">${d.hospitalName}</span></td>
+                    <td>
+                        <div style="font-weight:600; color:var(--primary-teal);">${d.specialty}</div>
+                        <small style="color:var(--text-muted);">${d.qualification}</small>
+                    </td>
+                    <td><strong>${d.experience}</strong></td>
+                    <td>
+                        <div style="font-size:12.5px;">${d.opdDays.join(', ')}</div>
+                        <small style="color:var(--text-muted);">${d.opdTime}</small>
+                    </td>
+                    <td><strong style="color:var(--secondary-blue);">₹${d.consultationFee}</strong></td>
+                    <td>
+                        <span class="badge ${d.isOnline ? 'badge-green' : 'badge-orange'}">
+                            ${d.isOnline ? '• In OPD' : '• On Leave'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterDoctors() {
+            const data = window.SwastikData.getData();
+            const hospFilter = document.getElementById('doctorHospitalFilter').value;
+            const search = document.getElementById('doctorSearchInput').value.toLowerCase();
+
+            let list = data.doctors;
+            if (hospFilter !== 'ALL') {
+                list = list.filter(d => d.hospitalId === hospFilter);
+            }
+            if (search.trim()) {
+                list = list.filter(d => d.name.toLowerCase().includes(search) || d.specialty.toLowerCase().includes(search) || d.hospitalName.toLowerCase().includes(search));
+            }
+            renderDoctorsTable(list);
+        }
+
+        function renderAppointmentsTable(apts) {
+            const tbody = document.getElementById('appointmentsTableBody');
+            tbody.innerHTML = apts.map(a => `
+                <tr>
+                    <td><strong>${a.id}</strong></td>
+                    <td>
+                        <strong style="color:var(--secondary-blue);">${a.patientName}</strong>
+                        <div style="font-size:11px; color:var(--text-muted);">${a.patientPhone || ''}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight:600;">${a.doctorName}</div>
+                        <small style="color:var(--text-muted);">${a.hospitalName}</small>
+                    </td>
+                    <td>
+                        <div>${a.date}</div>
+                        <small style="color:var(--text-muted);">${a.time}</small>
+                    </td>
+                    <td><span class="badge badge-purple">${a.type}</span></td>
+                    <td>
+                        <span class="badge ${a.status.includes('Confirmed') ? 'badge-green' : a.status.includes('Completed') ? 'badge-teal' : 'badge-orange'}">
+                            ${a.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:6px;">
+                            ${!a.status.includes('Completed') ? `
+                                <button class="btn-primary btn-sm" onclick="handleAptStatus('${a.id}', 'Completed')">Complete</button>
+                                <button class="btn-secondary btn-sm" onclick="handleAptStatus('${a.id}', 'Cancelled')">Cancel</button>
+                            ` : `<span style="font-size:12px; color:var(--text-muted);">Past Record</span>`}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleAptStatus(aptId, status) {
+            window.SwastikData.updateAppointmentStatus(aptId, status);
+            window.showToast(`Appointment ${aptId} status updated!`, "success");
+            renderAdminDashboard();
+        }
+
+        function openAddHospitalModal() {
+            document.getElementById('addHospitalModal').classList.add('active');
+        }
+
+        function closeAddHospitalModal() {
+            document.getElementById('addHospitalModal').classList.remove('active');
+        }
+
+        function handleSaveHospital(e) {
+            e.preventDefault();
+            const data = window.SwastikData.getData();
+            const newHosp = {
+                id: "hosp-" + (data.hospitals.length + 1),
+                code: document.getElementById('newHospCode').value.trim().toLowerCase(),
+                name: document.getElementById('newHospName').value.trim(),
+                subtitle: "Super Speciality Hospital",
+                type: "Hospital",
+                logo: "🏥",
+                logoBadge: document.getElementById('newHospCode').value.trim().toUpperCase(),
+                accentColor: "#0d9488",
+                location: document.getElementById('newHospLocation').value.trim(),
+                phone: document.getElementById('newHospPhone').value.trim(),
+                emergencyPhone: "108 / +91 11 4000 0000",
+                email: "admin@" + document.getElementById('newHospCode').value.trim().toLowerCase() + ".org",
+                rating: 4.8,
+                reviewCount: 120,
+                bedsTotal: parseInt(document.getElementById('newHospBeds').value) || 500,
+                bedsOccupied: Math.floor((parseInt(document.getElementById('newHospBeds').value) || 500) * 0.85),
+                bedsAvailable: Math.floor((parseInt(document.getElementById('newHospBeds').value) || 500) * 0.15),
+                bedsICU: 20,
+                established: 2026,
+                accreditation: document.getElementById('newHospAccred').value.trim() || "NABH Certified",
+                description: "New hospital affiliated to the SwastikCare digital network.",
+                specialties: ["General Medicine", "Cardiology", "Surgery"]
+            };
+
+            data.hospitals.push(newHosp);
+            window.SwastikData.saveData(data);
+            closeAddHospitalModal();
+            window.showToast(`New hospital "${newHosp.name}" added!`, "success");
+            renderAdminDashboard();
+        }
+
+        function exportPlatformData() {
+            const data = window.SwastikData.getData();
+            const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", jsonStr);
+            dlAnchor.setAttribute("download", "swastikcare_audit.json");
+            dlAnchor.click();
+            window.showToast("Full health data report downloaded!", "success");
+        }
+
+        window.onload = renderAdminDashboard;
+    </script>
+</body>
+</html>

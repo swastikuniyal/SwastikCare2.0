@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Health Locker & Reports | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-folder-open" style="color: var(--primary-teal);"></i>
+                    ABHA (ABDM) Digital Health Locker
+                </h1>
+                <p class="page-subtitle">
+                    Securely linked Electronic Health Records (EHR) from AIIMS, Apollo, Max, Fortis & Medanta.
+                </p>
+            </div>
+            <div>
+                <button class="btn-primary" onclick="openUploadModal()">
+                    <i class="fa fa-cloud-upload-alt"></i> Upload New Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div style="display:flex; gap:8px; margin-bottom: 24px; flex-wrap:wrap;">
+            <button class="role-chip active" onclick="filterRecords('ALL', this)">All Documents</button>
+            <button class="role-chip" onclick="filterRecords('X-Ray & Scans', this)">X-Ray & Scans</button>
+            <button class="role-chip" onclick="filterRecords('Blood & Urine Tests', this)">Blood & Urine Tests</button>
+            <button class="role-chip" onclick="filterRecords('Doctor Prescription (Rx)', this)">Prescription (Rx)</button>
+            <button class="role-chip" onclick="filterRecords('Heart Checkup', this)">Heart Checkup Report</button>
+        </div>
+
+        <!-- Records Table -->
+        <div class="card-box">
+            <div class="card-header">
+                <h3><i class="fa fa-file-medical" style="color:var(--primary-teal);"></i> Medical Records Archive</h3>
+                <span id="recordCountBadge" class="badge badge-teal">5 reports stored</span>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Document Title</th>
+                            <th>Category</th>
+                            <th>Hospital & Doctor</th>
+                            <th>Issue Date</th>
+                            <th>Size</th>
+                            <th>Verification</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Upload New Report -->
+    <div id="uploadModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close-btn" onclick="closeUploadModal()">&times;</button>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--secondary-blue);">
+                <i class="fa fa-upload" style="color: var(--primary-teal);"></i> Upload New Medical Document
+            </h3>
+            <form onsubmit="handleUploadSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Document Name</label>
+                    <input type="text" id="recTitleInput" class="form-control" required placeholder="e.g. Abdominal Ultrasound Report">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="recCategoryInput" class="form-control">
+                            <option value="Blood & Urine Tests">Blood & Urine Tests</option>
+                            <option value="Doctor Prescription (Rx)">Prescription (Rx)</option>
+                            <option value="X-Ray & Scans">X-Ray & Scans</option>
+                            <option value="Heart Checkup">Heart Checkup</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hospital</label>
+                        <select id="recHospitalInput" class="form-control">
+                            <option value="AIIMS New Delhi">AIIMS New Delhi</option>
+                            <option value="Indraprastha Apollo">Indraprastha Apollo</option>
+                            <option value="Max Super Speciality">Max Super Speciality</option>
+                            <option value="Fortis Memorial">Fortis Memorial</option>
+                            <option value="Medanta The Medicity">Medanta The Medicity</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Doctor's Notes / Summary</label>
+                    <textarea id="recSummaryInput" class="form-control" rows="2" placeholder="Briefly describe the test findings..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select File (PDF, PNG, JPG)</label>
+                    <input type="file" id="fileSelector" class="form-control" accept=".pdf,.png,.jpg,.jpeg">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                    <i class="fa fa-save"></i> Save to Digital Health Locker
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Preview Report -->
+    <div id="previewModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 680px;">
+            <button class="modal-close-btn" onclick="closePreviewModal()">&times;</button>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 38px; color: var(--primary-teal); margin-bottom: 8px;"><i class="fa fa-file-medical-alt"></i></div>
+                <h3 id="prevTitle" style="font-size: 20px; font-weight: 700; color: var(--secondary-blue);">Document Name</h3>
+                <div id="prevSub" style="font-size: 13px; color: var(--text-secondary);">AIIMS New Delhi • 18 October 2026</div>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px;">
+                <h4 style="font-size: 14px; color: var(--secondary-blue); margin-bottom: 8px;">Clinical Summary:</h4>
+                <p id="prevSummary" style="font-size: 13.5px; line-height: 1.6; color: var(--text-primary);">
+                    Report details.
+                </p>
+                <div style="margin-top: 15px; font-size: 12px; color: var(--text-muted);">
+                    Digitally verified under Ayushman Bharat (ABDM) Digital Health Standards.
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn-primary" onclick="downloadMock()">
+                    <i class="fa fa-download"></i> Download Certified Copy
+                </button>
+                <button class="btn-secondary" onclick="closePreviewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        let currentFilter = 'ALL';
+
+        function renderHealthRecords() {
+            const data = window.SwastikData.getData();
+            let records = data.records;
+
+            if (currentFilter !== 'ALL') {
+                records = records.filter(r => r.category === currentFilter);
+            }
+
+            document.getElementById('recordCountBadge').innerText = `${records.length} reports`;
+
+            const tbody = document.getElementById('recordsTableBody');
+            tbody.innerHTML = records.map(r => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="stat-icon teal" style="width:40px; height:40px; font-size:18px;">
+                                <i class="fa ${r.category.includes('Scan') || r.category.includes('X-Ray') ? 'fa-x-ray' : r.category.includes('Prescription') ? 'fa-prescription' : 'fa-file-alt'}"></i>
+                            </div>
+                            <div>
+                                <strong style="color:var(--secondary-blue);">${r.title}</strong>
+                                <div style="font-size:11px; color:var(--text-muted);">${r.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-teal">${r.category}</span></td>
+                    <td>
+                        <div>${r.hospital}</div>
+                        <small style="color:var(--text-muted);">${r.doctor || ''}</small>
+                    </td>
+                    <td>${r.date}</td>
+                    <td>${r.size || '1.2 MB'}</td>
+                    <td><span class="badge badge-green"><i class="fa fa-shield-alt"></i> ${r.status || 'Verified'}</span></td>
+                    <td>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn-primary btn-sm" onclick="openPreview('${r.id}')"><i class="fa fa-eye"></i> View</button>
+                            <button class="btn-secondary btn-sm" onclick="downloadMock()"><i class="fa fa-download"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterRecords(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.role-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderHealthRecords();
+        }
+
+        function openUploadModal() { document.getElementById('uploadModal').classList.add('active'); }
+        function closeUploadModal() { document.getElementById('uploadModal').classList.remove('active'); }
+
+        function handleUploadSubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('recTitleInput').value.trim();
+            const cat = document.getElementById('recCategoryInput').value;
+            const hosp = document.getElementById('recHospitalInput').value;
+            const sum = document.getElementById('recSummaryInput').value.trim();
+
+            const newRec = {
+                title: title, category: cat, hospital: hosp,
+                summary: sum || "Report uploaded by patient to health locker.",
+                size: "2.1 MB", status: "Uploaded"
+            };
+
+            window.SwastikData.addRecord(newRec);
+            closeUploadModal();
+            window.showToast("Test report saved to your Digital Health Locker!", "success");
+            renderHealthRecords();
+        }
+
+        function openPreview(id) {
+            const data = window.SwastikData.getData();
+            const rec = data.records.find(r => r.id === id);
+            if (!rec) return;
+
+            document.getElementById('prevTitle').innerText = rec.title;
+            document.getElementById('prevSub').innerText = `${rec.hospital} • Issued: ${rec.date}`;
+            document.getElementById('prevSummary').innerText = rec.summary || "No special remarks.";
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        function closePreviewModal() { document.getElementById('previewModal').classList.remove('active'); }
+
+        function downloadMock() {
+            window.showToast("Downloading certified report...", "success");
+        }
+
+        window.onload = renderHealthRecords;
+    </script>
+</body>
+</html>

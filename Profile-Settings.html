@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profile & ABHA Settings | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-layout-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 900px) {
+            .profile-layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-user-cog" style="color: var(--primary-teal);"></i>
+                    Patient Profile & ABHA Identity
+                </h1>
+                <p class="page-subtitle">
+                    Manage your personal medical profile, primary healthcare provider, and In Case of Emergency (ICE) contacts.
+                </p>
+            </div>
+            <div>
+                <button class="btn-secondary" onclick="window.SwastikData.clearSession(); location.href='Login.html';">
+                    <i class="fa fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-layout-grid">
+            <!-- Left: Profile Summary Card & ABHA Card -->
+            <div>
+                <div class="card-box" style="text-align: center; margin-bottom: 24px;">
+                    <img id="profAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-light); margin: 0 auto 15px;">
+                    <h3 id="profNameTitle" style="font-size: 20px; font-weight: 700; color: var(--secondary-blue);">Manish Pandey</h3>
+                    <p id="profIdTitle" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">SC-PAT-101 • Ayushman Bharat Linked</p>
+                    <span class="badge badge-teal"><i class="fa fa-check-circle"></i> Verified Patient Identity</span>
+                </div>
+
+                <!-- Digital ABHA Card -->
+                <div class="card-box" style="background: linear-gradient(135deg, #0f172a, #0d9488); color: white; border: none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <span style="font-size: 13px; font-weight: 800; letter-spacing: 1px;"><i class="fa fa-id-card"></i> ABHA DIGITAL HEALTH CARD</span>
+                        <span style="font-size: 11px; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 4px;">Govt. of India</span>
+                    </div>
+                    <div style="font-size: 18px; font-family: monospace; letter-spacing: 2px; margin-bottom: 15px;">
+                        91-4402-8819-2041
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size: 12px; color: #e2e8f0;">
+                        <div>
+                            <div>Name: <strong id="abhaCardName">Manish Pandey</strong></div>
+                            <div>Gender / YOB: Male / 1998</div>
+                        </div>
+                        <div style="font-size: 28px;">
+                            <i class="fa fa-qrcode"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Editable Profile Settings Form -->
+            <div>
+                <div class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa fa-edit" style="color:var(--primary-teal);"></i> Personal & Clinical Information</h3>
+                        <span class="badge badge-blue">Encrypted EHR</span>
+                    </div>
+
+                    <form onsubmit="handleSaveProfile(event)">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Full Legal Name</label>
+                                <input type="text" id="inFullName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mobile Phone Number</label>
+                                <input type="text" id="inPhone" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="grid-3">
+                            <div class="form-group">
+                                <label class="form-label">Age (Years)</label>
+                                <input type="number" id="inAge" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select id="inGender" class="form-control">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Blood Group</label>
+                                <select id="inBlood" class="form-control">
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="inEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Primary Care Hospital</label>
+                                <select id="inPrimaryHosp" class="form-control">
+                                    <option value="hosp-1">AIIMS New Delhi</option>
+                                    <option value="hosp-2">Indraprastha Apollo Hospitals</option>
+                                    <option value="hosp-3">Max Super Speciality Hospital (Saket)</option>
+                                    <option value="hosp-4">Fortis Memorial Research Institute (FMRI)</option>
+                                    <option value="hosp-5">Medanta - The Medicity</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Residential Address</label>
+                            <input type="text" id="inAddress" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Primary Medical Condition / Diagnosis</label>
+                            <input type="text" id="inCondition" class="form-control">
+                        </div>
+
+                        <!-- In Case of Emergency (ICE) -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); padding: 16px; margin: 20px 0;">
+                            <h4 style="font-size: 14px; color: var(--secondary-blue); margin-bottom: 12px;">
+                                <i class="fa fa-phone-square" style="color:#ef4444;"></i> In Case of Emergency (ICE) Contact
+                            </h4>
+                            <div class="grid-2">
+                                <div class="form-group">
+                                    <label class="form-label">Emergency Contact Person & Relation</label>
+                                    <input type="text" id="inIceName" class="form-control" placeholder="e.g. Ramesh Pandey (Father)">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Emergency Mobile Number</label>
+                                    <input type="text" id="inIcePhone" class="form-control" placeholder="+91 98111 00223">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 28px;">
+                                <i class="fa fa-save"></i> Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function loadProfile() {
+            const data = window.SwastikData.getData();
+            const session = window.SwastikData.getSession();
+            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+
+            if (pat) {
+                document.getElementById('profAvatar').src = pat.avatar;
+                document.getElementById('profNameTitle').innerText = pat.name;
+                document.getElementById('profIdTitle').innerText = `${pat.id} • Ayushman Bharat Linked`;
+                document.getElementById('abhaCardName').innerText = pat.name;
+
+                document.getElementById('inFullName').value = pat.name;
+                document.getElementById('inPhone').value = pat.phone;
+                document.getElementById('inAge').value = pat.age;
+                document.getElementById('inGender').value = pat.gender === 'Female' ? 'Female' : 'Male';
+                document.getElementById('inBlood').value = pat.bloodGroup;
+                document.getElementById('inEmail').value = pat.email;
+                document.getElementById('inPrimaryHosp').value = pat.primaryHospitalId || "hosp-1";
+                document.getElementById('inAddress').value = pat.address || "";
+                document.getElementById('inCondition').value = pat.condition || "";
+                if (pat.emergencyContact) {
+                    document.getElementById('inIceName').value = pat.emergencyContact.name;
+                    document.getElementById('inIcePhone').value = pat.emergencyContact.phone;
+                }
+            }
+        }
+
+        function handleSaveProfile(e) {
+            e.preventDefault();
+            const data = window.SwastikData.getData();
+            const session = window.SwastikData.getSession();
+            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+
+            pat.name = document.getElementById('inFullName').value.trim();
+            pat.phone = document.getElementById('inPhone').value.trim();
+            pat.age = parseInt(document.getElementById('inAge').value);
+            pat.gender = document.getElementById('inGender').value;
+            pat.bloodGroup = document.getElementById('inBlood').value;
+            pat.email = document.getElementById('inEmail').value.trim();
+            pat.primaryHospitalId = document.getElementById('inPrimaryHosp').value;
+            const hospObj = data.hospitals.find(h => h.id === pat.primaryHospitalId);
+            pat.primaryHospitalName = hospObj ? hospObj.name : "AIIMS New Delhi";
+            pat.address = document.getElementById('inAddress').value.trim();
+            pat.condition = document.getElementById('inCondition').value.trim();
+            pat.emergencyContact = {
+                name: document.getElementById('inIceName').value.trim(),
+                phone: document.getElementById('inIcePhone').value.trim(),
+                relation: "Emergency Contact"
+            };
+
+            window.SwastikData.saveData(data);
+            window.SwastikData.setSession({
+                ...session,
+                displayName: pat.name
+            });
+
+            loadProfile();
+            window.showToast("Profile & ABHA health record updated successfully!", "success");
+        }
+
+        window.onload = loadProfile;
+    </script>
+</body>
+</html>

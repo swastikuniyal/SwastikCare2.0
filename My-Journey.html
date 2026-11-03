@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoveOn Recovery Journey | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .circular-progress {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: radial-gradient(closest-side, white 76%, transparent 77% 100%),
+                        conic-gradient(var(--primary-teal) 65%, #e2e8f0 0);
+            margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: 800; color: var(--secondary-blue);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .timeline { position: relative; padding-left: 36px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 12px; top: 10px; bottom: 10px;
+            width: 3px; background: var(--border-color);
+        }
+
+        .milestone { position: relative; margin-bottom: 28px; }
+        .milestone-dot {
+            width: 26px; height: 26px; border-radius: 50%;
+            position: absolute; left: -36px; top: 2px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; background: white;
+            border: 3px solid var(--border-color); color: var(--text-muted); z-index: 2;
+        }
+
+        .milestone.completed .milestone-dot { background: var(--accent-green); border-color: var(--accent-green); color: white; }
+        .milestone.active .milestone-dot { background: var(--primary-teal); border-color: var(--primary-teal); color: white; box-shadow: 0 0 10px rgba(13, 148, 136, 0.4); }
+
+        .milestone-card {
+            background: white; border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); padding: 18px 22px; box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-walking" style="color: var(--primary-teal);"></i>
+                    MoveOn Health Recovery Journey
+                </h1>
+                <p class="page-subtitle">
+                    Personalised physiotherapy roadmap prepared by Dr. Rajesh Malhotra (AIIMS) & Dr. Shalih Kapoor (Max).
+                </p>
+            </div>
+            <div>
+                <button class="btn-primary" onclick="markTodayTaskComplete()">
+                    <i class="fa fa-check-circle"></i> Log Today's Exercise
+                </button>
+            </div>
+        </div>
+
+        <div class="grid-12">
+            <!-- Left: Progress Gauge -->
+            <div style="grid-column: span 4;">
+                <div class="card-box" style="text-align: center; margin-bottom: 20px;">
+                    <div id="progRing" class="circular-progress">
+                        <span id="pctVal">65%</span>
+                    </div>
+                    <h3 style="font-size: 18px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 4px;">Recovery Completed</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">Estimated full recovery: 24 days</p>
+
+                    <div style="background: var(--bg-muted); padding: 14px; border-radius: var(--radius-sm); text-align: left; font-size: 13px; line-height: 1.8;">
+                        <div><strong>Daily Exercise Streak:</strong> 🔥 18 days in a row</div>
+                        <div><strong>Recommended Physio:</strong> 45 min/day</div>
+                        <div><strong>Next Doctor Review:</strong> 02 November, 2026</div>
+                    </div>
+                </div>
+
+                <div class="card-box">
+                    <h4 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 12px;">Physiotherapy Supervisor</h4>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80" style="width:48px; height:48px; border-radius:12px; object-fit:cover;">
+                        <div>
+                            <strong style="color:var(--secondary-blue);">Dr. Shalih Kapoor</strong>
+                            <div style="font-size:12px; color:var(--primary-teal);">Sports Rehab • Max Super Speciality</div>
+                        </div>
+                    </div>
+                    <button class="btn-outline-teal btn-sm" style="width:100%; margin-top:14px;" onclick="location.href='Talk-To-Doctor.html'">
+                        <i class="fa fa-comment"></i> Talk to Doctor
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Milestones Timeline -->
+            <div style="grid-column: span 8;">
+                <div class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa fa-tasks" style="color:var(--primary-teal);"></i> Recovery Milestones Roadmap</h3>
+                        <span class="badge badge-teal">Phase 3: Strength & Balance</span>
+                    </div>
+
+                    <div class="timeline">
+                        <!-- Milestone 1 -->
+                        <div class="milestone completed">
+                            <div class="milestone-dot"><i class="fa fa-check"></i></div>
+                            <div class="milestone-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <strong style="font-size: 15px; color: var(--secondary-blue);">Phase 1: Post-Op Swelling Control</strong>
+                                    <span class="badge badge-green">Completed</span>
+                                </div>
+                                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                                    Cryotherapy (ice pack) and range-of-motion exercises (0° to 90°).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 2 -->
+                        <div class="milestone completed">
+                            <div class="milestone-dot"><i class="fa fa-check"></i></div>
+                            <div class="milestone-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <strong style="font-size: 15px; color: var(--secondary-blue);">Phase 2: Weight-Bearing & Walking Practice</strong>
+                                    <span class="badge badge-green">Completed</span>
+                                </div>
+                                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                                    Crutch-free walking practice, stationary cycling, and quadriceps strengthening.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 3 (Active) -->
+                        <div class="milestone active">
+                            <div class="milestone-dot"><i class="fa fa-spinner fa-spin"></i></div>
+                            <div class="milestone-card" style="border-left: 4px solid var(--primary-teal);">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <strong style="font-size: 15px; color: var(--primary-teal);">Phase 3: Kinetic Strength & Balance</strong>
+                                    <span class="badge badge-teal">Current Phase (18/30 days)</span>
+                                </div>
+                                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">
+                                    Hamstring curls, wobble board balance drills, and resistance band exercises.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 4 (Locked) -->
+                        <div class="milestone">
+                            <div class="milestone-dot"><i class="fa fa-lock"></i></div>
+                            <div class="milestone-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <strong style="font-size: 15px; color: var(--text-muted);">Phase 4: Full Return to Jogging & Agility</strong>
+                                    <span class="badge" style="background:#e2e8f0; color:#64748b;">Upcoming</span>
+                                </div>
+                                <p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">
+                                    Jump balance tests, multi-directional agility drills, and full return to sport.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function markTodayTaskComplete() {
+            const data = window.SwastikData.getData();
+            const session = window.SwastikData.getSession();
+            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+
+            pat.recoveryProgress = Math.min(100, pat.recoveryProgress + 2);
+            window.SwastikData.saveData(data);
+
+            document.getElementById('pctVal').innerText = `${pat.recoveryProgress}%`;
+            document.getElementById('progRing').style.background = `radial-gradient(closest-side, white 76%, transparent 77% 100%), conic-gradient(var(--primary-teal) ${pat.recoveryProgress}%, #e2e8f0 0)`;
+
+            window.showToast("Today's rehabilitation exercise logged! Recovery +2%", "success");
+        }
+
+        window.onload = function () {
+            const data = window.SwastikData.getData();
+            const session = window.SwastikData.getSession();
+            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+            if (pat) {
+                document.getElementById('pctVal').innerText = `${pat.recoveryProgress}%`;
+                document.getElementById('progRing').style.background = `radial-gradient(closest-side, white 76%, transparent 77% 100%), conic-gradient(var(--primary-teal) ${pat.recoveryProgress}%, #e2e8f0 0)`;
+            }
+        };
+    </script>
+</body>
+</html>

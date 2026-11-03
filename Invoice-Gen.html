@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing & Invoices | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <i class="fa fa-file-invoice-dollar" style="color: var(--primary-teal);"></i>
+                    Hospital Billing & Digital Invoices
+                </h1>
+                <p class="page-subtitle">
+                    GST-compliant treatment receipts, health insurance claims, and instant digital payment slips.
+                </p>
+            </div>
+            <div>
+                <button class="btn-primary" onclick="openNewBillModal()">
+                    <i class="fa fa-plus-circle"></i> Generate New Invoice
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid-3" style="margin-bottom: 25px;">
+            <div class="card-box" style="background: linear-gradient(135deg, var(--secondary-blue), #1e3a8a); color: white; border: none;">
+                <div style="font-size: 12px; color: #cbd5e1; font-weight: 700;">TOTAL AMOUNT PAID</div>
+                <div style="font-size: 32px; font-weight: 800; margin: 4px 0;">₹5,175.00</div>
+                <div style="font-size: 13px; color: #93c5fd;"><i class="fa fa-shield-alt"></i> All invoices fully cleared</div>
+            </div>
+            <div class="card-box">
+                <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">PENDING BALANCE</div>
+                <div style="font-size: 32px; font-weight: 800; color: var(--accent-green); margin: 4px 0;">₹0.00</div>
+                <div style="font-size: 13px; color: var(--text-secondary);"><i class="fa fa-check-circle" style="color:var(--accent-green);"></i> Zero outstanding dues</div>
+            </div>
+            <div class="card-box">
+                <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">HEALTH INSURANCE COVER</div>
+                <div style="font-size: 32px; font-weight: 800; color: var(--primary-teal); margin: 4px 0;">₹5,00,000</div>
+                <div style="font-size: 13px; color: var(--text-secondary);">Star Health Comprehensive policy active</div>
+            </div>
+        </div>
+
+        <!-- Invoices Table -->
+        <div class="card-box">
+            <div class="card-header">
+                <h3><i class="fa fa-receipt" style="color:var(--primary-teal);"></i> Payment Invoices Register</h3>
+                <span id="invCountBadge" class="badge badge-teal">3 Invoices</span>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Service & Description</th>
+                            <th>Hospital</th>
+                            <th>Date Issued</th>
+                            <th>Amount</th>
+                            <th>Payment Method</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Receipt Preview -->
+    <div id="receiptModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 650px;">
+            <button class="modal-close-btn" onclick="closeReceiptModal()">&times;</button>
+            
+            <div id="printableArea" style="padding: 10px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 20px;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px; font-size:22px; font-weight:800; font-family:'Outfit', sans-serif; color:var(--secondary-blue);">
+                            <i class="fa fa-heartbeat" style="color:var(--primary-teal);"></i> Swastik<span>Care</span>
+                        </div>
+                        <div id="rcptHospital" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
+                            AIIMS New Delhi • GSTIN: 07AAACA0001Z1Z5
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge badge-green" style="font-size:12px;">PAID</span>
+                        <div id="rcptInvNumber" style="font-size: 14px; font-weight:700; margin-top:5px; color:var(--secondary-blue);">INV-2026-081</div>
+                        <div id="rcptDate" style="font-size: 12px; color:var(--text-muted);">18 Oct 2026</div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="font-size:13px; line-height:1.7; margin-bottom: 20px;">
+                    <div>
+                        <strong style="color:var(--secondary-blue);">Patient Name:</strong>
+                        <div id="rcptPatientName">Manish Pandey</div>
+                        <div>Patient ID: SC-PAT-101</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong style="color:var(--secondary-blue);">Payment Mode:</strong>
+                        <div id="rcptMethod">UPI (Google Pay)</div>
+                        <div>Txn ID: SWASTIK-TXN-9982</div>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px;">
+                    <div style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px;">
+                        <span id="rcptDesc">Consultation + Digital X-Ray</span>
+                        <strong id="rcptSubtotal">₹1,050.00</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-secondary); margin-bottom:8px;">
+                        <span>Discount</span>
+                        <span id="rcptDiscount">-₹100.00</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--text-secondary); margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                        <span>GST Tax</span>
+                        <span>₹0.00 (Healthcare Exempt)</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:800; color:var(--secondary-blue);">
+                        <span>Total Paid</span>
+                        <span id="rcptTotal" style="color:var(--primary-teal);">₹950.00</span>
+                    </div>
+                </div>
+
+                <p style="font-size: 11.5px; color:var(--text-muted); text-align:center;">
+                    This is an electronically generated tax invoice compliant with the National Health Claims Exchange (NHCX) standards.
+                </p>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+                <button class="btn-primary" onclick="window.print()">
+                    <i class="fa fa-print"></i> Print Invoice
+                </button>
+                <button class="btn-secondary" onclick="closeReceiptModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Bill -->
+    <div id="newBillModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close-btn" onclick="closeNewBillModal()">&times;</button>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--secondary-blue);">
+                <i class="fa fa-file-invoice" style="color: var(--primary-teal);"></i> Generate Treatment Bill
+            </h3>
+            <form onsubmit="handleCreateInvoice(event)">
+                <div class="form-group">
+                    <label class="form-label">Service & Clinical Description</label>
+                    <input type="text" id="billDesc" class="form-control" required placeholder="e.g. OPD Consultation + ECG Diagnostic">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Select Hospital</label>
+                        <select id="billHospital" class="form-control">
+                            <option value="AIIMS New Delhi">AIIMS New Delhi</option>
+                            <option value="Indraprastha Apollo Hospitals">Indraprastha Apollo Hospitals</option>
+                            <option value="Max Super Speciality (Saket)">Max Super Speciality (Saket)</option>
+                            <option value="Fortis Memorial (FMRI)">Fortis Memorial (FMRI)</option>
+                            <option value="Medanta - The Medicity">Medanta - The Medicity</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount (₹)</label>
+                        <input type="number" id="billAmount" class="form-control" required placeholder="1500" value="1500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Payment Mode</label>
+                    <select id="billMethod" class="form-control">
+                        <option value="UPI (Google Pay / PhonePe)">UPI (Google Pay / PhonePe)</option>
+                        <option value="Credit / Debit Card">Credit / Debit Card</option>
+                        <option value="Net Banking">Net Banking</option>
+                        <option value="Cash at Counter">Cash at Counter</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                    <i class="fa fa-check-circle"></i> Generate Bill & Issue Receipt
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function renderInvoicesPage() {
+            const data = window.SwastikData.getData();
+
+            let invoices = data.invoices;
+            document.getElementById('invCountBadge').innerText = `${invoices.length} Invoices`;
+
+            const tbody = document.getElementById('invoicesTableBody');
+            tbody.innerHTML = invoices.map(inv => `
+                <tr>
+                    <td><strong>${inv.id}</strong></td>
+                    <td>
+                        <strong style="color:var(--secondary-blue);">${inv.description}</strong>
+                        <div style="font-size:11px; color:var(--text-muted);">${inv.patientName}</div>
+                    </td>
+                    <td><span class="badge badge-teal">${inv.hospital}</span></td>
+                    <td>${inv.date}</td>
+                    <td><strong style="font-size:14px; color:var(--secondary-blue);">₹${inv.total.toLocaleString()}</strong></td>
+                    <td><span style="font-size:12.5px; color:var(--text-secondary);"><i class="fa fa-credit-card"></i> ${inv.method}</span></td>
+                    <td><span class="badge badge-green">${inv.status}</span></td>
+                    <td>
+                        <button class="btn-primary btn-sm" onclick="viewReceipt('${inv.id}')">
+                            <i class="fa fa-print"></i> View Receipt
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewReceipt(invId) {
+            const data = window.SwastikData.getData();
+            const inv = data.invoices.find(i => i.id === invId);
+            if (!inv) return;
+
+            document.getElementById('rcptHospital').innerText = `${inv.hospital} • GSTIN Verified`;
+            document.getElementById('rcptInvNumber').innerText = inv.id;
+            document.getElementById('rcptDate').innerText = inv.date;
+            document.getElementById('rcptPatientName').innerText = inv.patientName;
+            document.getElementById('rcptMethod').innerText = inv.method;
+            document.getElementById('rcptDesc').innerText = inv.description;
+            document.getElementById('rcptSubtotal').innerText = `₹${inv.subtotal.toLocaleString()}`;
+            document.getElementById('rcptDiscount').innerText = `-₹${(inv.discount || 0).toLocaleString()}`;
+            document.getElementById('rcptTotal').innerText = `₹${inv.total.toLocaleString()}`;
+
+            document.getElementById('receiptModal').classList.add('active');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.remove('active');
+        }
+
+        function openNewBillModal() {
+            document.getElementById('newBillModal').classList.add('active');
+        }
+
+        function closeNewBillModal() {
+            document.getElementById('newBillModal').classList.remove('active');
+        }
+
+        function handleCreateInvoice(e) {
+            e.preventDefault();
+            const desc = document.getElementById('billDesc').value.trim();
+            const hosp = document.getElementById('billHospital').value;
+            const amt = parseInt(document.getElementById('billAmount').value) || 1000;
+            const method = document.getElementById('billMethod').value;
+            const session = window.SwastikData.getSession();
+
+            const newInv = {
+                id: "INV-2026-0" + Math.floor(100 + Math.random() * 900),
+                patientId: session.userId || "pat-1",
+                patientName: session.displayName || "Patient",
+                hospital: hosp,
+                description: desc,
+                date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+                subtotal: amt,
+                tax: 0,
+                discount: 0,
+                total: amt,
+                status: "Paid",
+                method: method
+            };
+
+            const data = window.SwastikData.getData();
+            data.invoices.unshift(newInv);
+            window.SwastikData.saveData(data);
+
+            closeNewBillModal();
+            renderInvoicesPage();
+            window.showToast("Invoice generated and recorded successfully!", "success");
+        }
+
+        window.onload = renderInvoicesPage;
+    </script>
+</body>
+</html>

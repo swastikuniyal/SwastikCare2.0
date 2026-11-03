@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24/7 Emergency SOS & Ambulance 108 | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .sos-hero-card {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b, #450a0a);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 50px 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(153, 27, 27, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sos-big-btn {
+            width: 175px;
+            height: 175px;
+            border-radius: 50%;
+            background: #ef4444;
+            color: white;
+            border: 8px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto;
+            cursor: pointer;
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            animation: pulseBig 1.8s infinite;
+            transition: var(--transition);
+        }
+
+        .sos-big-btn:hover {
+            transform: scale(1.05);
+            background: #dc2626;
+        }
+
+        .sos-big-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulseBig {
+            0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 35px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .live-tracker-panel {
+            background: #0f172a;
+            color: white;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-top: 25px;
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="main-wrapper">
+        <!-- SOS Hero Trigger -->
+        <div class="sos-hero-card">
+            <span class="badge badge-red" style="background: rgba(255,255,255,0.2); color:white; font-size:13px; margin-bottom:12px;">
+                <i class="fa fa-satellite-dish"></i> National 108 Emergency Network Active
+            </span>
+            <h1 style="font-size: 36px; font-weight: 800; font-family: 'Outfit', sans-serif;">
+                Instant 108 Emergency Ambulance SOS
+            </h1>
+            <p style="font-size: 15px; color: #fca5a5; max-width: 620px; margin: 0 auto;">
+                Pressing the red button below will instantly share your live location with the nearest hospital and 108 ambulance.
+            </p>
+
+            <!-- Big SOS Button -->
+            <button class="sos-big-btn" onclick="triggerEmergencySOS()">
+                <i class="fa fa-phone-volume" style="font-size: 44px; margin-bottom: 6px;"></i>
+                <span style="font-size: 20px; font-weight: 800; letter-spacing: 1.5px;">SOS 108</span>
+                <small style="font-size: 11px; opacity: 0.95;">Press to call ambulance</small>
+            </button>
+
+            <div style="font-size: 13.5px; color: #fecaca;">
+                <i class="fa fa-map-marker-alt"></i> Your Location (GPS): <strong id="locText">New Delhi Central (28.6139° N, 77.2090° E)</strong>
+            </div>
+
+            <!-- Live Ambulance Tracker Simulator -->
+            <div id="liveDispatchTracker" class="live-tracker-panel">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:12px; margin-bottom:15px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="badge badge-red"><i class="fa fa-ambulance"></i> Dispatched</span>
+                        <strong style="font-size: 16px;">ALS Ambulance #DL-01-AMB-2026</strong>
+                    </div>
+                    <div style="color: #38bdf8; font-weight: 700; font-size: 16px;">
+                        ETA: <span id="etaTime">5 minutes</span>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="text-align: left; font-size: 13px; line-height: 1.8;">
+                    <div><strong>Hospital:</strong> <span id="assignedER">AIIMS New Delhi Trauma Centre</span></div>
+                    <div><strong>Paramedic In-charge:</strong> Rajesh Sharma (Critical Care)</div>
+                    <div><strong>Emergency Ward:</strong> Cath-Lab & Bed #ICU-04 Ready</div>
+                </div>
+
+                <div style="margin-top: 15px; background: rgba(255,255,255,0.1); border-radius: var(--radius-full); height: 8px; overflow:hidden;">
+                    <div id="ambProgressBar" style="background:#10b981; width:30%; height:100%; transition: width 1s linear;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direct Emergency Helplines for 5 Hospitals -->
+        <div class="page-header">
+            <div>
+                <h2 class="page-title"><i class="fa fa-phone-alt" style="color:var(--primary-teal);"></i> Direct Emergency Numbers for All 5 Hospitals</h2>
+                <p class="page-subtitle">Speak directly to an on-duty emergency doctor at any of our partner hospitals</p>
+            </div>
+        </div>
+
+        <div class="grid-5" id="emergencyHospitalsGrid">
+            <!-- Filled by JavaScript -->
+        </div>
+
+        <!-- First Aid Protocols -->
+        <div class="card-box" style="margin-top: 30px;">
+            <div class="card-header">
+                <h3><i class="fa fa-heartbeat" style="color:#ef4444;"></i> Essential First Aid in an Emergency</h3>
+                <span class="badge badge-teal">Red Cross Certified</span>
+            </div>
+            <div class="grid-3" style="font-size: 13.5px; line-height: 1.6; color: var(--text-secondary);">
+                <div style="background: var(--bg-muted); padding: 18px; border-radius: var(--radius-md);">
+                    <h4 style="color: var(--secondary-blue); margin-bottom: 6px;"><i class="fa fa-heart"></i> Heart Attack</h4>
+                    <p>Lay the patient flat immediately and check breathing. Place both hands in the centre of the chest and compress at 100–120 times per minute (CPR). Call 108 immediately.</p>
+                </div>
+                <div style="background: var(--bg-muted); padding: 18px; border-radius: var(--radius-md);">
+                    <h4 style="color: var(--secondary-blue); margin-bottom: 6px;"><i class="fa fa-brain"></i> Stroke</h4>
+                    <p>Face drooping, arm weakness, slurred speech — these are warning signs. Do not waste a single minute. Take the patient immediately to the AIIMS or Apollo emergency department.</p>
+                </div>
+                <div style="background: var(--bg-muted); padding: 18px; border-radius: var(--radius-md);">
+                    <h4 style="color: var(--secondary-blue); margin-bottom: 6px;"><i class="fa fa-tint"></i> Severe Bleeding</h4>
+                    <p>Apply firm pressure to the wound with a clean cloth or bandage. Keep the injured limb elevated above heart level until help arrives.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
+    <script>
+        function renderEmergencyPage() {
+            const data = window.SwastikData.getData();
+            const grid = document.getElementById('emergencyHospitalsGrid');
+
+            grid.innerHTML = data.hospitals.map(h => `
+                <div class="card-box" style="text-align: center; border-top: 4px solid #ef4444;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">${h.logo}</div>
+                    <strong style="font-size: 15px; color: var(--secondary-blue); display:block;">${h.name}</strong>
+                    <div style="font-size: 12px; color: var(--text-muted); margin: 4px 0 12px;">${h.location.split(',')[0]}</div>
+                    <a href="tel:${h.emergencyPhone.split('/')[0]}" class="btn-primary btn-sm" style="background:#ef4444; width:100%; text-decoration:none;">
+                        <i class="fa fa-phone"></i> ${h.emergencyPhone.split('/')[0]}
+                    </a>
+                </div>
+            `).join('');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    document.getElementById('locText').innerText = `Lat: ${pos.coords.latitude.toFixed(4)}°, Lon: ${pos.coords.longitude.toFixed(4)}° (GPS Locked)`;
+                }, () => {});
+            }
+        }
+
+        function triggerEmergencySOS() {
+            const tracker = document.getElementById('liveDispatchTracker');
+            tracker.style.display = 'block';
+            window.showToast("ALERT: Your location has been sent to the nearest hospital and 108 ambulance!", "error");
+
+            let progress = 30;
+            const bar = document.getElementById('ambProgressBar');
+            const timerText = document.getElementById('etaTime');
+
+            const interval = setInterval(() => {
+                progress += 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    bar.style.width = "100%";
+                    timerText.innerText = "Ambulance has arrived!";
+                    clearInterval(interval);
+                    window.showToast("Ambulance has reached the patient's location!", "success");
+                } else {
+                    bar.style.width = progress + "%";
+                    timerText.innerText = Math.max(1, 6 - Math.floor(progress / 20)) + " minutes";
+                }
+            }, 1500);
+        }
+
+        window.onload = renderEmergencyPage;
+    </script>
+</body>
+</html>
