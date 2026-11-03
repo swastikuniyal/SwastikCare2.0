@@ -1,40 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Payment Successful</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0f2027, #203a43);
-      color: #e0ffe0;
-    }
-    .msg {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      padding: 2rem 3rem;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-    h1 {font-size: 2rem; margin-bottom: 1rem;}
-    a {color: #70e0ff; text-decoration: none;}
-    a:hover {text-decoration: underline;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmed | SwastikCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .pay-success-container {
+            display: flex; align-items: center; justify-content: center;
+            min-height: calc(100vh - 160px); padding: 40px 20px;
+        }
+        .pay-success-card {
+            background: white; border: 2px dashed #99f6e4; border-radius: var(--radius-lg);
+            padding: 40px; max-width: 600px; width: 100%; box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-  <div class="msg">
-    <h1>✅ Payment & Login Successful!</h1>
-    <p>Thank you for your payment. You are now logged in.</p>
-    <p><a href="index.html">Return to Home</a></p>
-  </div>
+
+    <main class="main-wrapper pay-success-container">
+        <div class="pay-success-card">
+            <div style="width: 70px; height: 70px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px;">
+                <i class="fa fa-check"></i>
+            </div>
+
+            <h1 style="font-size: 26px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 8px;">
+                Payment Successfully Verified!
+            </h1>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">
+                Your transaction has been securely processed and registered with the hospital OPD desk.
+            </p>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 20px; text-align: left; margin-bottom: 25px; font-size: 13.5px; line-height: 2;">
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:10px;">
+                    <div>
+                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official UPI Receiver ID</span>
+                        <div style="font-size: 16px; font-weight: 800; color: #0d9488;">hmpmanish@ptyes</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge badge-green"><i class="fa fa-check-circle"></i> Verified</span>
+                    </div>
+                </div>
+                <div><strong>Accepted Modes:</strong> Instant Online UPI (GPay / PhonePe / Paytm) or Cash/UPI at Counter</div>
+                <div><strong>Healthcare Tax:</strong> GST Exempted (Sec 66D Health Services)</div>
+                <div><strong>Digital Token Issued:</strong> Yes • Added to Hospital Telemetry</div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="Appointment-Booking.html" class="btn-primary">
+                    <i class="fa fa-calendar-check"></i> View OPD Appointments
+                </a>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fa fa-home"></i> Back to Homepage
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="data.js"></script>
+    <script src="nav.js"></script>
 </body>
 </html>

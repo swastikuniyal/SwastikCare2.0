@@ -393,6 +393,88 @@
                         placeholder="Describe symptoms, duration, previous medication or allergies..."></textarea>
                 </div>
 
+                <!-- Payment Method Selection -->
+                <div style="background: white; border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin-bottom: 25px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; flex-wrap:wrap; gap:8px;">
+                        <h4 style="font-size: 15px; color: var(--secondary-blue); display:flex; align-items:center; gap:8px; margin:0;">
+                            <i class="fa fa-wallet" style="color:var(--primary-teal);"></i> Select Payment Method
+                        </h4>
+                        <span class="badge badge-teal"><i class="fa fa-shield-alt"></i> 100% Secure Payment</span>
+                    </div>
+
+                    <div class="grid-2" style="margin-bottom: 16px;">
+                        <!-- Option 1: Instant UPI Payment -->
+                        <div id="payOptUPI" class="selection-card selected" onclick="selectPaymentOption('upi')" style="padding: 16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div>
+                                    <span class="badge badge-teal" style="font-size: 11px; margin-bottom: 6px;"><i class="fa fa-bolt"></i> Instant Online</span>
+                                    <h5 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin: 4px 0;">UPI (Instant QR / Apps)</h5>
+                                    <div style="font-size: 12.5px; color: var(--text-secondary);">GPay, PhonePe, Paytm, BHIM</div>
+                                </div>
+                                <div style="font-size: 26px; color: var(--primary-teal);"><i class="fa fa-qrcode"></i></div>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 12px; color: #0d9488; font-weight: 700;">
+                                UPI ID: <strong>hmpmanish@ptyes</strong>
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Cash or UPI at Counter -->
+                        <div id="payOptCounter" class="selection-card" onclick="selectPaymentOption('counter')" style="padding: 16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div>
+                                    <span class="badge badge-blue" style="font-size: 11px; margin-bottom: 6px;"><i class="fa fa-hospital-user"></i> Hospital Visit</span>
+                                    <h5 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin: 4px 0;">Cash or UPI at Counter</h5>
+                                    <div style="font-size: 12.5px; color: var(--text-secondary);">Pay at hospital OPD reception desk</div>
+                                </div>
+                                <div style="font-size: 26px; color: var(--secondary-blue);"><i class="fa fa-money-bill-wave"></i></div>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                                Pay on arrival before doctor checkup
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic UPI Payment Details Box (Visible when UPI selected) -->
+                    <div id="upiPaymentDetailsBox" style="background: #f0fdfa; border: 1px dashed #0d9488; border-radius: var(--radius-sm); padding: 18px;">
+                        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                            <!-- Dynamic QR Code -->
+                            <div style="text-align: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #ccfbf1; box-shadow: var(--shadow-sm); flex-shrink: 0;">
+                                <img id="upiQrCodeImg" src="" alt="UPI Payment QR Code" style="width: 140px; height: 140px; display: block;">
+                                <div style="font-size: 11.5px; font-weight: 700; color: var(--primary-teal); margin-top: 6px;">Scan to Pay <span id="upiAmountBadge">₹500</span></div>
+                            </div>
+                            <div style="flex: 1; min-width: 240px;">
+                                <div style="font-size: 14px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 6px;">
+                                    Scan QR or Pay directly to SwastikCare UPI ID:
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #99f6e4; padding: 8px 14px; border-radius: var(--radius-sm); max-width: 320px; margin-bottom: 12px;">
+                                    <code style="font-size: 14px; font-weight: 800; color: #0f766e; flex: 1;">hmpmanish@ptyes</code>
+                                    <button type="button" class="btn-primary btn-sm" onclick="copyUpiId('hmpmanish@ptyes')" style="padding: 4px 10px; font-size: 12px;">
+                                        <i class="fa fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                                    <a id="btnPayUpiIntent" href="#" class="btn-outline-teal btn-sm" style="font-size: 12px; font-weight: 700;">
+                                        <i class="fa fa-mobile-alt"></i> Pay via UPI App (GPay / PhonePe / Paytm / BHIM)
+                                    </a>
+                                </div>
+                                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+                                    <i class="fa fa-check-circle" style="color:var(--accent-green);"></i> Once paid, click <strong>"Confirm Booking &amp; Get OPD Slip"</strong> below. Your transaction will be verified and recorded on your receipt.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Counter Payment Details Box (Visible when Counter selected) -->
+                    <div id="counterPaymentDetailsBox" style="display: none; background: #f8fafc; border: 1px dashed #94a3b8; border-radius: var(--radius-sm); padding: 16px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <i class="fa fa-info-circle" style="font-size:22px; color:var(--primary-teal); margin-top:2px;"></i>
+                            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                                <strong style="color:var(--secondary-blue);">Pay at Hospital Counter:</strong> You can pay the consultation fee of <strong id="counterFeeAmt" style="color:var(--primary-teal);">₹500</strong> directly at the OPD reception billing desk using <strong>Cash, UPI QR at the counter, or Debit/Credit Card</strong> when you arrive for your visit.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Booking Summary Card -->
                 <div
                     style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
@@ -460,9 +542,9 @@
                             <div><strong>Schedule:</strong> <span id="slipSchedule">Date &amp; Time</span></div>
                             <div><strong>Room / Wing:</strong> <span id="slipRoom">OPD Block A, Room 102</span></div>
                             <div><strong>Mode:</strong> <span id="slipMode">In-Person OPD</span></div>
-                            <div><strong>Consultation Fee:</strong> <span id="slipFee"
-                                    style="color:var(--primary-teal); font-weight:700;">₹500 (Paid / Cash at
-                                    Counter)</span></div>
+                            <div><strong>Consultation Fee:</strong> <span id="slipFee" style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
+                            <div><strong>Payment Method:</strong> <span id="slipPayMethod" style="font-weight:700; color:var(--secondary-blue);">UPI: hmpmanish@ptyes</span></div>
+                            <div><strong>Payment Status:</strong> <span id="slipPayStatus" class="badge badge-green">Paid Online (UPI)</span></div>
                         </div>
                     </div>
 
@@ -494,6 +576,57 @@
         let selectedTimeSlot = "09:30 AM";
         let selectedMode = "In-Person OPD";
         let currentBookingMode = "guest"; // 'guest' or 'profile'
+        let selectedPaymentOption = "upi"; // 'upi' or 'counter'
+
+        function selectPaymentOption(opt) {
+            selectedPaymentOption = opt;
+            const upiCard = document.getElementById('payOptUPI');
+            const counterCard = document.getElementById('payOptCounter');
+            const upiBox = document.getElementById('upiPaymentDetailsBox');
+            const counterBox = document.getElementById('counterPaymentDetailsBox');
+
+            if (opt === 'upi') {
+                if (upiCard) upiCard.classList.add('selected');
+                if (counterCard) counterCard.classList.remove('selected');
+                if (upiBox) upiBox.style.display = 'block';
+                if (counterBox) counterBox.style.display = 'none';
+            } else {
+                if (counterCard) counterCard.classList.add('selected');
+                if (upiCard) upiCard.classList.remove('selected');
+                if (counterBox) counterBox.style.display = 'block';
+                if (upiBox) upiBox.style.display = 'none';
+            }
+        }
+
+        function copyUpiId(id) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(id).then(() => {
+                    window.showToast(`UPI ID "${id}" copied to clipboard!`, 'success');
+                }).catch(() => {
+                    window.showToast(`UPI ID: ${id}`, 'info');
+                });
+            } else {
+                window.showToast(`UPI ID: ${id}`, 'info');
+            }
+        }
+
+        function updateUpiQr(fee) {
+            const amount = fee || 500;
+            const upiString = `upi://pay?pa=hmpmanish@ptyes&pn=SwastikCare&am=${amount}&cu=INR&tn=SwastikCare_OPD_Booking`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiString)}`;
+
+            const qrImg = document.getElementById('upiQrCodeImg');
+            if (qrImg) qrImg.src = qrUrl;
+
+            const amtBadge = document.getElementById('upiAmountBadge');
+            if (amtBadge) amtBadge.innerText = `₹${amount}`;
+
+            const counterAmt = document.getElementById('counterFeeAmt');
+            if (counterAmt) counterAmt.innerText = `₹${amount}`;
+
+            const intentBtn = document.getElementById('btnPayUpiIntent');
+            if (intentBtn) intentBtn.href = upiString;
+        }
 
         function initBooking() {
             const data = window.SwastikData.getData();
@@ -667,6 +800,7 @@
                                 <div style="text-align:right;">
                                     <div style="font-size:14px; font-weight:700; color:var(--secondary-blue);"><i class="fa fa-clock" style="color:var(--primary-teal);"></i> ${a.date} at ${a.time}</div>
                                     <div style="font-size:13px; font-weight:700; color:var(--primary-teal); margin-top:4px;">Fee: ₹${a.fee || 500}</div>
+                                    <div style="margin-top:4px;"><span class="badge ${a.paymentMethod && a.paymentMethod.includes('Counter') ? 'badge-blue' : 'badge-green'}" style="font-size:11px;">${a.paymentMethod || 'UPI: hmpmanish@ptyes'}</span></div>
                                     <button class="btn-outline-teal btn-sm" style="margin-top:10px;" onclick="viewSlipFromObject('${a.id}')">
                                         <i class="fa fa-receipt"></i> View OPD Slip
                                     </button>
@@ -695,7 +829,16 @@
             document.getElementById('slipSchedule').innerText = `${a.date} at ${a.time}`;
             document.getElementById('slipRoom').innerText = a.room || "OPD Room 101";
             document.getElementById('slipMode').innerText = a.type || "In-Person OPD";
-            document.getElementById('slipFee').innerText = `₹${a.fee || 500} (Paid / Cash at Counter)`;
+            document.getElementById('slipFee').innerText = `₹${a.fee || 500}`;
+            
+            const payMethodEl = document.getElementById('slipPayMethod');
+            if (payMethodEl) payMethodEl.innerText = a.paymentMethod || "UPI (hmpmanish@ptyes)";
+
+            const payStatusEl = document.getElementById('slipPayStatus');
+            if (payStatusEl) {
+                payStatusEl.innerText = a.paymentStatus || (a.paymentMethod && a.paymentMethod.includes('Counter') ? 'Pay at Counter' : 'Paid Online (UPI)');
+                payStatusEl.className = (a.paymentStatus && a.paymentStatus.includes('Counter')) ? 'badge badge-blue' : 'badge badge-green';
+            }
 
             document.getElementById('bookingSlipSection').style.display = 'block';
             window.scrollTo({ top: 120, behavior: 'smooth' });
@@ -797,12 +940,16 @@
             const hosp = data.hospitals.find(h => h.id === selectedHospId);
             const doc = data.doctors.find(d => d.id === selectedDoctorId);
 
+            const fee = doc ? doc.consultationFee : 500;
             document.getElementById('revHospName').innerText = hosp ? hosp.name : "";
             document.getElementById('revDocName').innerText = doc ? doc.name : "";
-            document.getElementById('revFee').innerText = doc ? `₹${doc.consultationFee}` : "₹500";
+            document.getElementById('revFee').innerText = `₹${fee}`;
             document.getElementById('revDate').innerText = document.getElementById('bookingDateInput').value;
             document.getElementById('revTime').innerText = selectedTimeSlot;
             document.getElementById('revMode').innerText = selectedMode;
+
+            updateUpiQr(fee);
+            selectPaymentOption(selectedPaymentOption);
 
             goToStep(4);
         }
@@ -826,6 +973,10 @@
 
             // patientId determination
             let patId = (currentBookingMode === 'profile' && session.role === 'patient') ? session.userId : null;
+            const fee = doc.consultationFee || 500;
+
+            const payMethod = (selectedPaymentOption === 'upi') ? 'UPI (hmpmanish@ptyes)' : 'Cash or UPI at Counter';
+            const payStatus = (selectedPaymentOption === 'upi') ? 'Paid Online via UPI' : 'Pay at Counter on Arrival';
 
             const newBooking = {
                 patientId: patId,
@@ -843,7 +994,9 @@
                 type: selectedMode,
                 room: doc.room || "OPD Room 101",
                 symptoms: symptoms || "General OPD consultation",
-                fee: doc.consultationFee || 500
+                fee: fee,
+                paymentMethod: payMethod,
+                paymentStatus: payStatus
             };
 
             const saved = window.SwastikData.bookAppointment(newBooking);
@@ -859,7 +1012,16 @@
             document.getElementById('slipSchedule').innerText = `${saved.date} at ${saved.time}`;
             document.getElementById('slipRoom').innerText = saved.room;
             document.getElementById('slipMode').innerText = saved.type;
-            document.getElementById('slipFee').innerText = `₹${saved.fee} (Paid / Cash at Counter)`;
+            document.getElementById('slipFee').innerText = `₹${saved.fee}`;
+
+            const payMethodEl = document.getElementById('slipPayMethod');
+            if (payMethodEl) payMethodEl.innerText = saved.paymentMethod || payMethod;
+
+            const payStatusEl = document.getElementById('slipPayStatus');
+            if (payStatusEl) {
+                payStatusEl.innerText = saved.paymentStatus || payStatus;
+                payStatusEl.className = (selectedPaymentOption === 'upi') ? 'badge badge-green' : 'badge badge-blue';
+            }
 
             document.getElementById('bookingSlipSection').style.display = 'block';
             window.showToast("Appointment confirmed! Registered in OPD schedule and Super Admin dashboard.", "success");

@@ -996,7 +996,7 @@
             discount: 100,
             total: 950,
             status: "Paid",
-            method: "UPI (Google Pay)"
+            method: "UPI (hmpmanish@ptyes)"
         },
         {
             id: "INV-2026-082",
@@ -1010,7 +1010,7 @@
             discount: 500,
             total: 4225,
             status: "Paid",
-            method: "HDFC Credit Card"
+            method: "Cash or UPI at Counter"
         },
         {
             id: "INV-2026-083",
@@ -1024,7 +1024,7 @@
             discount: 0,
             total: 2940,
             status: "Paid",
-            method: "Net Banking"
+            method: "UPI (hmpmanish@ptyes)"
         }
     ];
 
@@ -1247,6 +1247,8 @@
                 room: booking.room || "OPD Room 101",
                 symptoms: booking.symptoms || "General Health Consultation",
                 fee: booking.fee || 500,
+                paymentMethod: booking.paymentMethod || "UPI (hmpmanish@ptyes)",
+                paymentStatus: booking.paymentStatus || "Paid Online (UPI)",
                 status: "Confirmed",
                 bookedAt: new Date().toISOString().split("T")[0]
             };
