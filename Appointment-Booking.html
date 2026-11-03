@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,67 +9,164 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .step-progress-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            max-width: 800px; margin: 0 auto 35px; position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 35px;
+            position: relative;
         }
+
         .step-progress-bar::before {
-            content: ''; position: absolute; top: 50%; left: 40px; right: 40px;
-            height: 3px; background: var(--border-color); transform: translateY(-50%); z-index: 1;
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+            z-index: 1;
         }
-        .step-item { position: relative; z-index: 2; background: var(--bg-page); padding: 0 10px; text-align: center; }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            background: var(--bg-page);
+            padding: 0 10px;
+            text-align: center;
+        }
+
         .step-circle {
-            width: 44px; height: 44px; border-radius: 50%; background: white;
-            border: 2px solid var(--border-color); display: flex; align-items: center;
-            justify-content: center; font-weight: 700; font-size: 15px;
-            color: var(--text-muted); margin: 0 auto 8px; transition: var(--transition);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-muted);
+            margin: 0 auto 8px;
+            transition: var(--transition);
         }
-        .step-item.active .step-circle { background: var(--primary-teal); border-color: var(--primary-teal); color: white; box-shadow: 0 0 15px rgba(13, 148, 136, 0.4); }
-        .step-item.completed .step-circle { background: var(--accent-green); border-color: var(--accent-green); color: white; }
-        .step-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
-        .step-item.active .step-title { color: var(--primary-teal); font-weight: 700; }
+
+        .step-item.active .step-circle {
+            background: var(--primary-teal);
+            border-color: var(--primary-teal);
+            color: white;
+            box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .step-item.active .step-title {
+            color: var(--primary-teal);
+            font-weight: 700;
+        }
 
         .selection-card {
-            border: 2px solid var(--border-color); border-radius: var(--radius-md);
-            padding: 18px; background: white; cursor: pointer; transition: var(--transition);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .selection-card:hover { border-color: #cbd5e1; transform: translateY(-2px); }
-        .selection-card.selected { border-color: var(--primary-teal); background: #f0fdfa; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15); }
+
+        .selection-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .selection-card.selected {
+            border-color: var(--primary-teal);
+            background: #f0fdfa;
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15);
+        }
 
         .time-slot-btn {
-            padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);
-            background: white; font-size: 13px; font-weight: 600;
-            color: var(--text-secondary); cursor: pointer; transition: var(--transition);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: white;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .time-slot-btn:hover { border-color: var(--primary-teal); color: var(--primary-teal); }
-        .time-slot-btn.selected { background: var(--primary-teal); border-color: var(--primary-teal); color: white; }
+
+        .time-slot-btn:hover {
+            border-color: var(--primary-teal);
+            color: var(--primary-teal);
+        }
+
+        .time-slot-btn.selected {
+            background: var(--primary-teal);
+            border-color: var(--primary-teal);
+            color: white;
+        }
 
         .confirmation-slip {
-            background: white; border: 2px dashed #99f6e4; border-radius: var(--radius-lg);
-            padding: 30px; max-width: 680px; margin: 0 auto;
-            box-shadow: var(--shadow-lg); text-align: center;
+            background: white;
+            border: 2px dashed #99f6e4;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            max-width: 680px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
         }
 
         .booking-mode-chip {
-            padding: 10px 18px; border-radius: var(--radius-sm); border: 2px solid var(--border-color);
-            background: white; font-size: 13px; font-weight: 700; color: var(--text-secondary);
-            cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            background: white;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
         .booking-mode-chip.active {
-            border-color: var(--primary-teal); background: #f0fdfa; color: var(--primary-teal);
+            border-color: var(--primary-teal);
+            background: #f0fdfa;
+            color: var(--primary-teal);
         }
     </style>
 </head>
+
 <body>
 
     <main class="main-wrapper">
-        <div class="page-header" style="text-align: center; justify-content: center; margin-bottom: 25px; flex-direction: column;">
+        <div class="page-header"
+            style="text-align: center; justify-content: center; margin-bottom: 25px; flex-direction: column;">
             <div>
                 <h1 class="page-title" style="justify-content: center;">
                     <i class="fa fa-calendar-check" style="color: var(--primary-teal);"></i>
                     Specialist Doctor OPD Appointment Booking
                 </h1>
                 <p class="page-subtitle">
-                    Instant doctor appointments across AIIMS, Apollo, Max, Fortis &amp; Medanta. <strong>No login required for guest booking!</strong>
+                    Instant doctor appointments across AIIMS, Apollo, Max, Fortis &amp; Medanta. <strong>No login
+                        required for guest booking!</strong>
                 </p>
             </div>
             <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
@@ -82,16 +180,21 @@
         </div>
 
         <!-- TRACK BOOKINGS SECTION (Hidden by default) -->
-        <section id="trackBookingsSection" class="card-box" style="max-width: 900px; margin: 0 auto 30px; display: none;">
+        <section id="trackBookingsSection" class="card-box"
+            style="max-width: 900px; margin: 0 auto 30px; display: none;">
             <div class="card-header">
-                <h3><i class="fa fa-search" style="color:var(--primary-teal);"></i> Track Your OPD Bookings &amp; Slips</h3>
+                <h3><i class="fa fa-search" style="color:var(--primary-teal);"></i> Track Your OPD Bookings &amp; Slips
+                </h3>
                 <span class="badge badge-teal">Instant Search</span>
             </div>
             <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 18px;">
-                Enter your mobile phone number or Token ID (e.g. <code>APT-1001</code>) to retrieve your confirmed appointments:
+                Enter your mobile phone number or Token ID (e.g. <code>APT-1001</code>) to retrieve your confirmed
+                appointments:
             </p>
             <div style="display: flex; gap: 10px; margin-bottom: 24px;">
-                <input type="text" id="trackSearchInput" class="form-control" placeholder="Enter Mobile Number (e.g. 9876543210) or Token ID..." onkeyup="if(event.key==='Enter') executeTrackSearch()">
+                <input type="text" id="trackSearchInput" class="form-control"
+                    placeholder="Enter Mobile Number (e.g. 9876543210) or Token ID..."
+                    onkeyup="if(event.key==='Enter') executeTrackSearch()">
                 <button class="btn-primary" onclick="executeTrackSearch()" style="white-space: nowrap;">
                     <i class="fa fa-search"></i> Find Booking
                 </button>
@@ -125,7 +228,8 @@
             <!-- Step 1: Select Hospital -->
             <section id="bookingStep1" class="card-box" style="max-width: 1050px; margin: 0 auto 30px;">
                 <div class="card-header">
-                    <h3><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> Step 1: Select Network Hospital</h3>
+                    <h3><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> Step 1: Select Network
+                        Hospital</h3>
                     <span class="badge badge-teal">5 Premier Centres</span>
                 </div>
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
@@ -146,7 +250,8 @@
             <!-- Step 2: Select Doctor -->
             <section id="bookingStep2" class="card-box" style="max-width: 1050px; margin: 0 auto 30px; display: none;">
                 <div class="card-header">
-                    <h3><i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Step 2: Select Specialist Doctor</h3>
+                    <h3><i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Step 2: Select Specialist
+                        Doctor</h3>
                     <span id="selectedHospBadge" class="badge badge-blue">AIIMS New Delhi</span>
                 </div>
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
@@ -170,7 +275,8 @@
             <!-- Step 3: Date & Time -->
             <section id="bookingStep3" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
                 <div class="card-header">
-                    <h3><i class="fa fa-clock" style="color:var(--primary-teal);"></i> Step 3: Date, Time &amp; Consultation Mode</h3>
+                    <h3><i class="fa fa-clock" style="color:var(--primary-teal);"></i> Step 3: Date, Time &amp;
+                        Consultation Mode</h3>
                     <span id="selectedDocBadge" class="badge badge-green">Doctor Selected</span>
                 </div>
 
@@ -190,15 +296,24 @@
 
                 <div class="form-group">
                     <label class="form-label">Available Time Slots</label>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;" id="timeSlotsContainer">
-                        <button type="button" class="time-slot-btn selected" onclick="selectSlot('09:30 AM', this)">09:30 AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('10:15 AM', this)">10:15 AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:00 AM', this)">11:00 AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:45 AM', this)">11:45 AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:00 PM', this)">02:00 PM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:45 PM', this)">02:45 PM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('03:30 PM', this)">03:30 PM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('04:15 PM', this)">04:15 PM</button>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;"
+                        id="timeSlotsContainer">
+                        <button type="button" class="time-slot-btn selected"
+                            onclick="selectSlot('09:30 AM', this)">09:30 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('10:15 AM', this)">10:15
+                            AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:00 AM', this)">11:00
+                            AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:45 AM', this)">11:45
+                            AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:00 PM', this)">02:00
+                            PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:45 PM', this)">02:45
+                            PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('03:30 PM', this)">03:30
+                            PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('04:15 PM', this)">04:15
+                            PM</button>
                     </div>
                 </div>
 
@@ -215,20 +330,24 @@
             <!-- Step 4: Patient Details & Confirm -->
             <section id="bookingStep4" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
                 <div class="card-header">
-                    <h3><i class="fa fa-user-check" style="color:var(--primary-teal);"></i> Step 4: Patient Information &amp; Symptoms</h3>
+                    <h3><i class="fa fa-user-check" style="color:var(--primary-teal);"></i> Step 4: Patient Information
+                        &amp; Symptoms</h3>
                     <span class="badge badge-purple">Instant Confirmation</span>
                 </div>
 
                 <!-- Persona Mode Notice / Choice -->
-                <div id="bookingModeSelector" style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
+                <div id="bookingModeSelector"
+                    style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
                     <div style="font-size: 13px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 10px;">
                         <i class="fa fa-shield-alt" style="color:var(--primary-teal);"></i> Choose Booking Mode:
                     </div>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button type="button" id="btnModeGuest" class="booking-mode-chip active" onclick="setBookingMode('guest')">
+                        <button type="button" id="btnModeGuest" class="booking-mode-chip active"
+                            onclick="setBookingMode('guest')">
                             <i class="fa fa-bolt" style="color:#0d9488;"></i> Instant Booking (No Login Required)
                         </button>
-                        <button type="button" id="btnModeProfile" class="booking-mode-chip" onclick="setBookingMode('profile')">
+                        <button type="button" id="btnModeProfile" class="booking-mode-chip"
+                            onclick="setBookingMode('profile')">
                             <i class="fa fa-user-circle"></i> Use Logged-in Profile
                         </button>
                     </div>
@@ -241,18 +360,22 @@
                 <div class="grid-2" style="margin-bottom: 18px;">
                     <div class="form-group">
                         <label class="form-label">Patient Full Legal Name <span style="color:#ef4444;">*</span></label>
-                        <input type="text" id="patientNameInput" class="form-control" required placeholder="e.g. Ramesh Kumar">
+                        <input type="text" id="patientNameInput" class="form-control" required
+                            placeholder="e.g. Ramesh Kumar">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Mobile Phone Number (for SMS &amp; Token) <span style="color:#ef4444;">*</span></label>
-                        <input type="tel" id="patientPhoneInput" class="form-control" required placeholder="+91 98765 43210">
+                        <label class="form-label">Mobile Phone Number (for SMS &amp; Token) <span
+                                style="color:#ef4444;">*</span></label>
+                        <input type="tel" id="patientPhoneInput" class="form-control" required
+                            placeholder="+91 98765 43210">
                     </div>
                 </div>
 
                 <div class="grid-2" style="margin-bottom: 18px;">
                     <div class="form-group">
                         <label class="form-label">Patient Age (Years)</label>
-                        <input type="number" id="patientAgeInput" class="form-control" min="1" max="120" placeholder="e.g. 35" value="32">
+                        <input type="number" id="patientAgeInput" class="form-control" min="1" max="120"
+                            placeholder="e.g. 35" value="32">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gender</label>
@@ -266,18 +389,21 @@
 
                 <div class="form-group">
                     <label class="form-label">Chief Medical Concern or Symptoms</label>
-                    <textarea id="patientSymptomsInput" class="form-control" rows="3" placeholder="Describe symptoms, duration, previous medication or allergies..."></textarea>
+                    <textarea id="patientSymptomsInput" class="form-control" rows="3"
+                        placeholder="Describe symptoms, duration, previous medication or allergies..."></textarea>
                 </div>
 
                 <!-- Booking Summary Card -->
-                <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
+                <div
+                    style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
                     <h4 style="font-size: 15px; color: var(--secondary-blue); margin-bottom: 12px;">
                         <i class="fa fa-receipt" style="color:var(--primary-teal);"></i> OPD Booking Summary
                     </h4>
                     <div class="grid-3" style="font-size: 13.5px; line-height: 1.8;">
                         <div><strong>Hospital:</strong> <span id="revHospName">AIIMS New Delhi</span></div>
                         <div><strong>Doctor:</strong> <span id="revDocName">Dr. Name</span></div>
-                        <div><strong>Consultation Fee:</strong> <span id="revFee" style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
+                        <div><strong>Consultation Fee:</strong> <span id="revFee"
+                                style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
                         <div><strong>Date:</strong> <span id="revDate">Today</span></div>
                         <div><strong>Time:</strong> <span id="revTime">09:30 AM</span></div>
                         <div><strong>Mode:</strong> <span id="revMode">In-Person OPD</span></div>
@@ -297,7 +423,8 @@
             <!-- Confirmation Slip -->
             <section id="bookingSlipSection" style="display: none; margin-bottom: 40px;">
                 <div class="confirmation-slip">
-                    <div style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
+                    <div
+                        style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
                         <i class="fa fa-check"></i>
                     </div>
                     <h2 style="font-size: 24px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 6px;">
@@ -307,14 +434,21 @@
                         Your booking has been added to the hospital OPD schedule and Super Admin registry.
                     </p>
 
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 22px; text-align: left; margin-bottom: 22px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
+                    <div
+                        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 22px; text-align: left; margin-bottom: 22px;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
                             <div>
-                                <span style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official OPD Token Number</span>
-                                <div id="slipTokenId" style="font-size: 20px; font-weight: 800; color: var(--primary-teal);">APT-9921</div>
+                                <span
+                                    style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official
+                                    OPD Token Number</span>
+                                <div id="slipTokenId"
+                                    style="font-size: 20px; font-weight: 800; color: var(--primary-teal);">APT-9921
+                                </div>
                             </div>
                             <div style="text-align: right;">
-                                <span class="badge badge-green" style="font-size: 12.5px;"><i class="fa fa-check-circle"></i> Confirmed &amp; Queued</span>
+                                <span class="badge badge-green" style="font-size: 12.5px;"><i
+                                        class="fa fa-check-circle"></i> Confirmed &amp; Queued</span>
                             </div>
                         </div>
 
@@ -326,7 +460,9 @@
                             <div><strong>Schedule:</strong> <span id="slipSchedule">Date &amp; Time</span></div>
                             <div><strong>Room / Wing:</strong> <span id="slipRoom">OPD Block A, Room 102</span></div>
                             <div><strong>Mode:</strong> <span id="slipMode">In-Person OPD</span></div>
-                            <div><strong>Consultation Fee:</strong> <span id="slipFee" style="color:var(--primary-teal); font-weight:700;">₹500 (Paid / Cash at Counter)</span></div>
+                            <div><strong>Consultation Fee:</strong> <span id="slipFee"
+                                    style="color:var(--primary-teal); font-weight:700;">₹500 (Paid / Cash at
+                                    Counter)</span></div>
                         </div>
                     </div>
 
@@ -739,4 +875,5 @@
         window.onload = initBooking;
     </script>
 </body>
+
 </html>
