@@ -15,8 +15,8 @@
                 <span style="color:#94a3b8; font-weight:700; margin-right:4px;"><i class="fa fa-sliders-h"></i> Switch Demo Profile:</span>
                 
                 <!-- Patient Accounts -->
-                <button class="role-chip ${session.role === 'patient' && session.userId === 'pat-1' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('patient', 'pat-1')" title="Patient: Manish Pandey (Post-Op ACL Rehab)">
-                    <i class="fa fa-user"></i> Manish (Patient)
+                <button class="role-chip ${session.role === 'patient' && session.userId === 'pat-1' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('patient', 'pat-1')" title="Patient: Rohan Mehta (Post-Op ACL Rehab)">
+                    <i class="fa fa-user"></i> Rohan (Patient)
                 </button>
                 <button class="role-chip ${session.role === 'patient' && session.userId === 'pat-2' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('patient', 'pat-2')" title="Patient: Priya Sharma (Diabetes Care)">
                     <i class="fa fa-user"></i> Priya (Patient)
@@ -52,9 +52,9 @@
 
                 <span style="color:#64748b; margin: 0 4px;">|</span>
 
-                <!-- Super Admin Account -->
-                <button class="role-chip ${session.role === 'admin' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('admin')" title="SwastikCare Super Admin Control">
-                    <i class="fa fa-shield-alt"></i> Super Admin
+                <!-- Super Pro Admin (Manish Pandey) -->
+                <button class="role-chip ${session.role === 'admin' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('admin')" title="SwastikCare Super Pro Admin: Manish Pandey" style="${session.role === 'admin' ? 'background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:white; font-weight:800;' : 'border-color:#f59e0b; color:#fde68a;'}">
+                    <i class="fa fa-crown" style="color:${session.role === 'admin' ? '#fff' : '#f59e0b'};"></i> Manish Pandey (Super Pro Admin)
                 </button>
             </div>
             <div>
@@ -101,13 +101,13 @@
                         <i class="fa fa-ambulance"></i> Emergency 108
                     </a>
 
-                    <div class="user-badge-menu" onclick="location.href='${session.role === 'admin' ? 'Admin-Dashboard.html' : session.role === 'hospital' ? 'Hospital-Dashboard.html' : 'Profile-Settings.html'}'" title="View Profile">
-                        <div class="user-avatar-mini">
-                            ${session.role === 'admin' ? '<i class="fa fa-shield-alt"></i>' : session.role === 'hospital' ? '<i class="fa fa-hospital"></i>' : '<i class="fa fa-user"></i>'}
+                    <div class="user-badge-menu" onclick="location.href='${session.role === 'admin' ? 'Admin-Dashboard.html' : session.role === 'hospital' ? 'Hospital-Dashboard.html' : 'Profile-Settings.html'}'" title="View Profile" style="${session.role === 'admin' ? 'border-color:#f59e0b; background:#fffbeb;' : ''}">
+                        <div class="user-avatar-mini" style="${session.role === 'admin' ? 'background:linear-gradient(135deg,#f59e0b,#d97706); color:white;' : ''}">
+                            ${session.role === 'admin' ? '<i class="fa fa-crown"></i>' : session.role === 'hospital' ? '<i class="fa fa-hospital"></i>' : '<i class="fa fa-user"></i>'}
                         </div>
                         <div style="font-size: 13px; font-weight:700; line-height:1.2;">
-                            <div>${session.displayName || 'Patient'}</div>
-                            <small style="color:var(--text-muted); font-size:10px; text-transform:uppercase;">${session.role === 'patient' ? 'Patient' : session.role === 'hospital' ? 'Hospital Staff' : 'Admin'}</small>
+                            <div>${session.displayName || 'Manish Pandey (Super Pro Admin)'}</div>
+                            <small style="color:${session.role === 'admin' ? '#b45309' : 'var(--text-muted)'}; font-size:10px; text-transform:uppercase; font-weight:800;">${session.role === 'admin' ? 'Super Pro Admin' : session.role === 'hospital' ? 'Hospital Staff' : 'Patient'}</small>
                         </div>
                     </div>
 

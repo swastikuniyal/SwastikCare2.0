@@ -113,11 +113,11 @@
                 document.getElementById('tabPatient').classList.add('active');
                 document.getElementById('lblUsername').innerText = "Patient Phone or Username";
                 document.getElementById('btnSubmitTxt').innerText = "Login to Patient Portal";
-                uField.value = "manish";
+                uField.value = "rohan_mehta";
                 pField.value = "password123";
 
                 pillsBox.innerHTML = `
-                    <button type="button" class="demo-quick-btn" onclick="fillPatient('manish')">Manish Pandey</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillPatient('rohan_mehta')">Rohan Mehta</button>
                     <button type="button" class="demo-quick-btn" onclick="fillPatient('priya_sharma')">Priya Sharma</button>
                     <button type="button" class="demo-quick-btn" onclick="fillPatient('rahul_verma')">Rahul Verma</button>
                     <button type="button" class="demo-quick-btn" onclick="fillPatient('ananya_singh')">Ananya Singh</button>
@@ -145,7 +145,7 @@
                 pField.value = "admin123";
 
                 pillsBox.innerHTML = `
-                    <button type="button" class="demo-quick-btn" onclick="fillAdmin()">🛡️ SwastikCare Super Admin (admin / admin123)</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillAdmin()" style="border-color:#f59e0b; color:#b45309; font-weight:700;"><i class="fa fa-crown" style="color:#f59e0b;"></i> Manish Pandey (Super Pro Admin)</button>
                 `;
             }
         }

@@ -134,36 +134,36 @@
             </div>
         </div>
 
-        <!-- Active Patient Profile Card -->
+        <!-- Active User Profile / Admin Command Bar -->
         <div id="patientActiveCard" class="card-box" style="margin-bottom: 28px; background: white; border-left: 5px solid var(--primary-teal);">
-            <div class="patient-card-header">
+            <div class="patient-card-header" id="userHeaderContent">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <img id="patAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">
                     <div>
-                        <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing:0.5px;">Active Patient Profile</div>
-                        <h3 id="patName" style="font-size: 20px; font-weight: 800; color: var(--secondary-blue);">Manish Pandey</h3>
+                        <div id="patRoleTag" style="font-size: 11.5px; color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing:0.5px;"><i class="fa fa-crown" style="color:#f59e0b;"></i> Apex Super Pro Admin</div>
+                        <h3 id="patName" style="font-size: 22px; font-weight: 800; color: var(--secondary-blue);">Manish Pandey</h3>
                         <p id="patCondition" style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">
-                            Post-Op Knee Ligament Surgery Rehab • Primary Hospital: <strong>AIIMS New Delhi</strong>
+                            Founder & Apex Super Pro Admin • Network: <strong>5 Super-Specialty Hospitals • 25 Doctors • 5,360+ Beds</strong>
                         </p>
                     </div>
                 </div>
 
-                <!-- Patient Vitals Telemetry -->
-                <div class="patient-vitals-group">
+                <!-- Live Status Metrics -->
+                <div class="patient-vitals-group" id="headerMetricsGroup">
                     <div class="vital-mini-box">
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Heart Rate</div>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-red);"><i class="fa fa-heartbeat"></i> <span id="valHR">72</span> bpm</div>
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Hospitals</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--primary-teal);"><i class="fa fa-hospital"></i> 5 Active</div>
                     </div>
                     <div class="vital-mini-box">
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Blood Pressure</div>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-blue);"><i class="fa fa-tint"></i> <span id="valBP">120/80</span></div>
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Specialists</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-blue);"><i class="fa fa-user-md"></i> 25 Doctors</div>
                     </div>
                     <div class="vital-mini-box">
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Recovery</div>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-green);"><i class="fa fa-walking"></i> <span id="valRecovery">65%</span></div>
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Network Beds</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-green);"><i class="fa fa-procedures"></i> 5,360+</div>
                     </div>
-                    <button class="btn-primary" onclick="location.href='Appointment-Booking.html'" style="padding: 10px 18px;">
-                        <i class="fa fa-calendar-plus"></i> Book Doctor
+                    <button class="btn-primary" id="headerActionBtn" onclick="location.href='Admin-Dashboard.html'" style="padding: 10px 18px;">
+                        <i class="fa fa-shield-alt"></i> Admin Console
                     </button>
                 </div>
             </div>
@@ -282,15 +282,84 @@
             const data = window.SwastikData.getData();
             const session = window.SwastikData.getSession();
 
-            // 1. Populate Active Patient Details
-            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
-            if (pat) {
-                document.getElementById('patAvatar').src = pat.avatar;
-                document.getElementById('patName').innerText = pat.name;
-                document.getElementById('patCondition').innerHTML = `${pat.condition} • Primary Hospital: <strong>${pat.primaryHospitalName}</strong>`;
-                document.getElementById('valHR').innerText = pat.vitals.heartRate;
-                document.getElementById('valBP').innerText = `${pat.vitals.bpSystolic}/${pat.vitals.bpDiastolic}`;
-                document.getElementById('valRecovery').innerText = `${pat.recoveryProgress}%`;
+            // 1. Populate Active Persona Overview Card
+            const cardEl = document.getElementById('patientActiveCard');
+            const roleTag = document.getElementById('patRoleTag');
+            const nameEl = document.getElementById('patName');
+            const condEl = document.getElementById('patCondition');
+            const avatarEl = document.getElementById('patAvatar');
+            const metricsGroup = document.getElementById('headerMetricsGroup');
+
+            if (session.role === 'admin') {
+                cardEl.style.borderLeft = "5px solid #f59e0b";
+                roleTag.innerHTML = `<i class="fa fa-crown" style="color:#f59e0b;"></i> APEX SUPER PRO ADMIN`;
+                roleTag.style.color = "#b45309";
+                nameEl.innerText = "Manish Pandey";
+                condEl.innerHTML = `Founder & Apex Super Pro Admin • Network: <strong>5 Super-Specialty Hospitals • 25 Doctors • 5,360+ Beds</strong>`;
+                avatarEl.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80";
+                metricsGroup.innerHTML = `
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Hospitals</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--primary-teal);"><i class="fa fa-hospital"></i> 5 Active</div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Specialists</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-blue);"><i class="fa fa-user-md"></i> 25 Doctors</div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Network Beds</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-green);"><i class="fa fa-procedures"></i> 5,360+</div>
+                    </div>
+                    <button class="btn-primary" onclick="location.href='Admin-Dashboard.html'" style="padding: 10px 18px; background:linear-gradient(135deg,#f59e0b,#d97706); border:none;">
+                        <i class="fa fa-shield-alt"></i> Admin Console
+                    </button>
+                `;
+            } else if (session.role === 'hospital') {
+                const hosp = data.hospitals.find(h => h.id === session.hospitalId) || data.hospitals[0];
+                cardEl.style.borderLeft = "5px solid #2563eb";
+                roleTag.innerHTML = `<i class="fa fa-hospital" style="color:#2563eb;"></i> HOSPITAL STAFF PORTAL`;
+                roleTag.style.color = "#1e40af";
+                nameEl.innerText = `${hosp.name} Staff`;
+                condEl.innerHTML = `${hosp.subtitle} • Location: <strong>${hosp.location.split(',')[0]}</strong>`;
+                avatarEl.src = "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=200&q=80";
+                metricsGroup.innerHTML = `
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Free Beds</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--primary-teal);">${hosp.bedsAvailable}</div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">ICU Units</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-red);">${hosp.bedsICU}</div>
+                    </div>
+                    <button class="btn-primary" onclick="location.href='Hospital-Dashboard.html'" style="padding: 10px 18px;">
+                        <i class="fa fa-hospital"></i> Hospital Workspace
+                    </button>
+                `;
+            } else {
+                const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+                cardEl.style.borderLeft = "5px solid var(--primary-teal)";
+                roleTag.innerHTML = `<i class="fa fa-user" style="color:var(--primary-teal);"></i> ACTIVE PATIENT PROFILE`;
+                roleTag.style.color = "var(--primary-teal)";
+                nameEl.innerText = pat.name;
+                condEl.innerHTML = `${pat.condition} • Primary Hospital: <strong>${pat.primaryHospitalName}</strong>`;
+                avatarEl.src = pat.avatar;
+                metricsGroup.innerHTML = `
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Heart Rate</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-red);"><i class="fa fa-heartbeat"></i> ${pat.vitals.heartRate} bpm</div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Blood Pressure</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-blue);"><i class="fa fa-tint"></i> ${pat.vitals.bpSystolic}/${pat.vitals.bpDiastolic}</div>
+                    </div>
+                    <div class="vital-mini-box">
+                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Recovery</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--accent-green);"><i class="fa fa-walking"></i> ${pat.recoveryProgress}%</div>
+                    </div>
+                    <button class="btn-primary" onclick="location.href='Appointment-Booking.html'" style="padding: 10px 18px;">
+                        <i class="fa fa-calendar-plus"></i> Book Doctor
+                    </button>
+                `;
             }
 
             // 2. Render Partner Hospitals Grid

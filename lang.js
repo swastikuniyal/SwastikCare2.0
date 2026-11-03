@@ -21,7 +21,10 @@
 
         // ── Nav / Top-Bar ──────────────────────────────────────────────────────
         ['डेमो प्रोफाइल बदलीं:', 'Switch Demo Profile:'],
-        ['मरीज: मनीष पांडेय (ठेहुना रिहैब)', 'Patient: Manish Pandey (Knee Rehab)'],
+        ['मरीज: रोहन मेहता (ठेहुना रिहैब)', 'Patient: Rohan Mehta (Knee Rehab)'],
+        ['रोहन (मरीज)', 'Rohan (Patient)'],
+        ['रोहन मेहता', 'Rohan Mehta'],
+        ['मनीष पांडेय (सुपर एडमिन)', 'Manish Pandey (Super Pro Admin)'],
         ['मरीज: प्रिया शर्मा (शुगर इलाज)', 'Patient: Priya Sharma (Diabetes)'],
         ['मरीज: राहुल वर्मा (हार्ट चेकअप)', 'Patient: Rahul Verma (Heart Checkup)'],
         ['मरीज: अनन्या सिंह (माइग्रेन)', 'Patient: Ananya Singh (Migraine)'],

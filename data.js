@@ -10,8 +10,8 @@
  */
 
 (function () {
-    const STORAGE_KEY_DATA = "swastik_care_data_v3_en";
-    const STORAGE_KEY_SESSION = "swastik_care_session_v3_en";
+    const STORAGE_KEY_DATA = "swastik_care_data_v4_admin";
+    const STORAGE_KEY_SESSION = "swastik_care_session_v4_admin";
 
     // 5 Leading Network Hospitals
     const defaultHospitals = [
@@ -654,21 +654,21 @@
     const defaultPatients = [
         {
             id: "pat-1",
-            username: "manish",
+            username: "rohan_mehta",
             password: "password123",
-            name: "Manish Pandey",
+            name: "Rohan Mehta",
             age: 28,
             gender: "Male",
             bloodGroup: "B+",
             phone: "+91 98765 43210",
-            email: "manish.pandey@gmail.com",
-            address: "Flat 402, Green Glen, New Delhi (Orig: Bhojpur)",
+            email: "rohan.mehta@gmail.com",
+            address: "Flat 402, Green Glen, New Delhi",
             primaryHospitalId: "hosp-1",
             primaryHospitalName: "AIIMS New Delhi",
             condition: "Post-Op Knee Ligament Surgery Rehab (ACL Reconstruction)",
             recoveryProgress: 65,
             emergencyContact: {
-                name: "Ramesh Pandey (Father)",
+                name: "Sunil Mehta (Father)",
                 phone: "+91 98111 00223",
                 relation: "Father"
             },
@@ -682,7 +682,7 @@
                 weight: 71,
                 lastUpdated: "Today at 08:30 AM"
             },
-            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
+            avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80"
         },
         {
             id: "pat-2",
@@ -819,7 +819,7 @@
         {
             id: "APT-1001",
             patientId: "pat-1",
-            patientName: "Manish Pandey",
+            patientName: "Rohan Mehta",
             patientPhone: "+91 98765 43210",
             hospitalId: "hosp-1",
             hospitalName: "AIIMS New Delhi",
@@ -987,7 +987,7 @@
         {
             id: "INV-2026-081",
             patientId: "pat-1",
-            patientName: "Manish Pandey",
+            patientName: "Rohan Mehta",
             hospital: "AIIMS New Delhi",
             description: "Orthopedics OPD Consultation + Digital Knee X-Ray",
             date: "18 Oct 2026",
@@ -1001,7 +1001,7 @@
         {
             id: "INV-2026-082",
             patientId: "pat-1",
-            patientName: "Manish Pandey",
+            patientName: "Rohan Mehta",
             hospital: "Max Super Speciality Hospital (Saket)",
             description: "Sports Physiotherapy Rehab (5-Session Package)",
             date: "05 Oct 2026",
@@ -1064,12 +1064,11 @@
             }
         }
         const defaultSession = {
-            role: "patient",
-            userId: "pat-1",
-            username: "manish",
-            displayName: "Manish Pandey (Patient)",
-            hospitalId: "hosp-1",
-            hospitalCode: "aiims",
+            role: "admin",
+            userId: "admin-manish",
+            username: "manish_admin",
+            displayName: "Manish Pandey (Super Pro Admin)",
+            title: "Founder & Apex Super Pro Admin",
             avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
         };
         setSession(defaultSession);
@@ -1124,10 +1123,11 @@
             } else if (role === "admin") {
                 setSession({
                     role: "admin",
-                    userId: "admin-root",
-                    username: "admin",
-                    displayName: "SwastikCare Super Admin",
-                    avatar: null
+                    userId: "admin-manish",
+                    username: "manish_admin",
+                    displayName: "Manish Pandey (Super Pro Admin)",
+                    title: "Founder & Apex Super Pro Admin",
+                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
                 });
             }
             window.location.reload();
