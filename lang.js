@@ -240,7 +240,7 @@
     let currentLang = 'en';
     try {
         localStorage.setItem(LANG_KEY, 'en');
-    } catch(e) {}
+    } catch (e) { }
 
     // ─── DOM Translation Engine ────────────────────────────────────────────────
     function translateNode(node, map) {

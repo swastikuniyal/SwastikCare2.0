@@ -291,12 +291,13 @@
             const metricsGroup = document.getElementById('headerMetricsGroup');
 
             if (session.role === 'admin') {
+                const activeAdmin = session.userId === 'admin-swastik' ? 'Swastik Uniyal' : 'Manish Pandey';
                 cardEl.style.borderLeft = "5px solid #f59e0b";
-                roleTag.innerHTML = `<i class="fa fa-crown" style="color:#f59e0b;"></i> APEX SUPER PRO ADMIN`;
+                roleTag.innerHTML = `<i class="fa fa-crown" style="color:#f59e0b;"></i> APEX SUPER PRO ADMIN LEADERSHIP`;
                 roleTag.style.color = "#b45309";
-                nameEl.innerText = "Manish Pandey";
-                condEl.innerHTML = `Founder & Apex Super Pro Admin • Network: <strong>5 Super-Specialty Hospitals • 25 Doctors • 5,360+ Beds</strong>`;
-                avatarEl.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80";
+                nameEl.innerHTML = `Manish Pandey &amp; Swastik Uniyal <span style="font-size:13px; color:#b45309; font-weight:700; background:#fef3c7; border:1px solid #fde68a; padding:2px 8px; border-radius:12px; margin-left:8px; vertical-align:middle;">Active: ${activeAdmin}</span>`;
+                condEl.innerHTML = `Co-Founders &amp; Apex Super Pro Admins • Network: <strong>5 Super-Specialty Hospitals • 25 Doctors • 5,360+ Beds</strong>`;
+                avatarEl.src = session.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80";
                 metricsGroup.innerHTML = `
                     <div class="vital-mini-box">
                         <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Hospitals</div>

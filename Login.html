@@ -141,11 +141,12 @@
                 document.getElementById('tabAdmin').classList.add('active');
                 document.getElementById('lblUsername').innerText = "Super Admin ID";
                 document.getElementById('btnSubmitTxt').innerText = "Login to Super Admin Console";
-                uField.value = "admin";
+                uField.value = "manish_admin";
                 pField.value = "admin123";
 
                 pillsBox.innerHTML = `
-                    <button type="button" class="demo-quick-btn" onclick="fillAdmin()" style="border-color:#f59e0b; color:#b45309; font-weight:700;"><i class="fa fa-crown" style="color:#f59e0b;"></i> Manish Pandey (Super Pro Admin)</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillAdmin('manish')" style="border-color:#f59e0b; color:#b45309; font-weight:700;"><i class="fa fa-crown" style="color:#f59e0b;"></i> Manish Pandey (Admin)</button>
+                    <button type="button" class="demo-quick-btn" onclick="fillAdmin('swastik')" style="border-color:#f59e0b; color:#b45309; font-weight:700;"><i class="fa fa-crown" style="color:#f59e0b;"></i> Swastik Uniyal (Admin)</button>
                 `;
             }
         }
@@ -160,8 +161,8 @@
             document.getElementById('authPassword').value = "hosp123";
         }
 
-        function fillAdmin() {
-            document.getElementById('authUsername').value = "admin";
+        function fillAdmin(user) {
+            document.getElementById('authUsername').value = (user === 'swastik') ? "swastik_admin" : "manish_admin";
             document.getElementById('authPassword').value = "admin123";
         }
 
@@ -174,29 +175,30 @@
 
         function handleAuthSubmit(e) {
             e.preventDefault();
-            const u = document.getElementById('authUsername').value.trim();
+            const u = document.getElementById('authUsername').value.trim().toLowerCase();
             const p = document.getElementById('authPassword').value.trim();
             const errorBox = document.getElementById('errorBox');
             const errorTxt = document.getElementById('errorMsgTxt');
             const data = window.SwastikData.getData();
 
             if (activeRole === 'patient') {
-                const pat = data.patients.find(pt => pt.username.toLowerCase() === u.toLowerCase() || pt.phone.includes(u));
+                const pat = data.patients.find(pt => pt.username.toLowerCase() === u || pt.phone.includes(u));
                 if (pat && (p === pat.password || p === "password123" || p === "pandey" || p === "123456")) {
                     window.SwastikData.switchPersona('patient', pat.id);
                     window.location.href = "index.html";
                     return;
                 }
             } else if (activeRole === 'hospital') {
-                const hosp = data.hospitals.find(h => h.code.toLowerCase() === u.toLowerCase() || h.id.toLowerCase() === u.toLowerCase());
+                const hosp = data.hospitals.find(h => h.code.toLowerCase() === u || h.id.toLowerCase() === u);
                 if (hosp && (p === "hosp123" || p === "password" || p === "admin123")) {
                     window.SwastikData.switchPersona('hospital', hosp.id);
                     window.location.href = "Hospital-Dashboard.html";
                     return;
                 }
             } else if (activeRole === 'admin') {
-                if (u.toLowerCase() === "admin" && (p === "admin123" || p === "admin" || p === "password")) {
-                    window.SwastikData.switchPersona('admin');
+                if ((u === "admin" || u === "manish_admin" || u === "swastik_admin" || u === "manish" || u === "swastik") && (p === "admin123" || p === "admin" || p === "password")) {
+                    const adminId = (u.includes("swastik")) ? "admin-swastik" : "admin-manish";
+                    window.SwastikData.switchPersona('admin', adminId);
                     window.location.href = "Admin-Dashboard.html";
                     return;
                 }

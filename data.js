@@ -10,8 +10,8 @@
  */
 
 (function () {
-    const STORAGE_KEY_DATA = "swastik_care_data_v4_admin";
-    const STORAGE_KEY_SESSION = "swastik_care_session_v4_admin";
+    const STORAGE_KEY_DATA = "swastik_care_data_v5_coadmins";
+    const STORAGE_KEY_SESSION = "swastik_care_session_v5_coadmins";
 
     // 5 Leading Network Hospitals
     const defaultHospitals = [
@@ -1068,7 +1068,8 @@
             userId: "admin-manish",
             username: "manish_admin",
             displayName: "Manish Pandey (Super Pro Admin)",
-            title: "Founder & Apex Super Pro Admin",
+            coAdmin: "Swastik Uniyal",
+            title: "Co-Founder & Apex Super Pro Admin",
             avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
         };
         setSession(defaultSession);
@@ -1121,14 +1122,27 @@
                     badge: hospital.logoBadge
                 });
             } else if (role === "admin") {
-                setSession({
-                    role: "admin",
-                    userId: "admin-manish",
-                    username: "manish_admin",
-                    displayName: "Manish Pandey (Super Pro Admin)",
-                    title: "Founder & Apex Super Pro Admin",
-                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
-                });
+                if (id === "admin-swastik") {
+                    setSession({
+                        role: "admin",
+                        userId: "admin-swastik",
+                        username: "swastik_admin",
+                        displayName: "Swastik Uniyal (Super Pro Admin)",
+                        coAdmin: "Manish Pandey",
+                        title: "Co-Founder & Apex Super Pro Admin",
+                        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+                    });
+                } else {
+                    setSession({
+                        role: "admin",
+                        userId: "admin-manish",
+                        username: "manish_admin",
+                        displayName: "Manish Pandey (Super Pro Admin)",
+                        coAdmin: "Swastik Uniyal",
+                        title: "Co-Founder & Apex Super Pro Admin",
+                        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
+                    });
+                }
             }
             window.location.reload();
         },

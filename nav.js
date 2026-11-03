@@ -52,9 +52,12 @@
 
                 <span style="color:#64748b; margin: 0 4px;">|</span>
 
-                <!-- Super Pro Admin (Manish Pandey) -->
-                <button class="role-chip ${session.role === 'admin' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('admin')" title="SwastikCare Super Pro Admin: Manish Pandey" style="${session.role === 'admin' ? 'background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:white; font-weight:800;' : 'border-color:#f59e0b; color:#fde68a;'}">
-                    <i class="fa fa-crown" style="color:${session.role === 'admin' ? '#fff' : '#f59e0b'};"></i> Manish Pandey (Super Pro Admin)
+                <!-- Super Pro Admins: Manish Pandey & Swastik Uniyal -->
+                <button class="role-chip ${session.role === 'admin' && (session.userId === 'admin-manish' || !session.userId) ? 'active' : ''}" onclick="window.SwastikData.switchPersona('admin', 'admin-manish')" title="Co-Founder & Super Pro Admin: Manish Pandey" style="${session.role === 'admin' && (session.userId === 'admin-manish' || !session.userId) ? 'background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:white; font-weight:800;' : 'border-color:#f59e0b; color:#fde68a;'}">
+                    <i class="fa fa-crown" style="color:${session.role === 'admin' && (session.userId === 'admin-manish' || !session.userId) ? '#fff' : '#f59e0b'};"></i> Manish Pandey (Admin)
+                </button>
+                <button class="role-chip ${session.role === 'admin' && session.userId === 'admin-swastik' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('admin', 'admin-swastik')" title="Co-Founder & Super Pro Admin: Swastik Uniyal" style="${session.role === 'admin' && session.userId === 'admin-swastik' ? 'background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:white; font-weight:800;' : 'border-color:#f59e0b; color:#fde68a;'}">
+                    <i class="fa fa-crown" style="color:${session.role === 'admin' && session.userId === 'admin-swastik' ? '#fff' : '#f59e0b'};"></i> Swastik Uniyal (Admin)
                 </button>
             </div>
             <div>
