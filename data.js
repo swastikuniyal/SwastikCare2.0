@@ -1084,7 +1084,14 @@
     }
 
     function clearSession() {
-        localStorage.removeItem(STORAGE_KEY_SESSION);
+        const guestSession = {
+            role: "guest",
+            userId: null,
+            username: "guest_visitor",
+            displayName: "Guest Visitor (No Login)",
+            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
+        };
+        setSession(guestSession);
         localStorage.removeItem("patientName");
     }
 
@@ -1099,7 +1106,15 @@
         // 1-Click Persona Switcher
         switchPersona: function (role, id) {
             const data = loadData();
-            if (role === "patient") {
+            if (role === "guest") {
+                setSession({
+                    role: "guest",
+                    userId: null,
+                    username: "guest_visitor",
+                    displayName: "Guest Visitor (No Login)",
+                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
+                });
+            } else if (role === "patient") {
                 const patient = data.patients.find(p => p.id === id) || data.patients[0];
                 setSession({
                     role: "patient",
@@ -1167,18 +1182,100 @@
             return data.patients.find(p => p.id === id);
         },
 
-        // Book New Appointment
+        // Book New Appointment (Works with or without login)
         bookAppointment: function (booking) {
             const data = loadData();
+            
+            // Clean patientId: never tag super admin as patient
+            let patId = booking.patientId;
+            if (patId === 'admin-manish' || patId === 'admin-swastik' || !patId || String(patId).startsWith('guest')) {
+                patId = null;
+            }
+
+            let existingPat = null;
+            if (patId) {
+                existingPat = data.patients.find(p => p.id === patId);
+            }
+            if (!existingPat && booking.patientPhone) {
+                existingPat = data.patients.find(p => p.phone === booking.patientPhone || p.phone.replace(/\D/g, '') === booking.patientPhone.replace(/\D/g, ''));
+            }
+
+            if (!existingPat && booking.patientName) {
+                // Auto-create patient profile so medical records, vitals & history are preserved
+                patId = "pat-" + (data.patients.length + 1);
+                existingPat = {
+                    id: patId,
+                    name: booking.patientName,
+                    phone: booking.patientPhone || "+91 98000 00000",
+                    age: Number(booking.patientAge) || 28,
+                    gender: booking.patientGender || "Other",
+                    username: booking.patientName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Math.floor(10 + Math.random() * 90),
+                    password: "password123",
+                    primaryHospitalId: booking.hospitalId || "hosp-1",
+                    primaryHospitalName: booking.hospitalName || "AIIMS New Delhi",
+                    condition: booking.symptoms || "General OPD Consultation",
+                    recoveryProgress: 15,
+                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
+                    vitals: {
+                        bpSystolic: 120,
+                        bpDiastolic: 80,
+                        heartRate: 72,
+                        oxygenSat: 98,
+                        temperature: 98.4
+                    }
+                };
+                data.patients.push(existingPat);
+            } else if (existingPat) {
+                patId = existingPat.id;
+            }
+
             const newApt = {
                 id: "APT-" + Math.floor(1000 + Math.random() * 9000),
-                bookedAt: new Date().toISOString().split("T")[0],
+                patientId: patId || "pat-1",
+                patientName: booking.patientName || (existingPat ? existingPat.name : "Patient"),
+                patientPhone: booking.patientPhone || "",
+                patientAge: booking.patientAge || (existingPat ? existingPat.age : 30),
+                patientGender: booking.patientGender || (existingPat ? existingPat.gender : "Other"),
+                hospitalId: booking.hospitalId,
+                hospitalName: booking.hospitalName,
+                doctorId: booking.doctorId,
+                doctorName: booking.doctorName,
+                specialty: booking.specialty,
+                date: booking.date,
+                time: booking.time,
+                type: booking.type || "In-Person OPD",
+                room: booking.room || "OPD Room 101",
+                symptoms: booking.symptoms || "General Health Consultation",
+                fee: booking.fee || 500,
                 status: "Confirmed",
-                ...booking
+                bookedAt: new Date().toISOString().split("T")[0]
             };
+
             data.appointments.unshift(newApt);
             saveData(data);
             return newApt;
+        },
+
+        // Retrieve Appointments for Patient / Phone
+        getAppointmentsByPatient: function (patientId, phone) {
+            const data = loadData();
+            return data.appointments.filter(a => {
+                if (patientId && a.patientId === patientId) return true;
+                if (phone && a.patientPhone && a.patientPhone.replace(/\D/g, '') === phone.replace(/\D/g, '')) return true;
+                return false;
+            });
+        },
+
+        // Retrieve Appointments by Hospital
+        getAppointmentsByHospital: function (hospitalId) {
+            const data = loadData();
+            return data.appointments.filter(a => a.hospitalId === hospitalId);
+        },
+
+        // Retrieve Appointments by Doctor
+        getAppointmentsByDoctor: function (doctorId) {
+            const data = loadData();
+            return data.appointments.filter(a => a.doctorId === doctorId);
         },
 
         // Update Appointment Status

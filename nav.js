@@ -59,6 +59,13 @@
                 <button class="role-chip ${session.role === 'admin' && session.userId === 'admin-swastik' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('admin', 'admin-swastik')" title="Co-Founder & Super Pro Admin: Swastik Uniyal" style="${session.role === 'admin' && session.userId === 'admin-swastik' ? 'background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:white; font-weight:800;' : 'border-color:#f59e0b; color:#fde68a;'}">
                     <i class="fa fa-crown" style="color:${session.role === 'admin' && session.userId === 'admin-swastik' ? '#fff' : '#f59e0b'};"></i> Swastik Uniyal (Admin)
                 </button>
+
+                <span style="color:#64748b; margin: 0 4px;">|</span>
+
+                <!-- Guest Mode (No Login) -->
+                <button class="role-chip ${session.role === 'guest' ? 'active' : ''}" onclick="window.SwastikData.switchPersona('guest')" title="Browse or Book as Guest (No Login Required)">
+                    <i class="fa fa-user-secret"></i> Guest (No Login)
+                </button>
             </div>
             <div>
                 <a href="Emergency.html" class="emergency-link">
@@ -104,13 +111,13 @@
                         <i class="fa fa-ambulance"></i> Emergency 108
                     </a>
 
-                    <div class="user-badge-menu" onclick="location.href='${session.role === 'admin' ? 'Admin-Dashboard.html' : session.role === 'hospital' ? 'Hospital-Dashboard.html' : 'Profile-Settings.html'}'" title="View Profile" style="${session.role === 'admin' ? 'border-color:#f59e0b; background:#fffbeb;' : ''}">
+                    <div class="user-badge-menu" onclick="location.href='${session.role === 'admin' ? 'Admin-Dashboard.html' : session.role === 'hospital' ? 'Hospital-Dashboard.html' : session.role === 'guest' ? 'Login.html' : 'Profile-Settings.html'}'" title="View Profile" style="${session.role === 'admin' ? 'border-color:#f59e0b; background:#fffbeb;' : ''}">
                         <div class="user-avatar-mini" style="${session.role === 'admin' ? 'background:linear-gradient(135deg,#f59e0b,#d97706); color:white;' : ''}">
-                            ${session.role === 'admin' ? '<i class="fa fa-crown"></i>' : session.role === 'hospital' ? '<i class="fa fa-hospital"></i>' : '<i class="fa fa-user"></i>'}
+                            ${session.role === 'admin' ? '<i class="fa fa-crown"></i>' : session.role === 'hospital' ? '<i class="fa fa-hospital"></i>' : session.role === 'guest' ? '<i class="fa fa-user-secret"></i>' : '<i class="fa fa-user"></i>'}
                         </div>
                         <div style="font-size: 13px; font-weight:700; line-height:1.2;">
-                            <div>${session.displayName || 'Manish Pandey (Super Pro Admin)'}</div>
-                            <small style="color:${session.role === 'admin' ? '#b45309' : 'var(--text-muted)'}; font-size:10px; text-transform:uppercase; font-weight:800;">${session.role === 'admin' ? 'Super Pro Admin' : session.role === 'hospital' ? 'Hospital Staff' : 'Patient'}</small>
+                            <div>${session.displayName || 'Guest Visitor (No Login)'}</div>
+                            <small style="color:${session.role === 'admin' ? '#b45309' : 'var(--text-muted)'}; font-size:10px; text-transform:uppercase; font-weight:800;">${session.role === 'admin' ? 'Super Pro Admin' : session.role === 'hospital' ? 'Hospital Staff' : session.role === 'guest' ? 'Guest (No Login)' : 'Patient'}</small>
                         </div>
                     </div>
 

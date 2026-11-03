@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book OPD Appointment | SwastikCare</title>
+    <title>Book Doctor OPD Appointment | SwastikCare</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -44,228 +44,309 @@
 
         .confirmation-slip {
             background: white; border: 2px dashed #99f6e4; border-radius: var(--radius-lg);
-            padding: 30px; max-width: 650px; margin: 0 auto;
+            padding: 30px; max-width: 680px; margin: 0 auto;
             box-shadow: var(--shadow-lg); text-align: center;
+        }
+
+        .booking-mode-chip {
+            padding: 10px 18px; border-radius: var(--radius-sm); border: 2px solid var(--border-color);
+            background: white; font-size: 13px; font-weight: 700; color: var(--text-secondary);
+            cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px;
+        }
+        .booking-mode-chip.active {
+            border-color: var(--primary-teal); background: #f0fdfa; color: var(--primary-teal);
         }
     </style>
 </head>
 <body>
 
     <main class="main-wrapper">
-        <div class="page-header" style="text-align: center; justify-content: center; margin-bottom: 30px;">
+        <div class="page-header" style="text-align: center; justify-content: center; margin-bottom: 25px; flex-direction: column;">
             <div>
                 <h1 class="page-title" style="justify-content: center;">
                     <i class="fa fa-calendar-check" style="color: var(--primary-teal);"></i>
                     Specialist Doctor OPD Appointment Booking
                 </h1>
                 <p class="page-subtitle">
-                    Choose a hospital, select a doctor, pick a time, and instantly receive your digital appointment slip.
+                    Instant doctor appointments across AIIMS, Apollo, Max, Fortis &amp; Medanta. <strong>No login required for guest booking!</strong>
                 </p>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="btn-primary" id="tabNewBookingBtn" onclick="showNewBookingTab()">
+                    <i class="fa fa-calendar-plus"></i> Book New OPD
+                </button>
+                <button class="btn-secondary" id="tabTrackBookingBtn" onclick="showTrackBookingsTab()">
+                    <i class="fa fa-search"></i> Check My Existing OPD Bookings
+                </button>
             </div>
         </div>
 
-        <!-- 4-Step Progress Bar -->
-        <div class="step-progress-bar">
-            <div id="stepIndicator1" class="step-item active">
-                <div class="step-circle">1</div>
-                <div class="step-title">1. Select Hospital</div>
-            </div>
-            <div id="stepIndicator2" class="step-item">
-                <div class="step-circle">2</div>
-                <div class="step-title">2. Select Doctor</div>
-            </div>
-            <div id="stepIndicator3" class="step-item">
-                <div class="step-circle">3</div>
-                <div class="step-title">3. Date & Time</div>
-            </div>
-            <div id="stepIndicator4" class="step-item">
-                <div class="step-circle">4</div>
-                <div class="step-title">4. Confirm</div>
-            </div>
-        </div>
-
-        <!-- Step 1: Select Hospital -->
-        <section id="bookingStep1" class="card-box" style="max-width: 1050px; margin: 0 auto 30px;">
+        <!-- TRACK BOOKINGS SECTION (Hidden by default) -->
+        <section id="trackBookingsSection" class="card-box" style="max-width: 900px; margin: 0 auto 30px; display: none;">
             <div class="card-header">
-                <h3><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> Step 1: Select Network Hospital</h3>
-                <span class="badge badge-teal">5 Top Hospitals</span>
+                <h3><i class="fa fa-search" style="color:var(--primary-teal);"></i> Track Your OPD Bookings &amp; Slips</h3>
+                <span class="badge badge-teal">Instant Search</span>
             </div>
-            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
-                Click on the hospital where you wish to receive treatment:
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 18px;">
+                Enter your mobile phone number or Token ID (e.g. <code>APT-1001</code>) to retrieve your confirmed appointments:
             </p>
-
-            <div class="grid-5" id="hospSelectionGrid">
-                <!-- Filled by JavaScript -->
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
-                <button class="btn-primary" onclick="proceedToStep2()">
-                    Proceed to Select Doctor <i class="fa fa-arrow-right"></i>
+            <div style="display: flex; gap: 10px; margin-bottom: 24px;">
+                <input type="text" id="trackSearchInput" class="form-control" placeholder="Enter Mobile Number (e.g. 9876543210) or Token ID..." onkeyup="if(event.key==='Enter') executeTrackSearch()">
+                <button class="btn-primary" onclick="executeTrackSearch()" style="white-space: nowrap;">
+                    <i class="fa fa-search"></i> Find Booking
                 </button>
+            </div>
+            <div id="trackResultsContainer">
+                <!-- Filled dynamically by JavaScript -->
             </div>
         </section>
 
-        <!-- Step 2: Select Doctor -->
-        <section id="bookingStep2" class="card-box" style="max-width: 1050px; margin: 0 auto 30px; display: none;">
-            <div class="card-header">
-                <h3><i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Step 2: Select Specialist Doctor</h3>
-                <span id="selectedHospBadge" class="badge badge-blue">AIIMS New Delhi</span>
-            </div>
-            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
-                Choose from this hospital's 5 senior specialist doctors:
-            </p>
-
-            <div class="grid-2" id="docSelectionGrid">
-                <!-- Filled by JavaScript -->
-            </div>
-
-            <div style="display: flex; justify-content: space-between; margin-top: 25px;">
-                <button class="btn-secondary" onclick="goToStep(1)">
-                    <i class="fa fa-arrow-left"></i> Back to Hospital
-                </button>
-                <button class="btn-primary" onclick="proceedToStep3()">
-                    Proceed to Date & Time <i class="fa fa-arrow-right"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- Step 3: Date & Time -->
-        <section id="bookingStep3" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
-            <div class="card-header">
-                <h3><i class="fa fa-clock" style="color:var(--primary-teal);"></i> Step 3: Date, Time & Consultation Type</h3>
-                <span id="selectedDocBadge" class="badge badge-green">Doctor Selected</span>
-            </div>
-
-            <div class="grid-2" style="margin-bottom: 20px;">
-                <div class="form-group">
-                    <label class="form-label">Consultation Mode</label>
-                    <select id="bookingMode" class="form-control" onchange="updateBookingMode(this.value)">
-                        <option value="In-Person OPD">🏥 In-Person OPD (Hospital Visit)</option>
-                        <option value="Online Telehealth Video Call">💻 Online HD Video Call (Telehealth)</option>
-                    </select>
+        <!-- BOOKING PROGRESS BAR -->
+        <div id="bookingFlowContainer">
+            <div class="step-progress-bar">
+                <div id="stepIndicator1" class="step-item active">
+                    <div class="step-circle">1</div>
+                    <div class="step-title">1. Select Hospital</div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Appointment Date</label>
-                    <input type="date" id="bookingDateInput" class="form-control" onchange="refreshTimeSlots()">
+                <div id="stepIndicator2" class="step-item">
+                    <div class="step-circle">2</div>
+                    <div class="step-title">2. Select Doctor</div>
+                </div>
+                <div id="stepIndicator3" class="step-item">
+                    <div class="step-circle">3</div>
+                    <div class="step-title">3. Date &amp; Time</div>
+                </div>
+                <div id="stepIndicator4" class="step-item">
+                    <div class="step-circle">4</div>
+                    <div class="step-title">4. Patient Details</div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Available Time Slots</label>
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;" id="timeSlotsContainer">
-                    <button type="button" class="time-slot-btn selected" onclick="selectSlot('09:30 AM', this)">09:30 AM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('10:15 AM', this)">10:15 AM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('11:00 AM', this)">11:00 AM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('11:45 AM', this)">11:45 AM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('02:00 PM', this)">02:00 PM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('02:45 PM', this)">02:45 PM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('03:30 PM', this)">03:30 PM</button>
-                    <button type="button" class="time-slot-btn" onclick="selectSlot('04:15 PM', this)">04:15 PM</button>
+            <!-- Step 1: Select Hospital -->
+            <section id="bookingStep1" class="card-box" style="max-width: 1050px; margin: 0 auto 30px;">
+                <div class="card-header">
+                    <h3><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> Step 1: Select Network Hospital</h3>
+                    <span class="badge badge-teal">5 Premier Centres</span>
                 </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; margin-top: 25px;">
-                <button class="btn-secondary" onclick="goToStep(2)">
-                    <i class="fa fa-arrow-left"></i> Back to Doctor
-                </button>
-                <button class="btn-primary" onclick="proceedToStep4()">
-                    Review & Finalise <i class="fa fa-arrow-right"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- Step 4: Patient Details & Confirm -->
-        <section id="bookingStep4" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
-            <div class="card-header">
-                <h3><i class="fa fa-user-check" style="color:var(--primary-teal);"></i> Step 4: Patient Name & Symptoms</h3>
-                <span class="badge badge-purple">Final Step</span>
-            </div>
-
-            <div class="grid-2" style="margin-bottom: 20px;">
-                <div class="form-group">
-                    <label class="form-label">Patient Full Name</label>
-                    <input type="text" id="patientNameInput" class="form-control" required placeholder="e.g. Rohan Mehta">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Mobile Phone Number</label>
-                    <input type="text" id="patientPhoneInput" class="form-control" required placeholder="+91 98765 43210">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">What is your concern? (Symptoms)</label>
-                <textarea id="patientSymptomsInput" class="form-control" rows="3" placeholder="Describe your symptoms or any previous surgery/medication..."></textarea>
-            </div>
-
-            <!-- Booking Summary -->
-            <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
-                <h4 style="font-size: 15px; color: var(--secondary-blue); margin-bottom: 12px;"><i class="fa fa-receipt"></i> Booking Summary</h4>
-                <div class="grid-3" style="font-size: 13.5px; line-height: 1.8;">
-                    <div><strong>Hospital:</strong> <span id="revHospName">AIIMS</span></div>
-                    <div><strong>Doctor:</strong> <span id="revDocName">Dr. Name</span></div>
-                    <div><strong>Consultation Fee:</strong> <span id="revFee" style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
-                    <div><strong>Date:</strong> <span id="revDate">2026-11-02</span></div>
-                    <div><strong>Time:</strong> <span id="revTime">09:30 AM</span></div>
-                    <div><strong>Mode:</strong> <span id="revMode">In-Person OPD</span></div>
-                </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between;">
-                <button class="btn-secondary" onclick="goToStep(3)">
-                    <i class="fa fa-arrow-left"></i> Change Time
-                </button>
-                <button class="btn-primary" style="padding: 12px 28px;" onclick="confirmAndSaveBooking()">
-                    <i class="fa fa-check-circle"></i> Confirm Booking & Get Slip
-                </button>
-            </div>
-        </section>
-
-        <!-- Confirmation Slip -->
-        <section id="bookingSlipSection" style="display: none; margin-bottom: 40px;">
-            <div class="confirmation-slip">
-                <div style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
-                    <i class="fa fa-check"></i>
-                </div>
-                <h2 style="font-size: 24px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 6px;">
-                    Appointment Booked Successfully!
-                </h2>
-                <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 20px;">
-                    An SMS confirmation has been sent to your mobile.
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                    Select the hospital where you wish to book your OPD consultation:
                 </p>
 
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 20px; text-align: left; margin-bottom: 20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;">
-                        <div>
-                            <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Booking Token Number</span>
-                            <div id="slipTokenId" style="font-size: 18px; font-weight: 800; color: var(--primary-teal);">APT-9921</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <span class="badge badge-green">Confirmed</span>
-                        </div>
-                    </div>
+                <div class="grid-5" id="hospSelectionGrid">
+                    <!-- Filled by JavaScript -->
+                </div>
 
-                    <div style="font-size: 13.5px; line-height: 1.9; color: var(--text-primary);">
-                        <div><strong>Patient Name:</strong> <span id="slipPatient">Rohan Mehta</span></div>
-                        <div><strong>Hospital:</strong> <span id="slipHosp">AIIMS New Delhi</span></div>
-                        <div><strong>Doctor:</strong> <span id="slipDoctor">Dr. Rajesh Malhotra</span></div>
-                        <div><strong>Date & Time:</strong> <span id="slipSchedule">02 November 2026, 09:30 AM</span></div>
-                        <div><strong>Room / Wing:</strong> <span id="slipRoom">OPD Block A, Room 102</span></div>
+                <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
+                    <button class="btn-primary" onclick="proceedToStep2()">
+                        Proceed to Select Doctor <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 2: Select Doctor -->
+            <section id="bookingStep2" class="card-box" style="max-width: 1050px; margin: 0 auto 30px; display: none;">
+                <div class="card-header">
+                    <h3><i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Step 2: Select Specialist Doctor</h3>
+                    <span id="selectedHospBadge" class="badge badge-blue">AIIMS New Delhi</span>
+                </div>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                    Choose from this hospital's senior specialist doctors:
+                </p>
+
+                <div class="grid-2" id="docSelectionGrid">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                    <button class="btn-secondary" onclick="goToStep(1)">
+                        <i class="fa fa-arrow-left"></i> Back to Hospital
+                    </button>
+                    <button class="btn-primary" onclick="proceedToStep3()">
+                        Proceed to Date &amp; Time <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 3: Date & Time -->
+            <section id="bookingStep3" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
+                <div class="card-header">
+                    <h3><i class="fa fa-clock" style="color:var(--primary-teal);"></i> Step 3: Date, Time &amp; Consultation Mode</h3>
+                    <span id="selectedDocBadge" class="badge badge-green">Doctor Selected</span>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Consultation Mode</label>
+                        <select id="bookingMode" class="form-control" onchange="updateBookingMode(this.value)">
+                            <option value="In-Person OPD">🏥 In-Person OPD (Hospital Visit)</option>
+                            <option value="Online Telehealth Video Call">💻 Online HD Video Call (Telehealth)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Appointment Date</label>
+                        <input type="date" id="bookingDateInput" class="form-control" onchange="refreshTimeSlots()">
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 12px; justify-content: center;">
-                    <button class="btn-primary" onclick="window.print()">
-                        <i class="fa fa-print"></i> Print Slip
+                <div class="form-group">
+                    <label class="form-label">Available Time Slots</label>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;" id="timeSlotsContainer">
+                        <button type="button" class="time-slot-btn selected" onclick="selectSlot('09:30 AM', this)">09:30 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('10:15 AM', this)">10:15 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:00 AM', this)">11:00 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:45 AM', this)">11:45 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:00 PM', this)">02:00 PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:45 PM', this)">02:45 PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('03:30 PM', this)">03:30 PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('04:15 PM', this)">04:15 PM</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                    <button class="btn-secondary" onclick="goToStep(2)">
+                        <i class="fa fa-arrow-left"></i> Back to Doctor
                     </button>
-                    <button class="btn-secondary" onclick="location.href='index.html'">
-                        <i class="fa fa-home"></i> Go to Home
-                    </button>
-                    <button class="btn-secondary" onclick="location.href='Hospital-Dashboard.html'">
-                        <i class="fa fa-hospital"></i> View Hospital OPD
+                    <button class="btn-primary" onclick="proceedToStep4()">
+                        Review &amp; Patient Details <i class="fa fa-arrow-right"></i>
                     </button>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <!-- Step 4: Patient Details & Confirm -->
+            <section id="bookingStep4" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
+                <div class="card-header">
+                    <h3><i class="fa fa-user-check" style="color:var(--primary-teal);"></i> Step 4: Patient Information &amp; Symptoms</h3>
+                    <span class="badge badge-purple">Instant Confirmation</span>
+                </div>
+
+                <!-- Persona Mode Notice / Choice -->
+                <div id="bookingModeSelector" style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 10px;">
+                        <i class="fa fa-shield-alt" style="color:var(--primary-teal);"></i> Choose Booking Mode:
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button type="button" id="btnModeGuest" class="booking-mode-chip active" onclick="setBookingMode('guest')">
+                            <i class="fa fa-bolt" style="color:#0d9488;"></i> Instant Booking (No Login Required)
+                        </button>
+                        <button type="button" id="btnModeProfile" class="booking-mode-chip" onclick="setBookingMode('profile')">
+                            <i class="fa fa-user-circle"></i> Use Logged-in Profile
+                        </button>
+                    </div>
+                    <div id="bookingModeNotice" style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+                        ✓ Anyone can book instantly with just a name and phone number. No login or password needed!
+                    </div>
+                </div>
+
+                <!-- Patient Form Fields -->
+                <div class="grid-2" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label class="form-label">Patient Full Legal Name <span style="color:#ef4444;">*</span></label>
+                        <input type="text" id="patientNameInput" class="form-control" required placeholder="e.g. Ramesh Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mobile Phone Number (for SMS &amp; Token) <span style="color:#ef4444;">*</span></label>
+                        <input type="tel" id="patientPhoneInput" class="form-control" required placeholder="+91 98765 43210">
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label class="form-label">Patient Age (Years)</label>
+                        <input type="number" id="patientAgeInput" class="form-control" min="1" max="120" placeholder="e.g. 35" value="32">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gender</label>
+                        <select id="patientGenderInput" class="form-control">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Chief Medical Concern or Symptoms</label>
+                    <textarea id="patientSymptomsInput" class="form-control" rows="3" placeholder="Describe symptoms, duration, previous medication or allergies..."></textarea>
+                </div>
+
+                <!-- Booking Summary Card -->
+                <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
+                    <h4 style="font-size: 15px; color: var(--secondary-blue); margin-bottom: 12px;">
+                        <i class="fa fa-receipt" style="color:var(--primary-teal);"></i> OPD Booking Summary
+                    </h4>
+                    <div class="grid-3" style="font-size: 13.5px; line-height: 1.8;">
+                        <div><strong>Hospital:</strong> <span id="revHospName">AIIMS New Delhi</span></div>
+                        <div><strong>Doctor:</strong> <span id="revDocName">Dr. Name</span></div>
+                        <div><strong>Consultation Fee:</strong> <span id="revFee" style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
+                        <div><strong>Date:</strong> <span id="revDate">Today</span></div>
+                        <div><strong>Time:</strong> <span id="revTime">09:30 AM</span></div>
+                        <div><strong>Mode:</strong> <span id="revMode">In-Person OPD</span></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between;">
+                    <button class="btn-secondary" onclick="goToStep(3)">
+                        <i class="fa fa-arrow-left"></i> Change Schedule
+                    </button>
+                    <button class="btn-primary" style="padding: 12px 28px;" onclick="confirmAndSaveBooking()">
+                        <i class="fa fa-check-circle"></i> Confirm Booking &amp; Get OPD Slip
+                    </button>
+                </div>
+            </section>
+
+            <!-- Confirmation Slip -->
+            <section id="bookingSlipSection" style="display: none; margin-bottom: 40px;">
+                <div class="confirmation-slip">
+                    <div style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
+                        <i class="fa fa-check"></i>
+                    </div>
+                    <h2 style="font-size: 24px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 6px;">
+                        OPD Appointment Confirmed!
+                    </h2>
+                    <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 20px;">
+                        Your booking has been added to the hospital OPD schedule and Super Admin registry.
+                    </p>
+
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 22px; text-align: left; margin-bottom: 22px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official OPD Token Number</span>
+                                <div id="slipTokenId" style="font-size: 20px; font-weight: 800; color: var(--primary-teal);">APT-9921</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="badge badge-green" style="font-size: 12.5px;"><i class="fa fa-check-circle"></i> Confirmed &amp; Queued</span>
+                            </div>
+                        </div>
+
+                        <div class="grid-2" style="font-size: 13.5px; line-height: 2; color: var(--text-primary);">
+                            <div><strong>Patient:</strong> <span id="slipPatient">Patient Name</span></div>
+                            <div><strong>Contact Phone:</strong> <span id="slipPhone">+91 98765 43210</span></div>
+                            <div><strong>Hospital:</strong> <span id="slipHosp">AIIMS New Delhi</span></div>
+                            <div><strong>Doctor:</strong> <span id="slipDoctor">Dr. Rajesh Malhotra</span></div>
+                            <div><strong>Schedule:</strong> <span id="slipSchedule">Date &amp; Time</span></div>
+                            <div><strong>Room / Wing:</strong> <span id="slipRoom">OPD Block A, Room 102</span></div>
+                            <div><strong>Mode:</strong> <span id="slipMode">In-Person OPD</span></div>
+                            <div><strong>Consultation Fee:</strong> <span id="slipFee" style="color:var(--primary-teal); font-weight:700;">₹500 (Paid / Cash at Counter)</span></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn-primary" onclick="window.print()">
+                            <i class="fa fa-print"></i> Print OPD Slip
+                        </button>
+                        <button class="btn-secondary" onclick="location.href='index.html'">
+                            <i class="fa fa-home"></i> View in My Appointments (Home)
+                        </button>
+                        <button class="btn-secondary" onclick="location.href='Hospital-Dashboard.html'">
+                            <i class="fa fa-hospital"></i> Hospital Live OPD Queue
+                        </button>
+                        <button class="btn-secondary" onclick="resetToStep1()">
+                            <i class="fa fa-calendar-plus"></i> Book Another Appointment
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
     <!-- Core Scripts -->
@@ -276,27 +357,59 @@
         let selectedDoctorId = "dr-1";
         let selectedTimeSlot = "09:30 AM";
         let selectedMode = "In-Person OPD";
+        let currentBookingMode = "guest"; // 'guest' or 'profile'
 
         function initBooking() {
             const data = window.SwastikData.getData();
             const session = window.SwastikData.getSession();
 
+            // Set date min to today so patients cannot book in the past
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const dateInput = document.getElementById('bookingDateInput');
+            dateInput.min = todayStr;
+
+            // Default to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.value = tomorrow.toISOString().split('T')[0];
+
+            // Parse URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const paramHosp = urlParams.get('hospId');
             const paramDoc = urlParams.get('docId');
 
-            if (paramHosp) selectedHospId = paramHosp;
-            if (paramDoc) selectedDoctorId = paramDoc;
+            if (paramDoc) {
+                const doc = data.doctors.find(d => d.id === paramDoc);
+                if (doc) {
+                    selectedDoctorId = doc.id;
+                    selectedHospId = doc.hospitalId;
+                }
+            } else if (paramHosp) {
+                selectedHospId = paramHosp;
+            }
 
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('bookingDateInput').value = tomorrow.toISOString().split('T')[0];
-
-            const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
-            if (pat) {
-                document.getElementById('patientNameInput').value = pat.name;
-                document.getElementById('patientPhoneInput').value = pat.phone;
-                document.getElementById('patientSymptomsInput').value = `Routine check-up for ${pat.condition}`;
+            // Check session
+            if (session.role === 'patient') {
+                const pat = data.patients.find(p => p.id === session.userId);
+                if (pat) {
+                    document.getElementById('patientNameInput').value = pat.name;
+                    document.getElementById('patientPhoneInput').value = pat.phone;
+                    document.getElementById('patientAgeInput').value = pat.age || 30;
+                    document.getElementById('patientGenderInput').value = pat.gender || "Male";
+                    document.getElementById('patientSymptomsInput').value = `Consultation for ${pat.condition}`;
+                    setBookingMode('profile');
+                } else {
+                    setBookingMode('guest');
+                }
+            } else if (session.role === 'admin') {
+                setBookingMode('guest');
+                document.getElementById('bookingModeNotice').innerHTML = `
+                    <span style="color:#b45309; font-weight:700;"><i class="fa fa-crown"></i> Super Pro Admin Mode:</span>
+                    Enter patient details below to book on their behalf. This appointment will automatically register in both Super Admin consoles (Manish Pandey &amp; Swastik Uniyal) and the hospital OPD.
+                `;
+            } else {
+                setBookingMode('guest');
             }
 
             renderHospitalStep();
@@ -307,6 +420,149 @@
             } else if (paramHosp) {
                 proceedToStep2();
             }
+        }
+
+        function setBookingMode(mode) {
+            currentBookingMode = mode;
+            const btnGuest = document.getElementById('btnModeGuest');
+            const btnProfile = document.getElementById('btnModeProfile');
+            const notice = document.getElementById('bookingModeNotice');
+            const session = window.SwastikData.getSession();
+            const data = window.SwastikData.getData();
+
+            btnGuest.classList.toggle('active', mode === 'guest');
+            btnProfile.classList.toggle('active', mode === 'profile');
+
+            if (mode === 'guest') {
+                notice.innerHTML = `✓ <strong>No login required:</strong> Enter patient name and mobile number. You will receive an instant digital OPD Token and SMS confirmation.`;
+                if (session.role === 'admin') {
+                    document.getElementById('patientNameInput').placeholder = "Enter patient's full name";
+                    document.getElementById('patientPhoneInput').placeholder = "+91 98765 43210";
+                }
+            } else {
+                if (session.role === 'patient') {
+                    const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+                    document.getElementById('patientNameInput').value = pat.name;
+                    document.getElementById('patientPhoneInput').value = pat.phone;
+                    document.getElementById('patientAgeInput').value = pat.age || 30;
+                    document.getElementById('patientGenderInput').value = pat.gender || "Male";
+                    notice.innerHTML = `✓ Using verified logged-in patient account: <strong>${pat.name}</strong> (${pat.phone}).`;
+                } else {
+                    notice.innerHTML = `⚠️ You are currently logged in as <strong>${session.displayName}</strong>. You can book directly for any patient using guest mode above.`;
+                }
+            }
+        }
+
+        function showNewBookingTab() {
+            document.getElementById('trackBookingsSection').style.display = 'none';
+            document.getElementById('bookingFlowContainer').style.display = 'block';
+            document.getElementById('tabNewBookingBtn').className = "btn-primary";
+            document.getElementById('tabTrackBookingBtn').className = "btn-secondary";
+        }
+
+        function showTrackBookingsTab() {
+            document.getElementById('bookingFlowContainer').style.display = 'none';
+            document.getElementById('trackBookingsSection').style.display = 'block';
+            document.getElementById('tabNewBookingBtn').className = "btn-secondary";
+            document.getElementById('tabTrackBookingBtn').className = "btn-primary";
+
+            const session = window.SwastikData.getSession();
+            const data = window.SwastikData.getData();
+            if (session.role === 'patient') {
+                const pat = data.patients.find(p => p.id === session.userId);
+                if (pat) {
+                    document.getElementById('trackSearchInput').value = pat.phone;
+                }
+            }
+            executeTrackSearch();
+        }
+
+        function executeTrackSearch() {
+            const query = document.getElementById('trackSearchInput').value.trim().toLowerCase();
+            const data = window.SwastikData.getData();
+            const resultsBox = document.getElementById('trackResultsContainer');
+
+            let matched = data.appointments;
+            if (query) {
+                const cleanQ = query.replace(/\D/g, '');
+                matched = data.appointments.filter(a => {
+                    const idMatch = a.id.toLowerCase().includes(query);
+                    const nameMatch = a.patientName && a.patientName.toLowerCase().includes(query);
+                    const phoneMatch = cleanQ.length >= 4 && a.patientPhone && a.patientPhone.replace(/\D/g, '').includes(cleanQ);
+                    const docMatch = a.doctorName && a.doctorName.toLowerCase().includes(query);
+                    return idMatch || nameMatch || phoneMatch || docMatch;
+                });
+            }
+
+            if (matched.length === 0) {
+                resultsBox.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; background: var(--bg-muted); border-radius: var(--radius-md);">
+                        <i class="fa fa-calendar-times" style="font-size: 36px; color: var(--text-muted); margin-bottom: 12px;"></i>
+                        <h4 style="color: var(--secondary-blue);">No matching bookings found</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                            We could not find any appointments matching "${query}". Try searching by phone number or Token ID.
+                        </p>
+                        <button class="btn-primary" onclick="showNewBookingTab()">
+                            <i class="fa fa-calendar-plus"></i> Book an OPD Appointment Now
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsBox.innerHTML = `
+                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                    Found <strong>${matched.length}</strong> confirmed appointment(s):
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    ${matched.map(a => `
+                        <div class="card-box" style="padding: 18px; border-left: 4px solid var(--primary-teal);">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+                                <div>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <span style="font-weight:800; font-size:16px; color:var(--primary-teal);">${a.id}</span>
+                                        <span class="badge ${a.status === 'Confirmed' ? 'badge-green' : a.status === 'Completed' ? 'badge-teal' : 'badge-orange'}">${a.status}</span>
+                                        <span class="badge badge-purple">${a.type || 'In-Person OPD'}</span>
+                                    </div>
+                                    <h4 style="font-size:16px; font-weight:700; color:var(--secondary-blue); margin-top:6px;">${a.doctorName} <small style="color:var(--text-muted); font-weight:400;">(${a.specialty || ''})</small></h4>
+                                    <div style="font-size:13px; color:var(--text-secondary);"><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> ${a.hospitalName} • <strong>Room:</strong> ${a.room || 'OPD Room 101'}</div>
+                                    <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;"><i class="fa fa-user" style="color:var(--accent-blue);"></i> Patient: <strong>${a.patientName}</strong> (${a.patientPhone || 'N/A'})</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:14px; font-weight:700; color:var(--secondary-blue);"><i class="fa fa-clock" style="color:var(--primary-teal);"></i> ${a.date} at ${a.time}</div>
+                                    <div style="font-size:13px; font-weight:700; color:var(--primary-teal); margin-top:4px;">Fee: ₹${a.fee || 500}</div>
+                                    <button class="btn-outline-teal btn-sm" style="margin-top:10px;" onclick="viewSlipFromObject('${a.id}')">
+                                        <i class="fa fa-receipt"></i> View OPD Slip
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function viewSlipFromObject(aptId) {
+            const data = window.SwastikData.getData();
+            const a = data.appointments.find(apt => apt.id === aptId);
+            if (!a) return;
+
+            showNewBookingTab();
+            document.querySelectorAll('section[id^="bookingStep"]').forEach(s => s.style.display = 'none');
+            document.querySelector('.step-progress-bar').style.display = 'none';
+
+            document.getElementById('slipTokenId').innerText = a.id;
+            document.getElementById('slipPatient').innerText = a.patientName;
+            document.getElementById('slipPhone').innerText = a.patientPhone || "+91 98765 43210";
+            document.getElementById('slipHosp').innerText = a.hospitalName;
+            document.getElementById('slipDoctor').innerText = a.doctorName;
+            document.getElementById('slipSchedule').innerText = `${a.date} at ${a.time}`;
+            document.getElementById('slipRoom').innerText = a.room || "OPD Room 101";
+            document.getElementById('slipMode').innerText = a.type || "In-Person OPD";
+            document.getElementById('slipFee').innerText = `₹${a.fee || 500} (Paid / Cash at Counter)`;
+
+            document.getElementById('bookingSlipSection').style.display = 'block';
+            window.scrollTo({ top: 120, behavior: 'smooth' });
         }
 
         function renderHospitalStep() {
@@ -407,7 +663,7 @@
 
             document.getElementById('revHospName').innerText = hosp ? hosp.name : "";
             document.getElementById('revDocName').innerText = doc ? doc.name : "";
-            document.getElementById('revFee').innerText = doc ? `₹${doc.consultationFee}` : "";
+            document.getElementById('revFee').innerText = doc ? `₹${doc.consultationFee}` : "₹500";
             document.getElementById('revDate').innerText = document.getElementById('bookingDateInput').value;
             document.getElementById('revTime').innerText = selectedTimeSlot;
             document.getElementById('revMode').innerText = selectedMode;
@@ -418,22 +674,29 @@
         function confirmAndSaveBooking() {
             const patName = document.getElementById('patientNameInput').value.trim();
             const patPhone = document.getElementById('patientPhoneInput').value.trim();
+            const patAge = document.getElementById('patientAgeInput').value.trim();
+            const patGender = document.getElementById('patientGenderInput').value;
             const symptoms = document.getElementById('patientSymptomsInput').value.trim();
 
             if (!patName || !patPhone) {
-                window.showToast("Please enter patient name and phone number.", "warning");
+                window.showToast("Please enter patient name and mobile phone number.", "warning");
                 return;
             }
 
             const data = window.SwastikData.getData();
-            const hosp = data.hospitals.find(h => h.id === selectedHospId);
-            const doc = data.doctors.find(d => d.id === selectedDoctorId);
+            const hosp = data.hospitals.find(h => h.id === selectedHospId) || data.hospitals[0];
+            const doc = data.doctors.find(d => d.id === selectedDoctorId) || data.doctors[0];
             const session = window.SwastikData.getSession();
 
+            // patientId determination
+            let patId = (currentBookingMode === 'profile' && session.role === 'patient') ? session.userId : null;
+
             const newBooking = {
-                patientId: session.userId || "pat-1",
+                patientId: patId,
                 patientName: patName,
                 patientPhone: patPhone,
+                patientAge: Number(patAge) || 30,
+                patientGender: patGender,
                 hospitalId: selectedHospId,
                 hospitalName: hosp.name,
                 doctorId: selectedDoctorId,
@@ -443,8 +706,8 @@
                 time: selectedTimeSlot,
                 type: selectedMode,
                 room: doc.room || "OPD Room 101",
-                symptoms: symptoms || "General health consultation",
-                fee: doc.consultationFee
+                symptoms: symptoms || "General OPD consultation",
+                fee: doc.consultationFee || 500
             };
 
             const saved = window.SwastikData.bookAppointment(newBooking);
@@ -454,13 +717,23 @@
 
             document.getElementById('slipTokenId').innerText = saved.id;
             document.getElementById('slipPatient').innerText = saved.patientName;
+            document.getElementById('slipPhone').innerText = saved.patientPhone;
             document.getElementById('slipHosp').innerText = saved.hospitalName;
             document.getElementById('slipDoctor').innerText = saved.doctorName;
             document.getElementById('slipSchedule').innerText = `${saved.date} at ${saved.time}`;
             document.getElementById('slipRoom').innerText = saved.room;
+            document.getElementById('slipMode').innerText = saved.type;
+            document.getElementById('slipFee').innerText = `₹${saved.fee} (Paid / Cash at Counter)`;
 
             document.getElementById('bookingSlipSection').style.display = 'block';
-            window.showToast("Appointment confirmed and registered with the hospital!", "success");
+            window.showToast("Appointment confirmed! Registered in OPD schedule and Super Admin dashboard.", "success");
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+        }
+
+        function resetToStep1() {
+            document.getElementById('bookingSlipSection').style.display = 'none';
+            document.querySelector('.step-progress-bar').style.display = 'flex';
+            goToStep(1);
         }
 
         window.onload = initBooking;
