@@ -277,6 +277,31 @@
         </div>
     </main>
 
+    <!-- Modal: Home Gate Pass QR Preview -->
+    <div id="homeGatePassModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 440px; text-align: center; background: white; border-radius: 16px; padding: 24px;">
+            <button class="modal-close-btn" onclick="closeHomeGatePassModal()">&times;</button>
+            <div style="display:inline-block; padding:4px 12px; background:#dcfce7; color:#16a34a; font-weight:800; font-size:11.5px; border-radius:20px; margin-bottom:10px;">
+                <i class="fa fa-qrcode"></i> HOSPITAL ENTRY &amp; KIOSK PASS
+            </div>
+            <h3 id="homeModalHospTitle" style="font-size: 18px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 4px;">AIIMS New Delhi</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Present this scannable QR at security gate or touch kiosk machine.</p>
+            <div style="background: #f8fafc; border: 2px dashed #0d9488; border-radius: 12px; padding: 14px; display: inline-block; margin-bottom: 16px;">
+                <img id="homeModalQrImg" src="" alt="Entry QR" style="width: 200px; height: 200px; display: block; margin: 0 auto; border-radius: 6px;">
+                <div id="homeModalPassCode" style="font-size: 12px; font-weight: 800; color: var(--secondary-blue); margin-top: 8px; font-family: monospace;">PASS-CODE</div>
+            </div>
+            <div id="homeModalDetails" style="font-size: 13px; line-height: 1.8; text-align: left; background: #f1f5f9; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                <!-- Populated by JS -->
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <a id="homeModalFullSlipBtn" href="#" class="btn-primary" style="text-decoration:none;">
+                    <i class="fa fa-receipt"></i> Full OPD Token Slip
+                </a>
+                <button class="btn-secondary" onclick="closeHomeGatePassModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Core Scripts -->
     <script src="data.js"></script>
     <script src="nav.js"></script>
@@ -346,7 +371,7 @@
                 roleTag.innerHTML = `<i class="fa fa-user-circle" style="color:var(--primary-teal);"></i> GUEST VISITOR WELCOME`;
                 roleTag.style.color = "var(--primary-teal)";
                 nameEl.innerText = "Welcome to SwastikCare";
-                condEl.innerHTML = `Connect directly with India's 5 top hospitals &amp; 25 specialist doctors. <strong>No login required to book appointments!</strong>`;
+                condEl.innerHTML = `Connect directly with India's 5 top hospitals &amp; 25 specialist doctors. <strong>Secure Patient Registration &amp; Login required to book OPD appointments.</strong>`;
                 avatarEl.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80";
                 metricsGroup.innerHTML = `
                     <button class="btn-primary" onclick="location.href='Appointment-Booking.html'" style="padding: 10px 20px;">
@@ -471,9 +496,14 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="Appointment-Booking.html" class="btn-secondary btn-sm" title="View or Print Slip">
-                                                    <i class="fa fa-receipt"></i> Slip
-                                                </a>
+                                                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                                    <a href="Appointment-Booking.html?slipAptId=${a.id}" class="btn-primary btn-sm" title="View Full Entry Pass &amp; Slip">
+                                                        <i class="fa fa-qrcode"></i> Entry QR
+                                                    </a>
+                                                    <button class="btn-secondary btn-sm" onclick="openHomeGatePassModal('${a.id}')" title="Quick Scan Popup">
+                                                        <i class="fa fa-expand"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     `).join('')}
@@ -593,6 +623,33 @@
             if (e.key === "Enter") {
                 executeGlobalSearch();
             }
+        }
+
+        function openHomeGatePassModal(aptId) {
+            const data = window.SwastikData.getData();
+            const apt = data.appointments.find(a => a.id === aptId);
+            if (!apt) return;
+
+            document.getElementById('homeModalHospTitle').innerText = apt.hospitalName;
+            document.getElementById('homeModalPassCode').innerText = apt.gatePassCode || `PASS-${apt.id}-GATE`;
+
+            const qrPayload = `SWASTIKCARE-ENTRY-PASS|APPT:${apt.id}|PAT:${apt.tokenNo || apt.patientId}|NAME:${encodeURIComponent(apt.patientName)}|PASS:${apt.gatePassCode || 'PASS-' + apt.id}`;
+            document.getElementById('homeModalQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrPayload)}`;
+
+            document.getElementById('homeModalDetails').innerHTML = `
+                <div><strong>Patient:</strong> ${apt.patientName} (Token: <span style="color:var(--primary-teal); font-weight:700;">${apt.tokenNo || apt.patientId}</span>)</div>
+                <div><strong>Consulting Doctor:</strong> ${apt.doctorName}</div>
+                <div><strong>Room / Wing:</strong> <span style="color:var(--primary-teal); font-weight:700;">${apt.room || 'OPD Room 101'}</span></div>
+                <div><strong>Slot:</strong> ${apt.date} at ${apt.time}</div>
+                <div><strong>Gate Status:</strong> <span class="badge ${apt.gateEntryStatus === 'ENTRY_GRANTED' ? 'badge-green' : 'badge-orange'}">${apt.gateEntryStatus === 'ENTRY_GRANTED' ? 'Entry Granted (' + (apt.gateEntryTime || 'Verified') + ')' : 'Ready for Gate Scan'}</span></div>
+            `;
+
+            document.getElementById('homeModalFullSlipBtn').href = `Appointment-Booking.html?slipAptId=${apt.id}`;
+            document.getElementById('homeGatePassModal').classList.add('active');
+        }
+
+        function closeHomeGatePassModal() {
+            document.getElementById('homeGatePassModal').classList.remove('active');
         }
 
         window.onload = renderHomePage;

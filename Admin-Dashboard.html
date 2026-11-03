@@ -465,11 +465,14 @@
                         </span>
                     </td>
                     <td>
-                        <div style="display:flex; gap:6px;">
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <a href="Appointment-Booking.html?slipAptId=${a.id}" class="btn-primary btn-sm" title="View OPD Slip &amp; Gate Pass QR">
+                                <i class="fa fa-qrcode"></i> Slip &amp; QR
+                            </a>
                             ${!a.status.includes('Completed') ? `
-                                <button class="btn-primary btn-sm" onclick="handleAptStatus('${a.id}', 'Completed')">Complete</button>
+                                <button class="btn-secondary btn-sm" onclick="handleAptStatus('${a.id}', 'Completed')">Complete</button>
                                 <button class="btn-secondary btn-sm" onclick="handleAptStatus('${a.id}', 'Cancelled')">Cancel</button>
-                            ` : `<span style="font-size:12px; color:var(--text-muted);">Past Record</span>`}
+                            ` : `<span style="font-size:12px; color:var(--text-muted); align-self:center;">Past Record</span>`}
                         </div>
                     </td>
                 </tr>

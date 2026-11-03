@@ -504,6 +504,60 @@
                         </div>
                     </div>
 
+                    <!-- UNIQUE SCANNABLE GATE ENTRY & KIOSK MACHINE QR PASS -->
+                    <div style="background: linear-gradient(135deg, #042f2e, #0f172a); color: white; border-radius: var(--radius-md); padding: 22px; margin-bottom: 22px; border: 2px solid #0d9488; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.2);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:12px; margin-bottom:16px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="width:36px; height:36px; border-radius:8px; background:#0d9488; display:flex; align-items:center; justify-content:center; font-size:18px;">
+                                    <i class="fa fa-qrcode"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size:16px; font-weight:800; margin:0; letter-spacing:0.3px;">Official Hospital Gate &amp; Kiosk Entry Pass</h4>
+                                    <div style="font-size:11.5px; color:#99f6e4;">Unique Smart QR for Gate Security Staff &amp; Automated Turnstile Kiosks</div>
+                                </div>
+                            </div>
+                            <div>
+                                <span id="slipGatePassBadge" class="badge badge-green" style="font-size:12px; padding:6px 12px;">
+                                    <i class="fa fa-shield-alt"></i> VALID FOR HOSPITAL ENTRY
+                                </span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:22px; align-items:center; flex-wrap:wrap; justify-content:center;">
+                            <!-- QR Code Container -->
+                            <div style="background:white; padding:12px; border-radius:12px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.3); min-width:180px;">
+                                <img id="slipGateQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=SWASTIKCARE-GATE-ENTRY" alt="Entry QR Code" style="width:160px; height:160px; display:block; margin:0 auto; border-radius:6px;">
+                                <div id="slipGatePassCodeText" style="margin-top:8px; font-size:11px; font-weight:800; color:#0f172a; letter-spacing:1px; font-family:monospace;">PASS-APT1001-GATE</div>
+                            </div>
+
+                            <!-- Info & Instructions -->
+                            <div style="flex:1; min-width:260px; text-align:left;">
+                                <div style="font-size:13.5px; line-height:1.7; margin-bottom:14px; color:#e2e8f0;">
+                                    <div style="margin-bottom:6px;">
+                                        <i class="fa fa-shield-alt" style="color:#2dd4bf;"></i> <strong>Security Pass Code:</strong> 
+                                        <span id="slipGateSecurityHash" style="color:#5eead4; font-family:monospace; font-weight:700;">SC-SEC-VERIFIED</span>
+                                    </div>
+                                    <div style="margin-bottom:6px;">
+                                        <i class="fa fa-door-open" style="color:#2dd4bf;"></i> <strong>OPD Gate Status:</strong> 
+                                        <span id="slipGateEntryStatus" style="color:#34d399; font-weight:700;">Ready for Scan / Turnstile Access</span>
+                                    </div>
+                                    <div style="background:rgba(255,255,255,0.08); border-left:3px solid #2dd4bf; padding:10px 12px; border-radius:4px; font-size:12.5px; color:#ccfbf1; margin-top:8px;">
+                                        <i class="fa fa-info-circle"></i> <strong>Hospital Entry Rule:</strong> Show this QR code to hospital security staff or hold it facing the automated kiosk scanner machine at the entrance gate. You will get verified entry inside without any problem!
+                                    </div>
+                                </div>
+
+                                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                    <button class="btn-primary btn-sm" onclick="openFullscreenKioskPass()" style="background:#0d9488; border-color:#0d9488;">
+                                        <i class="fa fa-expand"></i> Show Fullscreen Kiosk Machine QR
+                                    </button>
+                                    <button class="btn-secondary btn-sm" onclick="simulateGateScanFromSlip()" style="background:rgba(255,255,255,0.15); color:white; border-color:rgba(255,255,255,0.3);">
+                                        <i class="fa fa-barcode"></i> Test Staff Scanner / Gate Entry
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                         <button class="btn-primary" onclick="window.print()">
                             <i class="fa fa-print"></i> Print OPD Slip
@@ -522,6 +576,38 @@
             </section>
         </div>
     </main>
+
+    <!-- Modal: Fullscreen Kiosk Machine Pass -->
+    <div id="kioskPassModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 480px; text-align: center; background: white; border-radius: 16px; padding: 26px;">
+            <button class="modal-close-btn" onclick="closeKioskPassModal()">&times;</button>
+            <div style="display:inline-block; padding:6px 14px; background:#dcfce7; color:#16a34a; font-weight:800; font-size:12px; border-radius:20px; margin-bottom:12px;">
+                <i class="fa fa-check-circle"></i> READY FOR MACHINE SCANNER
+            </div>
+            <h3 id="kioskModalHosp" style="font-size: 20px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 4px;">AIIMS New Delhi</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;">Hold this QR code directly against the entry turnstile or machine optical reader.</p>
+            
+            <div style="background: #f8fafc; border: 3px dashed #0d9488; border-radius: 16px; padding: 18px; display: inline-block; margin-bottom: 18px;">
+                <img id="kioskModalQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=SWASTIKCARE-ENTRY-PASS" alt="Gate QR" style="width: 240px; height: 240px; display: block; margin: 0 auto; border-radius: 8px;">
+                <div id="kioskModalPassCode" style="font-size: 13px; font-weight: 800; letter-spacing: 2px; color: var(--secondary-blue); margin-top: 10px; font-family: monospace;">PASS-CODE</div>
+            </div>
+
+            <div style="font-size: 14px; line-height: 1.8; text-align: left; background: #f1f5f9; border-radius: 10px; padding: 14px; margin-bottom: 20px;">
+                <div><strong>Patient Name:</strong> <span id="kioskModalPatient">Rohan Mehta</span></div>
+                <div><strong>Patient Token ID:</strong> <span id="kioskModalToken" style="font-weight:700; color:var(--primary-teal);">SC-PAT-101</span></div>
+                <div><strong>OPD Doctor:</strong> <span id="kioskModalDoctor">Dr. Rajesh Malhotra</span></div>
+                <div><strong>OPD Room / Gate:</strong> <span id="kioskModalRoom">Trauma Centre, Room 402</span></div>
+                <div><strong>Schedule:</strong> <span id="kioskModalSchedule">Today at 10:30 AM</span></div>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button class="btn-primary" onclick="simulateGateScanFromSlip()">
+                    <i class="fa fa-check"></i> Simulate Machine Entry Now
+                </button>
+                <button class="btn-secondary" onclick="closeKioskPassModal()">Done</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Core Scripts -->
     <script src="data.js"></script>
@@ -590,6 +676,15 @@
 
             // Parse URL parameters
             const urlParams = new URLSearchParams(window.location.search);
+            const urlSlipId = urlParams.get('slipAptId');
+            if (urlSlipId) {
+                const foundApt = data.appointments.find(a => a.id === urlSlipId);
+                if (foundApt) {
+                    displayAppointmentSlip(foundApt);
+                    return;
+                }
+            }
+
             const paramHosp = urlParams.get('hospId');
             const paramDoc = urlParams.get('docId');
 
@@ -979,33 +1074,179 @@
             };
 
             const saved = window.SwastikData.bookAppointment(newBooking);
+            displayAppointmentSlip(saved);
+            window.showToast("OPD Appointment confirmed! Gate Entry QR & 5-Stage Roadmap generated.", "success");
+        }
 
+        function displayAppointmentSlip(saved) {
             document.querySelectorAll('section[id^="bookingStep"]').forEach(s => s.style.display = 'none');
-            document.querySelector('.step-progress-bar').style.display = 'none';
+            const stepBar = document.querySelector('.step-progress-bar');
+            if (stepBar) stepBar.style.display = 'none';
 
             document.getElementById('slipTokenId').innerText = saved.id;
             document.getElementById('slipPatient').innerText = saved.patientName;
-            document.getElementById('slipPatToken').innerText = saved.patientToken || patToken;
-            document.getElementById('slipPhone').innerText = saved.patientPhone;
+            document.getElementById('slipPatToken').innerText = saved.tokenNo || saved.patientToken || "SC-PAT-101";
+            document.getElementById('slipPhone').innerText = saved.patientPhone || "+91 98765 43210";
             document.getElementById('slipHosp').innerText = saved.hospitalName;
             document.getElementById('slipDoctor').innerText = saved.doctorName;
             document.getElementById('slipSchedule').innerText = `${saved.date} at ${saved.time}`;
-            document.getElementById('slipRoom').innerText = saved.room;
-            document.getElementById('slipMode').innerText = saved.type;
-            document.getElementById('slipFee').innerText = `₹${saved.fee}`;
+            document.getElementById('slipRoom').innerText = saved.room || "OPD Room 101";
+            document.getElementById('slipMode').innerText = saved.type || "In-Person OPD";
+            document.getElementById('slipFee').innerText = `₹${saved.fee || 500}`;
 
             const payMethodEl = document.getElementById('slipPayMethod');
-            if (payMethodEl) payMethodEl.innerText = saved.paymentMethod || payMethod;
+            if (payMethodEl) payMethodEl.innerText = saved.paymentMethod || "UPI (hmpmanish@ptyes)";
 
             const payStatusEl = document.getElementById('slipPayStatus');
             if (payStatusEl) {
-                payStatusEl.innerText = saved.paymentStatus || payStatus;
-                payStatusEl.className = (selectedPaymentOption === 'upi') ? 'badge badge-green' : 'badge badge-blue';
+                payStatusEl.innerText = saved.paymentStatus || "Paid Online (UPI)";
+                payStatusEl.className = String(saved.paymentStatus || '').includes('Paid') ? 'badge badge-green' : 'badge badge-blue';
+            }
+
+            const passCode = saved.gatePassCode || `PASS-${saved.id}-GATE`;
+            const patTok = saved.tokenNo || saved.patientToken || "SC-PAT-101";
+            const qrPayload = `SWASTIKCARE-ENTRY-PASS|APPT:${saved.id}|PAT:${patTok}|NAME:${encodeURIComponent(saved.patientName)}|HOSP:${saved.hospitalId}|ROOM:${encodeURIComponent(saved.room || '')}|DATE:${saved.date}|TIME:${encodeURIComponent(saved.time)}|PASS:${passCode}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrPayload)}`;
+
+            const gateQrImg = document.getElementById('slipGateQrImg');
+            if (gateQrImg) gateQrImg.src = qrUrl;
+
+            const gateCodeEl = document.getElementById('slipGatePassCodeText');
+            if (gateCodeEl) gateCodeEl.innerText = passCode;
+
+            const secHashEl = document.getElementById('slipGateSecurityHash');
+            if (secHashEl) secHashEl.innerText = `SEC-${saved.id}-${patTok.replace(/\D/g, '') || '8821'}`;
+
+            const gateStatusEl = document.getElementById('slipGateEntryStatus');
+            const gateBadge = document.getElementById('slipGatePassBadge');
+            if (saved.gateEntryStatus === 'ENTRY_GRANTED') {
+                if (gateStatusEl) gateStatusEl.innerHTML = `<span style="color:#10b981;"><i class="fa fa-check-circle"></i> ENTRY GRANTED (${saved.gateEntryTime || 'Verified'})</span>`;
+                if (gateBadge) {
+                    gateBadge.className = "badge badge-green";
+                    gateBadge.innerHTML = '<i class="fa fa-door-open"></i> GATE OPENED - INSIDE OPD';
+                }
+            } else {
+                if (gateStatusEl) gateStatusEl.innerText = 'Ready for Scan / Turnstile Access';
+                if (gateBadge) {
+                    gateBadge.className = "badge badge-green";
+                    gateBadge.innerHTML = '<i class="fa fa-shield-alt"></i> VALID FOR HOSPITAL ENTRY';
+                }
+            }
+
+            // Update Care Stage Tracker
+            const stageNodes = document.querySelectorAll('.stage-node');
+            if (stageNodes.length >= 5) {
+                stageNodes.forEach((node, idx) => {
+                    const stepNum = idx + 1;
+                    node.className = 'stage-node';
+                    const activeStage = saved.careStage || (saved.gateEntryStatus === 'ENTRY_GRANTED' ? 2 : 1);
+                    if (stepNum < activeStage) {
+                        node.classList.add('done');
+                        node.querySelector('.stage-badge-num').innerHTML = '<i class="fa fa-check"></i>';
+                    } else if (stepNum === activeStage) {
+                        node.classList.add('current');
+                        node.querySelector('.stage-badge-num').innerText = stepNum;
+                    } else {
+                        node.querySelector('.stage-badge-num').innerText = stepNum;
+                    }
+                });
             }
 
             document.getElementById('bookingSlipSection').style.display = 'block';
-            window.showToast("OPD Appointment confirmed! Digital Token & 5-Stage Roadmap generated.", "success");
             window.scrollTo({ top: 100, behavior: 'smooth' });
+        }
+
+        function openFullscreenKioskPass() {
+            const currentAptId = document.getElementById('slipTokenId').innerText.trim();
+            const data = window.SwastikData.getData();
+            const apt = data.appointments.find(a => a.id === currentAptId) || {
+                id: currentAptId,
+                patientName: document.getElementById('slipPatient').innerText,
+                patientToken: document.getElementById('slipPatToken').innerText,
+                hospitalName: document.getElementById('slipHosp').innerText,
+                doctorName: document.getElementById('slipDoctor').innerText,
+                room: document.getElementById('slipRoom').innerText,
+                date: document.getElementById('slipSchedule').innerText,
+                gatePassCode: document.getElementById('slipGatePassCodeText').innerText
+            };
+
+            document.getElementById('kioskModalHosp').innerText = apt.hospitalName || "Hospital OPD";
+            document.getElementById('kioskModalPatient').innerText = apt.patientName || "Patient";
+            document.getElementById('kioskModalToken').innerText = apt.tokenNo || apt.patientToken || "SC-PAT-101";
+            document.getElementById('kioskModalDoctor').innerText = apt.doctorName || "Doctor";
+            document.getElementById('kioskModalRoom').innerText = apt.room || "OPD Room 101";
+            document.getElementById('kioskModalSchedule').innerText = `${apt.date || ''} ${apt.time || ''}`;
+            document.getElementById('kioskModalPassCode').innerText = apt.gatePassCode || `PASS-${apt.id}-GATE`;
+
+            const qrPayload = `SWASTIKCARE-ENTRY-PASS|APPT:${apt.id}|PAT:${apt.tokenNo || apt.patientToken}|NAME:${encodeURIComponent(apt.patientName)}|PASS:${apt.gatePassCode || 'PASS-' + apt.id}`;
+            document.getElementById('kioskModalQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(qrPayload)}`;
+
+            document.getElementById('kioskPassModal').classList.add('active');
+        }
+
+        function closeKioskPassModal() {
+            document.getElementById('kioskPassModal').classList.remove('active');
+        }
+
+        function playAccessGrantedChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const now = ctx.currentTime;
+                    
+                    const osc1 = ctx.createOscillator();
+                    const gain1 = ctx.createGain();
+                    osc1.type = 'sine';
+                    osc1.frequency.setValueAtTime(523.25, now);
+                    gain1.gain.setValueAtTime(0.2, now);
+                    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc1.connect(gain1);
+                    gain1.connect(ctx.destination);
+                    osc1.start(now);
+                    osc1.stop(now + 0.25);
+
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(783.99, now + 0.18);
+                    gain2.gain.setValueAtTime(0.25, now + 0.18);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start(now + 0.18);
+                    osc2.stop(now + 0.6);
+                }
+            } catch (e) {
+                console.warn("Audio chime:", e);
+            }
+        }
+
+        function simulateGateScanFromSlip() {
+            const currentAptId = document.getElementById('slipTokenId').innerText.trim();
+            const result = window.SwastikData.verifyGateEntry(currentAptId);
+            if (result.success) {
+                playAccessGrantedChime();
+                document.getElementById('slipGateEntryStatus').innerHTML = `<span style="color:#10b981;"><i class="fa fa-check-circle"></i> ENTRY GRANTED (${result.appointment.gateEntryTime})</span>`;
+                document.getElementById('slipGatePassBadge').className = "badge badge-green";
+                document.getElementById('slipGatePassBadge').innerHTML = '<i class="fa fa-door-open"></i> GATE OPENED - INSIDE OPD';
+                
+                const stageNodes = document.querySelectorAll('.stage-node');
+                if (stageNodes.length >= 3) {
+                    stageNodes[0].className = 'stage-node done';
+                    stageNodes[0].querySelector('.stage-badge-num').innerHTML = '<i class="fa fa-check"></i>';
+                    stageNodes[1].className = 'stage-node done';
+                    stageNodes[1].querySelector('.stage-badge-num').innerHTML = '<i class="fa fa-check"></i>';
+                    stageNodes[2].className = 'stage-node current';
+                }
+
+                alert(`✅ HOSPITAL GATE ACCESS GRANTED!\n\nWelcome ${result.appointment.patientName}!\nGate Turnstile Barrier: OPENED\nDestination: ${result.appointment.hospitalName} - ${result.appointment.room}\nDoctor: ${result.appointment.doctorName}\n\nYou may now enter the hospital premises without any issues.`);
+                if (document.getElementById('kioskPassModal').classList.contains('active')) {
+                    closeKioskPassModal();
+                }
+            } else {
+                alert("Verification status: " + result.message);
+            }
         }
 
         function resetToStep1() {

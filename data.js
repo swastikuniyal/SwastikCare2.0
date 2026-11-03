@@ -819,6 +819,10 @@
         {
             id: "APT-1001",
             patientId: "pat-1",
+            tokenNo: "SC-PAT-101",
+            gatePassCode: "PASS-APT1001-GATE",
+            gateEntryStatus: "READY_FOR_SCAN",
+            careStage: 1,
             patientName: "Rohan Mehta",
             patientPhone: "+91 98765 43210",
             hospitalId: "hosp-1",
@@ -833,11 +837,17 @@
             room: "Trauma Centre, Room 402",
             symptoms: "6-week post-op ACL knee reconstruction mobility & strength checkup.",
             fee: 550,
+            paymentMethod: "UPI (hmpmanish@ptyes)",
+            paymentStatus: "Paid Online (UPI)",
             bookedAt: "2026-10-25"
         },
         {
             id: "APT-1002",
             patientId: "pat-2",
+            tokenNo: "SC-PAT-102",
+            gatePassCode: "PASS-APT1002-GATE",
+            gateEntryStatus: "READY_FOR_SCAN",
+            careStage: 1,
             patientName: "Priya Sharma",
             patientPhone: "+91 98111 22334",
             hospitalId: "hosp-3",
@@ -852,11 +862,17 @@
             room: "Online Telehealth Suite #MAX-08",
             symptoms: "HbA1c blood sugar panel review & dietary guidance.",
             fee: 1350,
+            paymentMethod: "UPI (hmpmanish@ptyes)",
+            paymentStatus: "Paid Online (UPI)",
             bookedAt: "2026-10-26"
         },
         {
             id: "APT-1003",
             patientId: "pat-3",
+            tokenNo: "SC-PAT-103",
+            gatePassCode: "PASS-APT1003-GATE",
+            gateEntryStatus: "READY_FOR_SCAN",
+            careStage: 1,
             patientName: "Rahul Verma",
             patientPhone: "+91 98222 33445",
             hospitalId: "hosp-5",
@@ -871,11 +887,18 @@
             room: "Heart Institute Board Suite",
             symptoms: "Echocardiogram cardiac review & Holter monitoring assessment.",
             fee: 2500,
+            paymentMethod: "Cash or UPI at Counter",
+            paymentStatus: "Pay at Counter on Arrival",
             bookedAt: "2026-10-27"
         },
         {
             id: "APT-1004",
             patientId: "pat-4",
+            tokenNo: "SC-PAT-104",
+            gatePassCode: "PASS-APT1004-GATE",
+            gateEntryStatus: "ENTRY_GRANTED",
+            gateEntryTime: "03:15 PM",
+            careStage: 5,
             patientName: "Ananya Singh",
             patientPhone: "+91 98333 44556",
             hospitalId: "hosp-2",
@@ -890,11 +913,17 @@
             room: "Neuro Block, Room 202",
             symptoms: "MRI Brain review for migraine headache management.",
             fee: 1800,
+            paymentMethod: "UPI (hmpmanish@ptyes)",
+            paymentStatus: "Paid Online (UPI)",
             bookedAt: "2026-10-15"
         },
         {
             id: "APT-1005",
             patientId: "pat-5",
+            tokenNo: "SC-PAT-105",
+            gatePassCode: "PASS-APT1005-GATE",
+            gateEntryStatus: "READY_FOR_SCAN",
+            careStage: 1,
             patientName: "Amit Kumar",
             patientPhone: "+91 98444 55667",
             hospitalId: "hosp-4",
@@ -908,8 +937,10 @@
             status: "Scheduled",
             room: "Heart Suite, Room 501",
             symptoms: "Exertional chest heaviness & shortness of breath evaluation.",
-            fee: 2400,
-            bookedAt: "2026-10-27"
+            fee: 2100,
+            paymentMethod: "Cash or UPI at Counter",
+            paymentStatus: "Pay at Counter on Arrival",
+            bookedAt: "2026-10-28"
         }
     ];
 
@@ -1029,24 +1060,62 @@
     ];
 
     function loadData() {
+        let current = null;
         const stored = localStorage.getItem(STORAGE_KEY_DATA);
         if (stored) {
             try {
-                return JSON.parse(stored);
+                current = JSON.parse(stored);
             } catch (e) {
                 console.error("Data load failed, resetting...", e);
             }
         }
-        const initial = {
-            hospitals: defaultHospitals,
-            doctors: defaultDoctors,
-            patients: defaultPatients,
-            appointments: defaultAppointments,
-            records: defaultRecords,
-            invoices: defaultInvoices
-        };
-        saveData(initial);
-        return initial;
+        if (!current) {
+            current = {
+                hospitals: defaultHospitals,
+                doctors: defaultDoctors,
+                patients: defaultPatients,
+                appointments: defaultAppointments,
+                records: defaultRecords,
+                invoices: defaultInvoices
+            };
+        }
+
+        // Normalize Appointments with Token No, Gate Pass Code & Care Stages
+        if (Array.isArray(current.appointments)) {
+            current.appointments.forEach((a, idx) => {
+                if (!a.tokenNo) {
+                    const pat = (current.patients || []).find(p => p.id === a.patientId);
+                    a.tokenNo = (pat && pat.tokenNo) ? pat.tokenNo : ("SC-PAT-" + (101 + idx));
+                }
+                if (!a.gatePassCode) {
+                    a.gatePassCode = "PASS-" + (a.id || ("APT-" + (1000 + idx))) + "-GATE";
+                }
+                if (!a.gateEntryStatus) {
+                    a.gateEntryStatus = a.status === 'Completed' ? 'ENTRY_COMPLETED' : 'READY_FOR_SCAN';
+                }
+                if (!a.careStage) {
+                    a.careStage = a.status === 'Completed' ? 5 : (a.gateEntryStatus === 'ENTRY_GRANTED' ? 2 : 1);
+                }
+                if (!a.paymentMethod) {
+                    a.paymentMethod = "UPI (hmpmanish@ptyes)";
+                }
+                if (!a.paymentStatus) {
+                    a.paymentStatus = "Paid Online (UPI)";
+                }
+            });
+        }
+
+        // Normalize Invoices with Gate Pass Codes
+        if (Array.isArray(current.invoices)) {
+            current.invoices.forEach((inv, idx) => {
+                if (!inv.gatePassCode) {
+                    inv.gatePassCode = "BILL-CLR-" + inv.id;
+                }
+            });
+        }
+
+        saveData(current);
+        return current;
     }
 
     function saveData(data) {
@@ -1285,9 +1354,17 @@
                 patId = existingPat.id;
             }
 
+            const newAptId = "APT-" + Math.floor(1000 + Math.random() * 9000);
+            const patToken = booking.patientToken || (existingPat ? (existingPat.tokenNo || existingPat.id) : ("SC-PAT-" + Math.floor(100 + Math.random() * 900)));
+            const passCode = "PASS-" + newAptId + "-GATE";
+
             const newApt = {
-                id: "APT-" + Math.floor(1000 + Math.random() * 9000),
+                id: newAptId,
                 patientId: patId || "pat-1",
+                tokenNo: patToken,
+                gatePassCode: passCode,
+                gateEntryStatus: "READY_FOR_SCAN",
+                careStage: 1,
                 patientName: booking.patientName || (existingPat ? existingPat.name : "Patient"),
                 patientPhone: booking.patientPhone || "",
                 patientAge: booking.patientAge || (existingPat ? existingPat.age : 30),
@@ -1385,6 +1462,54 @@
                 return hosp;
             }
             return null;
+        },
+
+        // Verify Hospital Gate Entry & Kiosk Machine Scan
+        verifyGateEntry: function (query) {
+            const data = loadData();
+            const q = String(query || '').trim().toUpperCase();
+            if (!q) {
+                return { success: false, message: "Empty scan payload. Please present a valid OPD QR Code or Token ID." };
+            }
+
+            // Match appointment by ID, gatePassCode, tokenNo, or phone
+            const apt = data.appointments.find(a => {
+                if (a.id && q.includes(a.id.toUpperCase())) return true;
+                if (a.gatePassCode && q.includes(a.gatePassCode.toUpperCase())) return true;
+                if (a.tokenNo && q.includes(a.tokenNo.toUpperCase())) return true;
+                if (a.patientPhone && a.patientPhone.replace(/\D/g, '').length >= 8 && q.includes(a.patientPhone.replace(/\D/g, ''))) return true;
+                return false;
+            });
+
+            if (!apt) {
+                return {
+                    success: false,
+                    message: `Entry Verification Failed: No matching appointment found for code "${query}". Please contact the reception desk.`
+                };
+            }
+
+            apt.gateEntryStatus = "ENTRY_GRANTED";
+            apt.gateEntryTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            apt.careStage = 2; // Advance care journey to Stage 2: Desk Check-in / Gate Cleared
+            apt.status = "In OPD Waiting (Gate Cleared)";
+            saveData(data);
+
+            return {
+                success: true,
+                message: `Entry Verified & Gate Access Granted! Welcome to ${apt.hospitalName}.`,
+                appointment: apt
+            };
+        },
+
+        // Retrieve Gate Entries for Hospital
+        getGateEntries: function (hospitalId) {
+            const data = loadData();
+            let apts = hospitalId ? data.appointments.filter(a => a.hospitalId === hospitalId) : data.appointments;
+            return apts.slice().sort((a, b) => {
+                if (a.gateEntryStatus === 'ENTRY_GRANTED' && b.gateEntryStatus !== 'ENTRY_GRANTED') return -1;
+                if (b.gateEntryStatus === 'ENTRY_GRANTED' && a.gateEntryStatus !== 'ENTRY_GRANTED') return 1;
+                return 0;
+            });
         }
     };
 

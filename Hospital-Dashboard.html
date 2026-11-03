@@ -6,6 +6,13 @@
     <title>Hospital Staff Portal | SwastikCare</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        @keyframes scannerLaser {
+            0% { top: 0%; opacity: 0.8; }
+            50% { top: 96%; opacity: 1; }
+            100% { top: 0%; opacity: 0.8; }
+        }
+    </style>
 </head>
 <body>
 
@@ -43,6 +50,9 @@
                         <option value="hosp-4" style="color:black;">🌱 Fortis Memorial (FMRI)</option>
                         <option value="hosp-5" style="color:black;">⚕️ Medanta - The Medicity</option>
                     </select>
+                    <button class="btn-primary" onclick="switchHospTab('gateScannerPane', document.getElementById('tabGateScannerBtn'))" style="margin-top:8px; font-size:12px; padding:6px 14px; width:100%; justify-content:center;">
+                        <i class="fa fa-qrcode"></i> OPD Gate Entry &amp; Kiosk Scanner
+                    </button>
                 </div>
             </div>
         </div>
@@ -87,6 +97,9 @@
             <button class="tab-btn" onclick="switchHospTab('appointmentsPane', this)">
                 <i class="fa fa-clipboard-list"></i> OPD Patient Queue
             </button>
+            <button class="tab-btn" id="tabGateScannerBtn" onclick="switchHospTab('gateScannerPane', this)">
+                <i class="fa fa-qrcode"></i> OPD Gate Entry &amp; Kiosk Scanner
+            </button>
             <button class="tab-btn" onclick="switchHospTab('bedsPane', this)">
                 <i class="fa fa-bed"></i> Bed & Ward Telemetry
             </button>
@@ -129,6 +142,100 @@
                             </tr>
                         </thead>
                         <tbody id="hospAppointmentsTbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: OPD Gate Entry & Kiosk Machine QR Scanner -->
+        <section id="gateScannerPane" class="tab-pane" style="display: none;">
+            <div class="card-box" style="margin-bottom: 24px;">
+                <div class="card-header" style="flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h3><i class="fa fa-qrcode" style="color:var(--primary-teal);"></i> Hospital Security &amp; OPD Turnstile Entry Verifier</h3>
+                        <p style="font-size:13px; color:var(--text-secondary); margin-top:3px;">
+                            Scan patient QR code from mobile screen, paper bill slip, or touch kiosk machine for instant verified gate clearance.
+                        </p>
+                    </div>
+                    <div>
+                        <span class="badge badge-teal" style="font-size:12.5px;"><i class="fa fa-shield-alt"></i> Machine &amp; Staff Scanner Ready</span>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap:24px; align-items:start;">
+                    <!-- Left Column: Scanner Viewfinder & Input -->
+                    <div style="background:#0f172a; color:white; border-radius:var(--radius-md); padding:24px; text-align:center;">
+                        <!-- Simulated Viewfinder with Reticle -->
+                        <div style="position:relative; width:220px; height:220px; margin:0 auto 20px; border:2px dashed #0d9488; border-radius:16px; display:flex; align-items:center; justify-content:center; background:rgba(13,148,136,0.08); overflow:hidden;">
+                            <!-- Laser line -->
+                            <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:#14b8a6; box-shadow:0 0 12px #14b8a6; animation:scannerLaser 2s infinite ease-in-out;"></div>
+                            <i class="fa fa-qrcode" style="font-size:90px; color:rgba(255,255,255,0.25);"></i>
+                            <div style="position:absolute; bottom:12px; font-size:11.5px; color:#5eead4; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:20px;">
+                                <i class="fa fa-crosshairs"></i> Optical Scanner Ready
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="text-align:left; margin-bottom:14px;">
+                            <label class="form-label" style="color:#94a3b8; font-size:12.5px;">Scan Payload / Token ID / Pass Code / Mobile:</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" id="gateScanInput" class="form-control" placeholder="Scan QR or enter e.g. APT-1001 or SC-PAT-101" style="background:#1e293b; color:white; border-color:#334155;" onkeypress="if(event.key==='Enter') executeGateScan()">
+                                <button class="btn-primary" onclick="executeGateScan()" style="padding:10px 18px; white-space:nowrap;">
+                                    <i class="fa fa-check-circle"></i> Verify Entry
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
+                            <button class="btn-secondary btn-sm" onclick="simulatePresetScan('APT-1001')" style="background:#1e293b; color:#cbd5e1; border-color:#334155;">
+                                <i class="fa fa-user"></i> Scan Rohan (APT-1001)
+                            </button>
+                            <button class="btn-secondary btn-sm" onclick="simulatePresetScan('APT-1002')" style="background:#1e293b; color:#cbd5e1; border-color:#334155;">
+                                <i class="fa fa-user"></i> Scan Priya (APT-1002)
+                            </button>
+                            <button class="btn-secondary btn-sm" onclick="simulatePresetScan('APT-1003')" style="background:#1e293b; color:#cbd5e1; border-color:#334155;">
+                                <i class="fa fa-user"></i> Scan Rahul (APT-1003)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Verification Result & Gate Status -->
+                    <div>
+                        <div id="gateScanResultBox" style="background:#f8fafc; border:2px dashed #cbd5e1; border-radius:var(--radius-md); padding:24px; min-height:280px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                            <div style="width:60px; height:60px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:24px; color:#64748b; margin-bottom:12px;">
+                                <i class="fa fa-barcode"></i>
+                            </div>
+                            <h4 style="font-size:16px; font-weight:700; color:var(--secondary-blue); margin-bottom:6px;">Awaiting QR Code or Token Scan</h4>
+                            <p style="font-size:13px; color:var(--text-secondary); max-width:320px;">
+                                Aim the camera scanner at the patient's mobile slip QR code or type their appointment ID to authorize entry.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Table: Today's Gate Entry Register -->
+            <div class="card-box">
+                <div class="card-header">
+                    <h3><i class="fa fa-list-check" style="color:var(--primary-teal);"></i> Today's Hospital Gate Entries &amp; Kiosk Scans</h3>
+                    <span id="gateEntryCountBadge" class="badge badge-teal">0 Scanned Today</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pass Code</th>
+                                <th>Token ID</th>
+                                <th>Patient Name</th>
+                                <th>Consulting Doctor</th>
+                                <th>OPD Room</th>
+                                <th>Scan / Entry Time</th>
+                                <th>Gate Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gateEntriesTbody">
                             <!-- Populated by JavaScript -->
                         </tbody>
                     </table>
@@ -213,6 +320,28 @@
             </div>
         </section>
     </main>
+
+    <!-- Modal: Hospital Gate Pass QR Preview -->
+    <div id="hospitalQrModal" class="modal-overlay">
+        <div class="modal-container" style="max-width: 440px; text-align: center; background: white; border-radius: 16px; padding: 24px;">
+            <button class="modal-close-btn" onclick="closeHospitalQrModal()">&times;</button>
+            <h3 id="modalHospAptTitle" style="font-size: 18px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 4px;">OPD Entry QR Pass</h3>
+            <p id="modalHospAptSub" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Patient Token &amp; Machine Entry Pass</p>
+            <div style="background: #f8fafc; border: 2px dashed #0d9488; border-radius: 12px; padding: 14px; display: inline-block; margin-bottom: 16px;">
+                <img id="modalHospQrImg" src="" alt="Entry QR" style="width: 200px; height: 200px; display: block; margin: 0 auto; border-radius: 6px;">
+                <div id="modalHospPassCode" style="font-size: 12px; font-weight: 800; color: var(--secondary-blue); margin-top: 8px; font-family: monospace;">PASS-CODE</div>
+            </div>
+            <div id="modalHospDetails" style="font-size: 13px; line-height: 1.8; text-align: left; background: #f1f5f9; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                <!-- Populated by JS -->
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="modalVerifyBtn" class="btn-primary" onclick="">
+                    <i class="fa fa-check-circle"></i> Grant Gate Entry
+                </button>
+                <button class="btn-secondary" onclick="closeHospitalQrModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Core Scripts -->
     <script src="data.js"></script>
@@ -342,13 +471,19 @@
                             </span>
                         </td>
                         <td>
-                            <div style="display:flex; gap:6px;">
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button class="btn-primary btn-sm" onclick="quickVerifyGateApt('${a.id}')" title="Authorize Gate Entry">
+                                    <i class="fa fa-qrcode"></i> ${a.gateEntryStatus === 'ENTRY_GRANTED' ? 'Entered' : 'Gate Verify'}
+                                </button>
+                                <button class="btn-secondary btn-sm" onclick="viewAptGatePass('${a.id}')" title="Preview Gate QR">
+                                    <i class="fa fa-eye"></i>
+                                </button>
                                 ${!a.status.includes('Completed') ? `
-                                    <button class="btn-primary btn-sm" onclick="handleAptStatusHosp('${a.id}', 'Completed')">
-                                        <i class="fa fa-check"></i> Complete
+                                    <button class="btn-outline-teal btn-sm" onclick="handleAptStatusHosp('${a.id}', 'Completed')">
+                                        <i class="fa fa-check"></i>
                                     </button>
                                     <button class="btn-secondary btn-sm" onclick="adjustBeds(-1); handleAptStatusHosp('${a.id}', 'Admitted');">
-                                        <i class="fa fa-procedures"></i> Admit
+                                        <i class="fa fa-procedures"></i>
                                     </button>
                                 ` : `<span style="font-size:12px; color:var(--text-muted);"><i class="fa fa-check-circle" style="color:var(--accent-green);"></i> Completed</span>`}
                             </div>
@@ -372,6 +507,193 @@
 
             const specBadges = document.getElementById('hospSpecialtiesBadges');
             specBadges.innerHTML = (hosp.specialties || []).map(s => `<span class="badge badge-teal">${s}</span>`).join('');
+
+            renderGateEntriesTable(hosp.id);
+        }
+
+        function renderGateEntriesTable(hospId) {
+            const data = window.SwastikData.getData();
+            const apts = (data.appointments || []).filter(a => a.hospitalId === hospId);
+            const tbody = document.getElementById('gateEntriesTbody');
+            const badge = document.getElementById('gateEntryCountBadge');
+            
+            const verified = apts.filter(a => a.gateEntryStatus === 'ENTRY_GRANTED');
+            if (badge) badge.innerText = `${verified.length} Scanned / Verified Today`;
+
+            if (!tbody) return;
+            if (apts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">No appointment records for this hospital.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = apts.map(a => `
+                <tr>
+                    <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; color:var(--secondary-blue); font-weight:700;">${a.gatePassCode || a.id}</code></td>
+                    <td><strong style="color:var(--primary-teal);">${a.tokenNo || a.patientId}</strong></td>
+                    <td>
+                        <strong>${a.patientName}</strong>
+                        <div style="font-size:11px; color:var(--text-muted);">${a.patientPhone || ''}</div>
+                    </td>
+                    <td>${a.doctorName}</td>
+                    <td><span class="badge badge-teal">${a.room}</span></td>
+                    <td>${a.gateEntryTime ? `<strong style="color:#10b981;"><i class="fa fa-clock"></i> ${a.gateEntryTime}</strong>` : '<span style="color:var(--text-muted);">Pending Scan</span>'}</td>
+                    <td>
+                        <span class="badge ${a.gateEntryStatus === 'ENTRY_GRANTED' ? 'badge-green' : 'badge-orange'}">
+                            ${a.gateEntryStatus === 'ENTRY_GRANTED' ? '• Entry Granted' : '• Ready to Scan'}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn-primary btn-sm" onclick="quickVerifyGateApt('${a.id}')">
+                                <i class="fa fa-qrcode"></i> Scan
+                            </button>
+                            <button class="btn-secondary btn-sm" onclick="viewAptGatePass('${a.id}')">
+                                <i class="fa fa-eye"></i> QR
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function playAccessGrantedChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    const ctx = new AudioCtx();
+                    const now = ctx.currentTime;
+                    
+                    const osc1 = ctx.createOscillator();
+                    const gain1 = ctx.createGain();
+                    osc1.type = 'sine';
+                    osc1.frequency.setValueAtTime(523.25, now);
+                    gain1.gain.setValueAtTime(0.2, now);
+                    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc1.connect(gain1);
+                    gain1.connect(ctx.destination);
+                    osc1.start(now);
+                    osc1.stop(now + 0.25);
+
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(783.99, now + 0.18);
+                    gain2.gain.setValueAtTime(0.25, now + 0.18);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start(now + 0.18);
+                    osc2.stop(now + 0.6);
+                }
+            } catch (e) {
+                console.warn("Audio chime:", e);
+            }
+        }
+
+        function executeGateScan(inputVal) {
+            const code = inputVal || document.getElementById('gateScanInput').value.trim();
+            if (!code) {
+                window.showToast("Please enter or scan a QR code / Token ID.", "warning");
+                return;
+            }
+
+            const res = window.SwastikData.verifyGateEntry(code);
+            const resultBox = document.getElementById('gateScanResultBox');
+
+            if (res.success) {
+                playAccessGrantedChime();
+                const a = res.appointment;
+                
+                resultBox.style.background = '#f0fdf4';
+                resultBox.style.border = '2px solid #22c55e';
+                resultBox.innerHTML = `
+                    <div style="width:68px; height:68px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:14px; box-shadow:0 4px 14px rgba(34,197,94,0.3);">
+                        <i class="fa fa-check"></i>
+                    </div>
+                    <div class="badge badge-green" style="font-size:13px; padding:6px 14px; margin-bottom:10px;">
+                        <i class="fa fa-door-open"></i> ENTRY GRANTED - GATE BARRIER OPENED
+                    </div>
+                    <h3 style="font-size:22px; font-weight:800; color:var(--secondary-blue); margin-bottom:4px;">${a.patientName}</h3>
+                    <div style="font-size:13px; color:var(--primary-teal); font-weight:700; margin-bottom:14px;">Token ID: ${a.tokenNo || a.patientId} | Pass: ${a.gatePassCode || a.id}</div>
+                    
+                    <div style="background:white; border:1px solid #e2e8f0; border-radius:10px; padding:14px; text-align:left; width:100%; max-width:360px; font-size:13px; line-height:1.8; margin-bottom:14px;">
+                        <div><strong>Doctor:</strong> ${a.doctorName}</div>
+                        <div><strong>Department:</strong> ${a.specialty || 'OPD'}</div>
+                        <div><strong>Room / Gate:</strong> <span style="font-weight:700; color:var(--primary-teal);">${a.room}</span></div>
+                        <div><strong>Slot:</strong> ${a.date} at ${a.time}</div>
+                        <div><strong>Payment:</strong> <span class="badge badge-green">${a.paymentStatus || 'Cleared'}</span></div>
+                        <div><strong>Verified At:</strong> ${a.gateEntryTime}</div>
+                    </div>
+
+                    <div style="font-size:12px; color:#15803d; font-weight:600;">
+                        <i class="fa fa-walking"></i> Patient successfully cleared to enter hospital OPD premises without any problem.
+                    </div>
+                `;
+
+                window.showToast(`Gate Opened! Entry verified for ${a.patientName}.`, "success");
+                document.getElementById('gateScanInput').value = '';
+                renderHospitalPortal();
+            } else {
+                resultBox.style.background = '#fef2f2';
+                resultBox.style.border = '2px solid #ef4444';
+                resultBox.innerHTML = `
+                    <div style="width:68px; height:68px; border-radius:50%; background:#fee2e2; color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:14px;">
+                        <i class="fa fa-times"></i>
+                    </div>
+                    <div class="badge badge-red" style="font-size:13px; padding:6px 14px; margin-bottom:10px;">
+                        <i class="fa fa-ban"></i> ACCESS DENIED / NOT FOUND
+                    </div>
+                    <h4 style="font-size:16px; font-weight:700; color:#991b1b; margin-bottom:6px;">Verification Failed</h4>
+                    <p style="font-size:13px; color:#7f1d1d; max-width:320px;">
+                        ${res.message}
+                    </p>
+                `;
+                window.showToast("Gate access denied. Code not found.", "error");
+            }
+        }
+
+        function simulatePresetScan(code) {
+            document.getElementById('gateScanInput').value = code;
+            executeGateScan(code);
+        }
+
+        function quickVerifyGateApt(aptId) {
+            switchHospTab('gateScannerPane', document.getElementById('tabGateScannerBtn'));
+            document.getElementById('gateScanInput').value = aptId;
+            executeGateScan(aptId);
+        }
+
+        function viewAptGatePass(aptId) {
+            const data = window.SwastikData.getData();
+            const apt = data.appointments.find(a => a.id === aptId);
+            if (!apt) return;
+
+            document.getElementById('modalHospAptTitle').innerText = `${apt.hospitalName} - OPD Pass`;
+            document.getElementById('modalHospAptSub').innerText = `Appointment ID: ${apt.id} | Token: ${apt.tokenNo || apt.patientId}`;
+            document.getElementById('modalHospPassCode').innerText = apt.gatePassCode || `PASS-${apt.id}-GATE`;
+
+            const qrPayload = `SWASTIKCARE-ENTRY-PASS|APPT:${apt.id}|PAT:${apt.tokenNo || apt.patientId}|NAME:${encodeURIComponent(apt.patientName)}|PASS:${apt.gatePassCode || 'PASS-' + apt.id}`;
+            document.getElementById('modalHospQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrPayload)}`;
+
+            document.getElementById('modalHospDetails').innerHTML = `
+                <div><strong>Patient:</strong> ${apt.patientName} (${apt.patientPhone || ''})</div>
+                <div><strong>Doctor:</strong> ${apt.doctorName} (${apt.specialty})</div>
+                <div><strong>Room:</strong> ${apt.room}</div>
+                <div><strong>Date & Time:</strong> ${apt.date} at ${apt.time}</div>
+                <div><strong>Payment:</strong> ${apt.paymentMethod} (${apt.paymentStatus})</div>
+                <div><strong>Gate Status:</strong> <span class="badge ${apt.gateEntryStatus === 'ENTRY_GRANTED' ? 'badge-green' : 'badge-orange'}">${apt.gateEntryStatus === 'ENTRY_GRANTED' ? 'Entry Granted (' + apt.gateEntryTime + ')' : 'Ready for Scan'}</span></div>
+            `;
+
+            document.getElementById('modalVerifyBtn').onclick = function() {
+                closeHospitalQrModal();
+                quickVerifyGateApt(apt.id);
+            };
+
+            document.getElementById('hospitalQrModal').classList.add('active');
+        }
+
+        function closeHospitalQrModal() {
+            document.getElementById('hospitalQrModal').classList.remove('active');
         }
 
         function handleAptStatusHosp(aptId, status) {
