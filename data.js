@@ -1182,6 +1182,62 @@
             return data.patients.find(p => p.id === id);
         },
 
+        // Register New Patient & Generate Unique Patient Token ID
+        registerPatient: function (details) {
+            const data = loadData();
+            const patNum = data.patients.length + 1;
+            const patId = "pat-" + patNum;
+            const tokenNo = "SC-PAT-" + (100 + patNum);
+            const abhaNumber = `91-4402-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+            const cleanName = (details.name || "New Patient").trim();
+            const username = details.username || (cleanName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + patNum);
+
+            const newPatient = {
+                id: patId,
+                tokenNo: tokenNo,
+                abhaNumber: abhaNumber,
+                name: cleanName,
+                phone: details.phone || "+91 98000 00000",
+                age: Number(details.age) || 30,
+                gender: details.gender || "Male",
+                username: username,
+                password: details.password || "password123",
+                primaryHospitalId: details.primaryHospitalId || "hosp-1",
+                primaryHospitalName: details.primaryHospitalName || "AIIMS New Delhi",
+                condition: details.condition || "General Healthcare & OPD Consultation",
+                recoveryProgress: 10,
+                bloodGroup: details.bloodGroup || "O+",
+                email: details.email || `${cleanName.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
+                address: details.address || "Delhi-NCR, India",
+                avatar: details.gender === 'Female'
+                    ? "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80"
+                    : "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+                vitals: {
+                    bpSystolic: 120,
+                    bpDiastolic: 80,
+                    heartRate: 72,
+                    oxygenSat: 98,
+                    temperature: 98.4
+                }
+            };
+
+            data.patients.push(newPatient);
+            saveData(data);
+
+            setSession({
+                role: "patient",
+                userId: newPatient.id,
+                tokenNo: newPatient.tokenNo,
+                username: newPatient.username,
+                displayName: newPatient.name,
+                hospitalId: newPatient.primaryHospitalId,
+                avatar: newPatient.avatar
+            });
+
+            return newPatient;
+        },
+
         // Book New Appointment (Works with or without login)
         bookAppointment: function (booking) {
             const data = loadData();

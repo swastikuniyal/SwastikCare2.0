@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,169 +8,86 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .step-progress-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto 35px;
-            position: relative;
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 900px; margin: 0 auto 35px; position: relative;
         }
-
         .step-progress-bar::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 40px;
-            right: 40px;
-            height: 3px;
-            background: var(--border-color);
-            transform: translateY(-50%);
-            z-index: 1;
+            content: ''; position: absolute; top: 50%; left: 40px; right: 40px;
+            height: 3px; background: var(--border-color); transform: translateY(-50%); z-index: 1;
         }
-
-        .step-item {
-            position: relative;
-            z-index: 2;
-            background: var(--bg-page);
-            padding: 0 10px;
-            text-align: center;
-        }
-
+        .step-item { position: relative; z-index: 2; background: var(--bg-page); padding: 0 8px; text-align: center; }
         .step-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-muted);
-            margin: 0 auto 8px;
-            transition: var(--transition);
+            width: 42px; height: 42px; border-radius: 50%; background: white;
+            border: 2px solid var(--border-color); display: flex; align-items: center;
+            justify-content: center; font-weight: 700; font-size: 14px;
+            color: var(--text-muted); margin: 0 auto 8px; transition: var(--transition);
         }
-
-        .step-item.active .step-circle {
-            background: var(--primary-teal);
-            border-color: var(--primary-teal);
-            color: white;
-            box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
-        }
-
-        .step-item.completed .step-circle {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            color: white;
-        }
-
-        .step-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .step-item.active .step-title {
-            color: var(--primary-teal);
-            font-weight: 700;
-        }
+        .step-item.active .step-circle { background: var(--primary-teal); border-color: var(--primary-teal); color: white; box-shadow: 0 0 15px rgba(13, 148, 136, 0.4); }
+        .step-item.completed .step-circle { background: var(--accent-green); border-color: var(--accent-green); color: white; }
+        .step-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+        .step-item.active .step-title { color: var(--primary-teal); font-weight: 700; }
 
         .selection-card {
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 18px;
-            background: white;
-            cursor: pointer;
-            transition: var(--transition);
+            border: 2px solid var(--border-color); border-radius: var(--radius-md);
+            padding: 18px; background: white; cursor: pointer; transition: var(--transition);
         }
-
-        .selection-card:hover {
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-        }
-
-        .selection-card.selected {
-            border-color: var(--primary-teal);
-            background: #f0fdfa;
-            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15);
-        }
+        .selection-card:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+        .selection-card.selected { border-color: var(--primary-teal); background: #f0fdfa; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.15); }
 
         .time-slot-btn {
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: white;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
+            padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);
+            background: white; font-size: 13px; font-weight: 600;
+            color: var(--text-secondary); cursor: pointer; transition: var(--transition);
         }
-
-        .time-slot-btn:hover {
-            border-color: var(--primary-teal);
-            color: var(--primary-teal);
-        }
-
-        .time-slot-btn.selected {
-            background: var(--primary-teal);
-            border-color: var(--primary-teal);
-            color: white;
-        }
+        .time-slot-btn:hover { border-color: var(--primary-teal); color: var(--primary-teal); }
+        .time-slot-btn.selected { background: var(--primary-teal); border-color: var(--primary-teal); color: white; }
 
         .confirmation-slip {
-            background: white;
-            border: 2px dashed #99f6e4;
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            max-width: 680px;
-            margin: 0 auto;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
+            background: white; border: 2px dashed #99f6e4; border-radius: var(--radius-lg);
+            padding: 30px; max-width: 760px; margin: 0 auto;
+            box-shadow: var(--shadow-lg); text-align: center;
         }
 
-        .booking-mode-chip {
-            padding: 10px 18px;
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--border-color);
-            background: white;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* 5-Stage Healthcare Journey Timeline */
+        .stage-timeline-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 25px 0; text-align: center;
         }
+        .stage-node {
+            background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            padding: 14px 8px; position: relative; transition: var(--transition);
+        }
+        .stage-node.done { border-color: #10b981; background: #f0fdf4; }
+        .stage-node.current { border-color: var(--primary-teal); background: #f0fdfa; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15); }
+        .stage-badge-num {
+            width: 28px; height: 28px; border-radius: 50%; margin: 0 auto 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;
+            background: #e2e8f0; color: #64748b;
+        }
+        .stage-node.done .stage-badge-num { background: #10b981; color: white; }
+        .stage-node.current .stage-badge-num { background: var(--primary-teal); color: white; }
 
-        .booking-mode-chip.active {
-            border-color: var(--primary-teal);
-            background: #f0fdfa;
-            color: var(--primary-teal);
+        .auth-gate-box {
+            background: #fffbeb; border: 2px solid #fde68a; border-radius: var(--radius-lg);
+            padding: 28px 24px; text-align: center; max-width: 750px; margin: 0 auto 30px;
         }
     </style>
 </head>
-
 <body>
 
     <main class="main-wrapper">
-        <div class="page-header"
-            style="text-align: center; justify-content: center; margin-bottom: 25px; flex-direction: column;">
+        <div class="page-header" style="text-align: center; justify-content: center; margin-bottom: 25px; flex-direction: column;">
             <div>
                 <h1 class="page-title" style="justify-content: center;">
                     <i class="fa fa-calendar-check" style="color: var(--primary-teal);"></i>
                     Specialist Doctor OPD Appointment Booking
                 </h1>
                 <p class="page-subtitle">
-                    Instant doctor appointments across AIIMS, Apollo, Max, Fortis &amp; Medanta. <strong>No login
-                        required for guest booking!</strong>
+                    5-Stage integrated OPD appointment wizard with verified ABHA Patient Token generation.
                 </p>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
                 <button class="btn-primary" id="tabNewBookingBtn" onclick="showNewBookingTab()">
-                    <i class="fa fa-calendar-plus"></i> Book New OPD
+                    <i class="fa fa-calendar-plus"></i> Book New Doctor OPD
                 </button>
                 <button class="btn-secondary" id="tabTrackBookingBtn" onclick="showTrackBookingsTab()">
                     <i class="fa fa-search"></i> Check My Existing OPD Bookings
@@ -179,22 +95,54 @@
             </div>
         </div>
 
+        <!-- AUTH GATE BANNER (Displayed when user is guest / not logged in) -->
+        <div id="authGateBanner" class="auth-gate-box" style="display: none;">
+            <div style="font-size: 38px; color: #d97706; margin-bottom: 8px;"><i class="fa fa-user-lock"></i></div>
+            <h3 style="font-size: 20px; font-weight: 800; color: #92400e; margin-bottom: 6px;">
+                Patient Login or Account Registration Required
+            </h3>
+            <p style="font-size: 13.5px; color: #78350f; max-width: 600px; margin: 0 auto 18px; line-height: 1.6;">
+                <strong>Bina login ke koi bhi appointment book nahi kar sakta.</strong><br>
+                Government ABDM &amp; hospital standards require every patient to have a verified account and Patient Token ID before booking an OPD slot.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="Login.html?role=patient&redirect=Appointment-Booking.html" class="btn-primary" style="padding: 10px 22px;">
+                    <i class="fa fa-sign-in-alt"></i> Login with Existing Account
+                </a>
+                <a href="Login.html?role=register&redirect=Appointment-Booking.html" class="btn-outline-teal" style="padding: 10px 22px; background: white;">
+                    <i class="fa fa-user-plus"></i> Register New Patient Account (Instant Token)
+                </a>
+            </div>
+        </div>
+
+        <!-- LOGGED-IN PATIENT BADGE -->
+        <div id="loggedInUserBar" style="display: none; max-width: 900px; margin: 0 auto 20px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: var(--radius-sm); padding: 12px 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="badge badge-green"><i class="fa fa-check-circle"></i> Authenticated</span>
+                    <span id="activeUserGreeting" style="font-size: 13.5px; font-weight: 700; color: var(--secondary-blue);">
+                        Booking as: Rohan Mehta (Token ID: SC-PAT-101)
+                    </span>
+                </div>
+                <div style="font-size: 12.5px;">
+                    <a href="Login.html?role=patient&redirect=Appointment-Booking.html" style="color:var(--primary-teal); font-weight:700;">
+                        <i class="fa fa-exchange-alt"></i> Switch Account
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- TRACK BOOKINGS SECTION (Hidden by default) -->
-        <section id="trackBookingsSection" class="card-box"
-            style="max-width: 900px; margin: 0 auto 30px; display: none;">
+        <section id="trackBookingsSection" class="card-box" style="max-width: 900px; margin: 0 auto 30px; display: none;">
             <div class="card-header">
-                <h3><i class="fa fa-search" style="color:var(--primary-teal);"></i> Track Your OPD Bookings &amp; Slips
-                </h3>
+                <h3><i class="fa fa-search" style="color:var(--primary-teal);"></i> Track Your OPD Bookings &amp; Slips</h3>
                 <span class="badge badge-teal">Instant Search</span>
             </div>
             <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 18px;">
-                Enter your mobile phone number or Token ID (e.g. <code>APT-1001</code>) to retrieve your confirmed
-                appointments:
+                Enter your mobile phone number, Token ID (e.g. <code>APT-1001</code>) or Patient ID (<code>SC-PAT-101</code>):
             </p>
             <div style="display: flex; gap: 10px; margin-bottom: 24px;">
-                <input type="text" id="trackSearchInput" class="form-control"
-                    placeholder="Enter Mobile Number (e.g. 9876543210) or Token ID..."
-                    onkeyup="if(event.key==='Enter') executeTrackSearch()">
+                <input type="text" id="trackSearchInput" class="form-control" placeholder="Enter Mobile Number, Token ID or Patient ID..." onkeyup="if(event.key==='Enter') executeTrackSearch()">
                 <button class="btn-primary" onclick="executeTrackSearch()" style="white-space: nowrap;">
                     <i class="fa fa-search"></i> Find Booking
                 </button>
@@ -204,36 +152,39 @@
             </div>
         </section>
 
-        <!-- BOOKING PROGRESS BAR -->
+        <!-- BOOKING 5-STAGE PROGRESS BAR & FLOW -->
         <div id="bookingFlowContainer">
             <div class="step-progress-bar">
                 <div id="stepIndicator1" class="step-item active">
                     <div class="step-circle">1</div>
-                    <div class="step-title">1. Select Hospital</div>
+                    <div class="step-title">1. Hospital</div>
                 </div>
                 <div id="stepIndicator2" class="step-item">
                     <div class="step-circle">2</div>
-                    <div class="step-title">2. Select Doctor</div>
+                    <div class="step-title">2. Doctor</div>
                 </div>
                 <div id="stepIndicator3" class="step-item">
                     <div class="step-circle">3</div>
-                    <div class="step-title">3. Date &amp; Time</div>
+                    <div class="step-title">3. Schedule</div>
                 </div>
                 <div id="stepIndicator4" class="step-item">
                     <div class="step-circle">4</div>
-                    <div class="step-title">4. Patient Details</div>
+                    <div class="step-title">4. Payment</div>
+                </div>
+                <div id="stepIndicator5" class="step-item">
+                    <div class="step-circle">5</div>
+                    <div class="step-title">5. Token Slip</div>
                 </div>
             </div>
 
-            <!-- Step 1: Select Hospital -->
+            <!-- Stage 1: Select Hospital -->
             <section id="bookingStep1" class="card-box" style="max-width: 1050px; margin: 0 auto 30px;">
                 <div class="card-header">
-                    <h3><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> Step 1: Select Network
-                        Hospital</h3>
+                    <h3><i class="fa fa-hospital" style="color:var(--primary-teal);"></i> Stage 1: Select Network Hospital</h3>
                     <span class="badge badge-teal">5 Premier Centres</span>
                 </div>
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
-                    Select the hospital where you wish to book your OPD consultation:
+                    Select the hospital where you wish to receive specialist medical care:
                 </p>
 
                 <div class="grid-5" id="hospSelectionGrid">
@@ -247,11 +198,10 @@
                 </div>
             </section>
 
-            <!-- Step 2: Select Doctor -->
+            <!-- Stage 2: Select Doctor -->
             <section id="bookingStep2" class="card-box" style="max-width: 1050px; margin: 0 auto 30px; display: none;">
                 <div class="card-header">
-                    <h3><i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Step 2: Select Specialist
-                        Doctor</h3>
+                    <h3><i class="fa fa-user-md" style="color:var(--primary-teal);"></i> Stage 2: Select Specialist Doctor</h3>
                     <span id="selectedHospBadge" class="badge badge-blue">AIIMS New Delhi</span>
                 </div>
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
@@ -267,16 +217,15 @@
                         <i class="fa fa-arrow-left"></i> Back to Hospital
                     </button>
                     <button class="btn-primary" onclick="proceedToStep3()">
-                        Proceed to Date &amp; Time <i class="fa fa-arrow-right"></i>
+                        Proceed to Schedule <i class="fa fa-arrow-right"></i>
                     </button>
                 </div>
             </section>
 
-            <!-- Step 3: Date & Time -->
+            <!-- Stage 3: Date & Time -->
             <section id="bookingStep3" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
                 <div class="card-header">
-                    <h3><i class="fa fa-clock" style="color:var(--primary-teal);"></i> Step 3: Date, Time &amp;
-                        Consultation Mode</h3>
+                    <h3><i class="fa fa-clock" style="color:var(--primary-teal);"></i> Stage 3: Date, Time &amp; Consultation Mode</h3>
                     <span id="selectedDocBadge" class="badge badge-green">Doctor Selected</span>
                 </div>
 
@@ -296,24 +245,15 @@
 
                 <div class="form-group">
                     <label class="form-label">Available Time Slots</label>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;"
-                        id="timeSlotsContainer">
-                        <button type="button" class="time-slot-btn selected"
-                            onclick="selectSlot('09:30 AM', this)">09:30 AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('10:15 AM', this)">10:15
-                            AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:00 AM', this)">11:00
-                            AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:45 AM', this)">11:45
-                            AM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:00 PM', this)">02:00
-                            PM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:45 PM', this)">02:45
-                            PM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('03:30 PM', this)">03:30
-                            PM</button>
-                        <button type="button" class="time-slot-btn" onclick="selectSlot('04:15 PM', this)">04:15
-                            PM</button>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;" id="timeSlotsContainer">
+                        <button type="button" class="time-slot-btn selected" onclick="selectSlot('09:30 AM', this)">09:30 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('10:15 AM', this)">10:15 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:00 AM', this)">11:00 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('11:45 AM', this)">11:45 AM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:00 PM', this)">02:00 PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('02:45 PM', this)">02:45 PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('03:30 PM', this)">03:30 PM</button>
+                        <button type="button" class="time-slot-btn" onclick="selectSlot('04:15 PM', this)">04:15 PM</button>
                     </div>
                 </div>
 
@@ -322,60 +262,127 @@
                         <i class="fa fa-arrow-left"></i> Back to Doctor
                     </button>
                     <button class="btn-primary" onclick="proceedToStep4()">
-                        Review &amp; Patient Details <i class="fa fa-arrow-right"></i>
+                        Proceed to Payment <i class="fa fa-arrow-right"></i>
                     </button>
                 </div>
             </section>
 
-            <!-- Step 4: Patient Details & Confirm -->
+            <!-- Stage 4: Payment Selection -->
             <section id="bookingStep4" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
                 <div class="card-header">
-                    <h3><i class="fa fa-user-check" style="color:var(--primary-teal);"></i> Step 4: Patient Information
-                        &amp; Symptoms</h3>
-                    <span class="badge badge-purple">Instant Confirmation</span>
+                    <h3><i class="fa fa-wallet" style="color:var(--primary-teal);"></i> Stage 4: Select Payment Method</h3>
+                    <span class="badge badge-teal"><i class="fa fa-lock"></i> 100% Encrypted Gateway</span>
                 </div>
 
-                <!-- Persona Mode Notice / Choice -->
-                <div id="bookingModeSelector"
-                    style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
-                    <div style="font-size: 13px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 10px;">
-                        <i class="fa fa-shield-alt" style="color:var(--primary-teal);"></i> Choose Booking Mode:
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                    Choose how you wish to pay the consultation fee of <strong id="stage4FeeDisplay" style="color:var(--primary-teal); font-size:16px;">₹500</strong>:
+                </p>
+
+                <div class="grid-2" style="margin-bottom: 20px;">
+                    <!-- Option 1: Instant UPI Payment -->
+                    <div id="payOptUPI" class="selection-card selected" onclick="selectPaymentOption('upi')" style="padding: 16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <span class="badge badge-teal" style="font-size: 11px; margin-bottom: 6px;"><i class="fa fa-bolt"></i> Instant Online</span>
+                                <h5 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin: 4px 0;">UPI (Instant QR / Apps)</h5>
+                                <div style="font-size: 12.5px; color: var(--text-secondary);">GPay, PhonePe, Paytm, BHIM</div>
+                            </div>
+                            <div style="font-size: 26px; color: var(--primary-teal);"><i class="fa fa-qrcode"></i></div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: #0d9488; font-weight: 700;">
+                            UPI ID: <strong>hmpmanish@ptyes</strong>
+                        </div>
                     </div>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <button type="button" id="btnModeGuest" class="booking-mode-chip active"
-                            onclick="setBookingMode('guest')">
-                            <i class="fa fa-bolt" style="color:#0d9488;"></i> Instant Booking (No Login Required)
-                        </button>
-                        <button type="button" id="btnModeProfile" class="booking-mode-chip"
-                            onclick="setBookingMode('profile')">
-                            <i class="fa fa-user-circle"></i> Use Logged-in Profile
-                        </button>
+
+                    <!-- Option 2: Cash or UPI at Counter -->
+                    <div id="payOptCounter" class="selection-card" onclick="selectPaymentOption('counter')" style="padding: 16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <span class="badge badge-blue" style="font-size: 11px; margin-bottom: 6px;"><i class="fa fa-hospital-user"></i> Hospital Visit</span>
+                                <h5 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin: 4px 0;">Cash or UPI at Counter</h5>
+                                <div style="font-size: 12.5px; color: var(--text-secondary);">Pay at hospital OPD reception desk</div>
+                            </div>
+                            <div style="font-size: 26px; color: var(--secondary-blue);"><i class="fa fa-money-bill-wave"></i></div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                            Pay on arrival before doctor checkup
+                        </div>
                     </div>
-                    <div id="bookingModeNotice" style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
-                        ✓ Anyone can book instantly with just a name and phone number. No login or password needed!
+                </div>
+
+                <!-- Dynamic UPI Payment Details Box (Visible when UPI selected) -->
+                <div id="upiPaymentDetailsBox" style="background: #f0fdfa; border: 1px dashed #0d9488; border-radius: var(--radius-sm); padding: 18px; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                        <!-- Dynamic QR Code -->
+                        <div style="text-align: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #ccfbf1; box-shadow: var(--shadow-sm); flex-shrink: 0;">
+                            <img id="upiQrCodeImg" src="" alt="UPI Payment QR Code" style="width: 140px; height: 140px; display: block;">
+                            <div style="font-size: 11.5px; font-weight: 700; color: var(--primary-teal); margin-top: 6px;">Scan to Pay <span id="upiAmountBadge">₹500</span></div>
+                        </div>
+                        <div style="flex: 1; min-width: 240px;">
+                            <div style="font-size: 14px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 6px;">
+                                Scan QR or Pay directly to SwastikCare UPI ID:
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #99f6e4; padding: 8px 14px; border-radius: var(--radius-sm); max-width: 320px; margin-bottom: 12px;">
+                                <code style="font-size: 14px; font-weight: 800; color: #0f766e; flex: 1;">hmpmanish@ptyes</code>
+                                <button type="button" class="btn-primary btn-sm" onclick="copyUpiId('hmpmanish@ptyes')" style="padding: 4px 10px; font-size: 12px;">
+                                    <i class="fa fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                                <a id="btnPayUpiIntent" href="#" class="btn-outline-teal btn-sm" style="font-size: 12px; font-weight: 700;">
+                                    <i class="fa fa-mobile-alt"></i> Pay via UPI App (GPay / PhonePe / Paytm / BHIM)
+                                </a>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+                                <i class="fa fa-check-circle" style="color:var(--accent-green);"></i> Once paid via UPI, click "Review &amp; Confirm" to generate your official OPD Token Slip.
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Counter Payment Details Box (Visible when Counter selected) -->
+                <div id="counterPaymentDetailsBox" style="display: none; background: #f8fafc; border: 1px dashed #94a3b8; border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px;">
+                    <div style="display:flex; align-items:flex-start; gap:12px;">
+                        <i class="fa fa-info-circle" style="font-size:22px; color:var(--primary-teal); margin-top:2px;"></i>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                            <strong style="color:var(--secondary-blue);">Pay at Hospital Counter:</strong> You can pay the consultation fee of <strong id="counterFeeAmt" style="color:var(--primary-teal);">₹500</strong> directly at the OPD reception billing desk using <strong>Cash, UPI QR at the counter, or Debit/Credit Card</strong> when you arrive for your visit.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between;">
+                    <button class="btn-secondary" onclick="goToStep(3)">
+                        <i class="fa fa-arrow-left"></i> Back to Schedule
+                    </button>
+                    <button class="btn-primary" onclick="proceedToStep5()">
+                        Proceed to Final Review <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Stage 5: Review, Patient Info & Confirm -->
+            <section id="bookingStep5" class="card-box" style="max-width: 850px; margin: 0 auto 30px; display: none;">
+                <div class="card-header">
+                    <h3><i class="fa fa-user-check" style="color:var(--primary-teal);"></i> Stage 5: Patient Details &amp; Confirm OPD Slip</h3>
+                    <span class="badge badge-purple">Final Step</span>
                 </div>
 
                 <!-- Patient Form Fields -->
                 <div class="grid-2" style="margin-bottom: 18px;">
                     <div class="form-group">
                         <label class="form-label">Patient Full Legal Name <span style="color:#ef4444;">*</span></label>
-                        <input type="text" id="patientNameInput" class="form-control" required
-                            placeholder="e.g. Ramesh Kumar">
+                        <input type="text" id="patientNameInput" class="form-control" required placeholder="e.g. Ramesh Kumar">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Mobile Phone Number (for SMS &amp; Token) <span
-                                style="color:#ef4444;">*</span></label>
-                        <input type="tel" id="patientPhoneInput" class="form-control" required
-                            placeholder="+91 98765 43210">
+                        <label class="form-label">Mobile Phone Number (for SMS &amp; Token) <span style="color:#ef4444;">*</span></label>
+                        <input type="tel" id="patientPhoneInput" class="form-control" required placeholder="+91 98765 43210">
                     </div>
                 </div>
 
-                <div class="grid-2" style="margin-bottom: 18px;">
+                <div class="grid-3" style="margin-bottom: 18px;">
                     <div class="form-group">
                         <label class="form-label">Patient Age (Years)</label>
-                        <input type="number" id="patientAgeInput" class="form-control" min="1" max="120"
-                            placeholder="e.g. 35" value="32">
+                        <input type="number" id="patientAgeInput" class="form-control" min="1" max="120" placeholder="e.g. 35" value="32">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gender</label>
@@ -385,157 +392,106 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Patient Token / ABHA ID</label>
+                        <input type="text" id="patientTokenDisplay" class="form-control" readonly style="background:#f1f5f9; font-weight:700; color:var(--primary-teal);" value="SC-PAT-101">
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Chief Medical Concern or Symptoms</label>
-                    <textarea id="patientSymptomsInput" class="form-control" rows="3"
-                        placeholder="Describe symptoms, duration, previous medication or allergies..."></textarea>
+                    <textarea id="patientSymptomsInput" class="form-control" rows="3" placeholder="Describe symptoms, duration, previous medication or allergies..."></textarea>
                 </div>
 
-                <!-- Payment Method Selection -->
-                <div style="background: white; border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin-bottom: 25px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; flex-wrap:wrap; gap:8px;">
-                        <h4 style="font-size: 15px; color: var(--secondary-blue); display:flex; align-items:center; gap:8px; margin:0;">
-                            <i class="fa fa-wallet" style="color:var(--primary-teal);"></i> Select Payment Method
-                        </h4>
-                        <span class="badge badge-teal"><i class="fa fa-shield-alt"></i> 100% Secure Payment</span>
-                    </div>
-
-                    <div class="grid-2" style="margin-bottom: 16px;">
-                        <!-- Option 1: Instant UPI Payment -->
-                        <div id="payOptUPI" class="selection-card selected" onclick="selectPaymentOption('upi')" style="padding: 16px;">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div>
-                                    <span class="badge badge-teal" style="font-size: 11px; margin-bottom: 6px;"><i class="fa fa-bolt"></i> Instant Online</span>
-                                    <h5 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin: 4px 0;">UPI (Instant QR / Apps)</h5>
-                                    <div style="font-size: 12.5px; color: var(--text-secondary);">GPay, PhonePe, Paytm, BHIM</div>
-                                </div>
-                                <div style="font-size: 26px; color: var(--primary-teal);"><i class="fa fa-qrcode"></i></div>
-                            </div>
-                            <div style="margin-top: 10px; font-size: 12px; color: #0d9488; font-weight: 700;">
-                                UPI ID: <strong>hmpmanish@ptyes</strong>
-                            </div>
-                        </div>
-
-                        <!-- Option 2: Cash or UPI at Counter -->
-                        <div id="payOptCounter" class="selection-card" onclick="selectPaymentOption('counter')" style="padding: 16px;">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div>
-                                    <span class="badge badge-blue" style="font-size: 11px; margin-bottom: 6px;"><i class="fa fa-hospital-user"></i> Hospital Visit</span>
-                                    <h5 style="font-size: 15px; font-weight: 700; color: var(--secondary-blue); margin: 4px 0;">Cash or UPI at Counter</h5>
-                                    <div style="font-size: 12.5px; color: var(--text-secondary);">Pay at hospital OPD reception desk</div>
-                                </div>
-                                <div style="font-size: 26px; color: var(--secondary-blue);"><i class="fa fa-money-bill-wave"></i></div>
-                            </div>
-                            <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                                Pay on arrival before doctor checkup
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic UPI Payment Details Box (Visible when UPI selected) -->
-                    <div id="upiPaymentDetailsBox" style="background: #f0fdfa; border: 1px dashed #0d9488; border-radius: var(--radius-sm); padding: 18px;">
-                        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                            <!-- Dynamic QR Code -->
-                            <div style="text-align: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #ccfbf1; box-shadow: var(--shadow-sm); flex-shrink: 0;">
-                                <img id="upiQrCodeImg" src="" alt="UPI Payment QR Code" style="width: 140px; height: 140px; display: block;">
-                                <div style="font-size: 11.5px; font-weight: 700; color: var(--primary-teal); margin-top: 6px;">Scan to Pay <span id="upiAmountBadge">₹500</span></div>
-                            </div>
-                            <div style="flex: 1; min-width: 240px;">
-                                <div style="font-size: 14px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 6px;">
-                                    Scan QR or Pay directly to SwastikCare UPI ID:
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #99f6e4; padding: 8px 14px; border-radius: var(--radius-sm); max-width: 320px; margin-bottom: 12px;">
-                                    <code style="font-size: 14px; font-weight: 800; color: #0f766e; flex: 1;">hmpmanish@ptyes</code>
-                                    <button type="button" class="btn-primary btn-sm" onclick="copyUpiId('hmpmanish@ptyes')" style="padding: 4px 10px; font-size: 12px;">
-                                        <i class="fa fa-copy"></i> Copy
-                                    </button>
-                                </div>
-                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
-                                    <a id="btnPayUpiIntent" href="#" class="btn-outline-teal btn-sm" style="font-size: 12px; font-weight: 700;">
-                                        <i class="fa fa-mobile-alt"></i> Pay via UPI App (GPay / PhonePe / Paytm / BHIM)
-                                    </a>
-                                </div>
-                                <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
-                                    <i class="fa fa-check-circle" style="color:var(--accent-green);"></i> Once paid, click <strong>"Confirm Booking &amp; Get OPD Slip"</strong> below. Your transaction will be verified and recorded on your receipt.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Counter Payment Details Box (Visible when Counter selected) -->
-                    <div id="counterPaymentDetailsBox" style="display: none; background: #f8fafc; border: 1px dashed #94a3b8; border-radius: var(--radius-sm); padding: 16px;">
-                        <div style="display:flex; align-items:flex-start; gap:12px;">
-                            <i class="fa fa-info-circle" style="font-size:22px; color:var(--primary-teal); margin-top:2px;"></i>
-                            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                                <strong style="color:var(--secondary-blue);">Pay at Hospital Counter:</strong> You can pay the consultation fee of <strong id="counterFeeAmt" style="color:var(--primary-teal);">₹500</strong> directly at the OPD reception billing desk using <strong>Cash, UPI QR at the counter, or Debit/Credit Card</strong> when you arrive for your visit.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Booking Summary Card -->
-                <div
-                    style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
+                <!-- Final Booking Summary Card -->
+                <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 25px;">
                     <h4 style="font-size: 15px; color: var(--secondary-blue); margin-bottom: 12px;">
-                        <i class="fa fa-receipt" style="color:var(--primary-teal);"></i> OPD Booking Summary
+                        <i class="fa fa-receipt" style="color:var(--primary-teal);"></i> Final OPD Booking Summary
                     </h4>
-                    <div class="grid-3" style="font-size: 13.5px; line-height: 1.8;">
+                    <div class="grid-3" style="font-size: 13.5px; line-height: 1.9;">
                         <div><strong>Hospital:</strong> <span id="revHospName">AIIMS New Delhi</span></div>
                         <div><strong>Doctor:</strong> <span id="revDocName">Dr. Name</span></div>
-                        <div><strong>Consultation Fee:</strong> <span id="revFee"
-                                style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
+                        <div><strong>Consultation Fee:</strong> <span id="revFee" style="color:var(--primary-teal); font-weight:700;">₹500</span></div>
                         <div><strong>Date:</strong> <span id="revDate">Today</span></div>
                         <div><strong>Time:</strong> <span id="revTime">09:30 AM</span></div>
                         <div><strong>Mode:</strong> <span id="revMode">In-Person OPD</span></div>
+                        <div><strong>Payment Method:</strong> <span id="revPayMethod" style="color:var(--secondary-blue); font-weight:700;">UPI (hmpmanish@ptyes)</span></div>
+                        <div><strong>Payment Status:</strong> <span id="revPayStatus" class="badge badge-green">Paid Online (UPI)</span></div>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between;">
-                    <button class="btn-secondary" onclick="goToStep(3)">
-                        <i class="fa fa-arrow-left"></i> Change Schedule
+                    <button class="btn-secondary" onclick="goToStep(4)">
+                        <i class="fa fa-arrow-left"></i> Change Payment
                     </button>
-                    <button class="btn-primary" style="padding: 12px 28px;" onclick="confirmAndSaveBooking()">
-                        <i class="fa fa-check-circle"></i> Confirm Booking &amp; Get OPD Slip
+                    <button class="btn-primary" style="padding: 12px 28px; font-size:15px;" onclick="confirmAndSaveBooking()">
+                        <i class="fa fa-check-circle"></i> Confirm Booking &amp; Issue OPD Token Slip
                     </button>
                 </div>
             </section>
 
-            <!-- Confirmation Slip -->
+            <!-- CONFIRMATION SLIP & 5-STAGE HEALTHCARE CARE JOURNEY -->
             <section id="bookingSlipSection" style="display: none; margin-bottom: 40px;">
                 <div class="confirmation-slip">
-                    <div
-                        style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
+                    <div style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px;">
                         <i class="fa fa-check"></i>
                     </div>
                     <h2 style="font-size: 24px; font-weight: 800; color: var(--secondary-blue); margin-bottom: 6px;">
-                        OPD Appointment Confirmed!
+                        OPD Appointment Confirmed &amp; Token Issued!
                     </h2>
                     <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 20px;">
                         Your booking has been added to the hospital OPD schedule and Super Admin registry.
                     </p>
 
-                    <div
-                        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 22px; text-align: left; margin-bottom: 22px;">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
+                    <!-- 5-STAGE CARE JOURNEY TRACKER -->
+                    <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px 14px; margin-bottom: 22px;">
+                        <div style="font-size: 13.5px; font-weight: 700; color: var(--secondary-blue); margin-bottom: 12px;">
+                            <i class="fa fa-road" style="color:var(--primary-teal);"></i> 5-Stage Healthcare Care Journey Tracker:
+                        </div>
+                        <div class="stage-timeline-grid">
+                            <div class="stage-node done">
+                                <div class="stage-badge-num"><i class="fa fa-check"></i></div>
+                                <strong style="font-size:11.5px; display:block; color:#10b981;">Stage 1</strong>
+                                <small style="font-size:11px; color:var(--text-secondary);">Token Issued</small>
+                            </div>
+                            <div class="stage-node current">
+                                <div class="stage-badge-num">2</div>
+                                <strong style="font-size:11.5px; display:block; color:var(--primary-teal);">Stage 2</strong>
+                                <small style="font-size:11px; color:var(--text-secondary);">Desk Check-in</small>
+                            </div>
+                            <div class="stage-node">
+                                <div class="stage-badge-num">3</div>
+                                <strong style="font-size:11.5px; display:block; color:var(--text-secondary);">Stage 3</strong>
+                                <small style="font-size:11px; color:var(--text-muted);">Doctor OPD</small>
+                            </div>
+                            <div class="stage-node">
+                                <div class="stage-badge-num">4</div>
+                                <strong style="font-size:11.5px; display:block; color:var(--text-secondary);">Stage 4</strong>
+                                <small style="font-size:11px; color:var(--text-muted);">Lab Tests / Rx</small>
+                            </div>
+                            <div class="stage-node">
+                                <div class="stage-badge-num">5</div>
+                                <strong style="font-size:11.5px; display:block; color:var(--text-secondary);">Stage 5</strong>
+                                <small style="font-size:11px; color:var(--text-muted);">Recovery Plan</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital OPD Slip Details Box -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 22px; text-align: left; margin-bottom: 22px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
                             <div>
-                                <span
-                                    style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official
-                                    OPD Token Number</span>
-                                <div id="slipTokenId"
-                                    style="font-size: 20px; font-weight: 800; color: var(--primary-teal);">APT-9921
-                                </div>
+                                <span style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official OPD Token Number</span>
+                                <div id="slipTokenId" style="font-size: 20px; font-weight: 800; color: var(--primary-teal);">APT-9921</div>
                             </div>
                             <div style="text-align: right;">
-                                <span class="badge badge-green" style="font-size: 12.5px;"><i
-                                        class="fa fa-check-circle"></i> Confirmed &amp; Queued</span>
+                                <span class="badge badge-green" style="font-size: 12.5px;"><i class="fa fa-check-circle"></i> Confirmed &amp; Queued</span>
                             </div>
                         </div>
 
                         <div class="grid-2" style="font-size: 13.5px; line-height: 2; color: var(--text-primary);">
                             <div><strong>Patient:</strong> <span id="slipPatient">Patient Name</span></div>
+                            <div><strong>Patient Token ID:</strong> <span id="slipPatToken" style="font-weight:700; color:var(--primary-teal);">SC-PAT-101</span></div>
                             <div><strong>Contact Phone:</strong> <span id="slipPhone">+91 98765 43210</span></div>
                             <div><strong>Hospital:</strong> <span id="slipHosp">AIIMS New Delhi</span></div>
                             <div><strong>Doctor:</strong> <span id="slipDoctor">Dr. Rajesh Malhotra</span></div>
@@ -575,8 +531,88 @@
         let selectedDoctorId = "dr-1";
         let selectedTimeSlot = "09:30 AM";
         let selectedMode = "In-Person OPD";
-        let currentBookingMode = "guest"; // 'guest' or 'profile'
         let selectedPaymentOption = "upi"; // 'upi' or 'counter'
+
+        function checkAuthStatus() {
+            const session = window.SwastikData.getSession();
+            const data = window.SwastikData.getData();
+            const gateBanner = document.getElementById('authGateBanner');
+            const userBar = document.getElementById('loggedInUserBar');
+            const flowContainer = document.getElementById('bookingFlowContainer');
+
+            // If user is guest or has no userId
+            if (!session || session.role === 'guest' || !session.userId) {
+                gateBanner.style.display = 'block';
+                userBar.style.display = 'none';
+                flowContainer.style.opacity = '0.4';
+                flowContainer.style.pointerEvents = 'none';
+                return false;
+            }
+
+            // Authenticated (Patient, Admin or Hospital)
+            gateBanner.style.display = 'none';
+            userBar.style.display = 'block';
+            flowContainer.style.opacity = '1';
+            flowContainer.style.pointerEvents = 'auto';
+
+            if (session.role === 'patient') {
+                const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
+                document.getElementById('activeUserGreeting').innerText = `Booking as: ${pat.name} (Patient Token: ${pat.tokenNo || pat.id})`;
+                document.getElementById('patientNameInput').value = pat.name;
+                document.getElementById('patientPhoneInput').value = pat.phone;
+                document.getElementById('patientAgeInput').value = pat.age || 30;
+                document.getElementById('patientGenderInput').value = pat.gender || "Male";
+                document.getElementById('patientTokenDisplay').value = pat.tokenNo || pat.id;
+                document.getElementById('patientSymptomsInput').value = `Consultation for ${pat.condition}`;
+            } else if (session.role === 'admin') {
+                document.getElementById('activeUserGreeting').innerHTML = `<i class="fa fa-crown" style="color:#f59e0b;"></i> Booking as Super Pro Admin: <strong>${session.displayName}</strong> (Hospital Admin Portal)`;
+                document.getElementById('patientTokenDisplay').value = "ADMIN-REGISTERED";
+            } else {
+                document.getElementById('activeUserGreeting').innerText = `Booking via Hospital Staff: ${session.displayName}`;
+                document.getElementById('patientTokenDisplay').value = "HOSP-DIRECT";
+            }
+            return true;
+        }
+
+        function initBooking() {
+            const data = window.SwastikData.getData();
+
+            // Set date min to today
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const dateInput = document.getElementById('bookingDateInput');
+            dateInput.min = todayStr;
+
+            // Default to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.value = tomorrow.toISOString().split('T')[0];
+
+            // Parse URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramHosp = urlParams.get('hospId');
+            const paramDoc = urlParams.get('docId');
+
+            if (paramDoc) {
+                const doc = data.doctors.find(d => d.id === paramDoc);
+                if (doc) {
+                    selectedDoctorId = doc.id;
+                    selectedHospId = doc.hospitalId;
+                }
+            } else if (paramHosp) {
+                selectedHospId = paramHosp;
+            }
+
+            renderHospitalStep();
+            checkAuthStatus();
+
+            if (paramDoc) {
+                proceedToStep2();
+                proceedToStep3();
+            } else if (paramHosp) {
+                proceedToStep2();
+            }
+        }
 
         function selectPaymentOption(opt) {
             selectedPaymentOption = opt;
@@ -624,102 +660,11 @@
             const counterAmt = document.getElementById('counterFeeAmt');
             if (counterAmt) counterAmt.innerText = `₹${amount}`;
 
+            const stage4Fee = document.getElementById('stage4FeeDisplay');
+            if (stage4Fee) stage4Fee.innerText = `₹${amount}`;
+
             const intentBtn = document.getElementById('btnPayUpiIntent');
             if (intentBtn) intentBtn.href = upiString;
-        }
-
-        function initBooking() {
-            const data = window.SwastikData.getData();
-            const session = window.SwastikData.getSession();
-
-            // Set date min to today so patients cannot book in the past
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-            const dateInput = document.getElementById('bookingDateInput');
-            dateInput.min = todayStr;
-
-            // Default to tomorrow
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            dateInput.value = tomorrow.toISOString().split('T')[0];
-
-            // Parse URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const paramHosp = urlParams.get('hospId');
-            const paramDoc = urlParams.get('docId');
-
-            if (paramDoc) {
-                const doc = data.doctors.find(d => d.id === paramDoc);
-                if (doc) {
-                    selectedDoctorId = doc.id;
-                    selectedHospId = doc.hospitalId;
-                }
-            } else if (paramHosp) {
-                selectedHospId = paramHosp;
-            }
-
-            // Check session
-            if (session.role === 'patient') {
-                const pat = data.patients.find(p => p.id === session.userId);
-                if (pat) {
-                    document.getElementById('patientNameInput').value = pat.name;
-                    document.getElementById('patientPhoneInput').value = pat.phone;
-                    document.getElementById('patientAgeInput').value = pat.age || 30;
-                    document.getElementById('patientGenderInput').value = pat.gender || "Male";
-                    document.getElementById('patientSymptomsInput').value = `Consultation for ${pat.condition}`;
-                    setBookingMode('profile');
-                } else {
-                    setBookingMode('guest');
-                }
-            } else if (session.role === 'admin') {
-                setBookingMode('guest');
-                document.getElementById('bookingModeNotice').innerHTML = `
-                    <span style="color:#b45309; font-weight:700;"><i class="fa fa-crown"></i> Super Pro Admin Mode:</span>
-                    Enter patient details below to book on their behalf. This appointment will automatically register in both Super Admin consoles (Manish Pandey &amp; Swastik Uniyal) and the hospital OPD.
-                `;
-            } else {
-                setBookingMode('guest');
-            }
-
-            renderHospitalStep();
-
-            if (paramDoc) {
-                proceedToStep2();
-                proceedToStep3();
-            } else if (paramHosp) {
-                proceedToStep2();
-            }
-        }
-
-        function setBookingMode(mode) {
-            currentBookingMode = mode;
-            const btnGuest = document.getElementById('btnModeGuest');
-            const btnProfile = document.getElementById('btnModeProfile');
-            const notice = document.getElementById('bookingModeNotice');
-            const session = window.SwastikData.getSession();
-            const data = window.SwastikData.getData();
-
-            btnGuest.classList.toggle('active', mode === 'guest');
-            btnProfile.classList.toggle('active', mode === 'profile');
-
-            if (mode === 'guest') {
-                notice.innerHTML = `✓ <strong>No login required:</strong> Enter patient name and mobile number. You will receive an instant digital OPD Token and SMS confirmation.`;
-                if (session.role === 'admin') {
-                    document.getElementById('patientNameInput').placeholder = "Enter patient's full name";
-                    document.getElementById('patientPhoneInput').placeholder = "+91 98765 43210";
-                }
-            } else {
-                if (session.role === 'patient') {
-                    const pat = data.patients.find(p => p.id === session.userId) || data.patients[0];
-                    document.getElementById('patientNameInput').value = pat.name;
-                    document.getElementById('patientPhoneInput').value = pat.phone;
-                    document.getElementById('patientAgeInput').value = pat.age || 30;
-                    document.getElementById('patientGenderInput').value = pat.gender || "Male";
-                    notice.innerHTML = `✓ Using verified logged-in patient account: <strong>${pat.name}</strong> (${pat.phone}).`;
-                } else {
-                    notice.innerHTML = `⚠️ You are currently logged in as <strong>${session.displayName}</strong>. You can book directly for any patient using guest mode above.`;
-                }
-            }
         }
 
         function showNewBookingTab() {
@@ -759,7 +704,8 @@
                     const nameMatch = a.patientName && a.patientName.toLowerCase().includes(query);
                     const phoneMatch = cleanQ.length >= 4 && a.patientPhone && a.patientPhone.replace(/\D/g, '').includes(cleanQ);
                     const docMatch = a.doctorName && a.doctorName.toLowerCase().includes(query);
-                    return idMatch || nameMatch || phoneMatch || docMatch;
+                    const tokenMatch = a.patientToken && a.patientToken.toLowerCase().includes(query);
+                    return idMatch || nameMatch || phoneMatch || docMatch || tokenMatch;
                 });
             }
 
@@ -769,7 +715,7 @@
                         <i class="fa fa-calendar-times" style="font-size: 36px; color: var(--text-muted); margin-bottom: 12px;"></i>
                         <h4 style="color: var(--secondary-blue);">No matching bookings found</h4>
                         <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
-                            We could not find any appointments matching "${query}". Try searching by phone number or Token ID.
+                            We could not find any appointments matching "${query}". Try searching by phone number, Token ID or Patient Token.
                         </p>
                         <button class="btn-primary" onclick="showNewBookingTab()">
                             <i class="fa fa-calendar-plus"></i> Book an OPD Appointment Now
@@ -823,6 +769,7 @@
 
             document.getElementById('slipTokenId').innerText = a.id;
             document.getElementById('slipPatient').innerText = a.patientName;
+            document.getElementById('slipPatToken').innerText = a.patientToken || a.patientId || "SC-PAT-VERIFIED";
             document.getElementById('slipPhone').innerText = a.patientPhone || "+91 98765 43210";
             document.getElementById('slipHosp').innerText = a.hospitalName;
             document.getElementById('slipDoctor').innerText = a.doctorName;
@@ -830,7 +777,7 @@
             document.getElementById('slipRoom').innerText = a.room || "OPD Room 101";
             document.getElementById('slipMode').innerText = a.type || "In-Person OPD";
             document.getElementById('slipFee').innerText = `₹${a.fee || 500}`;
-            
+
             const payMethodEl = document.getElementById('slipPayMethod');
             if (payMethodEl) payMethodEl.innerText = a.paymentMethod || "UPI (hmpmanish@ptyes)";
 
@@ -867,19 +814,31 @@
         }
 
         function goToStep(stepNum) {
+            if (!checkAuthStatus()) {
+                window.showToast("Bina login ke booking nahi ho sakti. Please login or register.", "warning");
+                return;
+            }
+
             document.querySelectorAll('section[id^="bookingStep"]').forEach(s => s.style.display = 'none');
             document.getElementById(`bookingStep${stepNum}`).style.display = 'block';
 
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <= 5; i++) {
                 const el = document.getElementById(`stepIndicator${i}`);
-                el.classList.remove('active', 'completed');
-                if (i < stepNum) el.classList.add('completed');
-                if (i === stepNum) el.classList.add('active');
+                if (el) {
+                    el.classList.remove('active', 'completed');
+                    if (i < stepNum) el.classList.add('completed');
+                    if (i === stepNum) el.classList.add('active');
+                }
             }
             window.scrollTo({ top: 120, behavior: 'smooth' });
         }
 
         function proceedToStep2() {
+            if (!checkAuthStatus()) {
+                window.showToast("Bina login ke booking nahi ho sakti. Please login or register first.", "warning");
+                return;
+            }
+
             const data = window.SwastikData.getData();
             const hosp = data.hospitals.find(h => h.id === selectedHospId);
             document.getElementById('selectedHospBadge').innerText = hosp ? hosp.name : "Hospital";
@@ -937,10 +896,20 @@
 
         function proceedToStep4() {
             const data = window.SwastikData.getData();
+            const doc = data.doctors.find(d => d.id === selectedDoctorId);
+            const fee = doc ? doc.consultationFee : 500;
+
+            updateUpiQr(fee);
+            selectPaymentOption(selectedPaymentOption);
+            goToStep(4);
+        }
+
+        function proceedToStep5() {
+            const data = window.SwastikData.getData();
             const hosp = data.hospitals.find(h => h.id === selectedHospId);
             const doc = data.doctors.find(d => d.id === selectedDoctorId);
-
             const fee = doc ? doc.consultationFee : 500;
+
             document.getElementById('revHospName').innerText = hosp ? hosp.name : "";
             document.getElementById('revDocName').innerText = doc ? doc.name : "";
             document.getElementById('revFee').innerText = `₹${fee}`;
@@ -948,13 +917,24 @@
             document.getElementById('revTime').innerText = selectedTimeSlot;
             document.getElementById('revMode').innerText = selectedMode;
 
-            updateUpiQr(fee);
-            selectPaymentOption(selectedPaymentOption);
+            const payMethodText = (selectedPaymentOption === 'upi') ? 'UPI (hmpmanish@ptyes)' : 'Cash or UPI at Counter';
+            document.getElementById('revPayMethod').innerText = payMethodText;
 
-            goToStep(4);
+            const payStatusBadge = document.getElementById('revPayStatus');
+            if (payStatusBadge) {
+                payStatusBadge.innerText = (selectedPaymentOption === 'upi') ? 'Paid Online via UPI' : 'Pay at Counter on Arrival';
+                payStatusBadge.className = (selectedPaymentOption === 'upi') ? 'badge badge-green' : 'badge badge-blue';
+            }
+
+            goToStep(5);
         }
 
         function confirmAndSaveBooking() {
+            if (!checkAuthStatus()) {
+                window.showToast("Bina login ke booking nahi ho sakti. Please login.", "warning");
+                return;
+            }
+
             const patName = document.getElementById('patientNameInput').value.trim();
             const patPhone = document.getElementById('patientPhoneInput').value.trim();
             const patAge = document.getElementById('patientAgeInput').value.trim();
@@ -971,15 +951,14 @@
             const doc = data.doctors.find(d => d.id === selectedDoctorId) || data.doctors[0];
             const session = window.SwastikData.getSession();
 
-            // patientId determination
-            let patId = (currentBookingMode === 'profile' && session.role === 'patient') ? session.userId : null;
+            const patToken = session.tokenNo || session.userId || `SC-PAT-${Math.floor(100 + Math.random()*900)}`;
             const fee = doc.consultationFee || 500;
-
             const payMethod = (selectedPaymentOption === 'upi') ? 'UPI (hmpmanish@ptyes)' : 'Cash or UPI at Counter';
             const payStatus = (selectedPaymentOption === 'upi') ? 'Paid Online via UPI' : 'Pay at Counter on Arrival';
 
             const newBooking = {
-                patientId: patId,
+                patientId: session.userId || "pat-1",
+                patientToken: patToken,
                 patientName: patName,
                 patientPhone: patPhone,
                 patientAge: Number(patAge) || 30,
@@ -1006,6 +985,7 @@
 
             document.getElementById('slipTokenId').innerText = saved.id;
             document.getElementById('slipPatient').innerText = saved.patientName;
+            document.getElementById('slipPatToken').innerText = saved.patientToken || patToken;
             document.getElementById('slipPhone').innerText = saved.patientPhone;
             document.getElementById('slipHosp').innerText = saved.hospitalName;
             document.getElementById('slipDoctor').innerText = saved.doctorName;
@@ -1024,7 +1004,7 @@
             }
 
             document.getElementById('bookingSlipSection').style.display = 'block';
-            window.showToast("Appointment confirmed! Registered in OPD schedule and Super Admin dashboard.", "success");
+            window.showToast("OPD Appointment confirmed! Digital Token & 5-Stage Roadmap generated.", "success");
             window.scrollTo({ top: 100, behavior: 'smooth' });
         }
 
@@ -1037,5 +1017,4 @@
         window.onload = initBooking;
     </script>
 </body>
-
 </html>
